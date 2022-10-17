@@ -10,7 +10,6 @@ public class PlayerMovement : MonoBehaviour
     {
         
     }
-
     // Update is called once per frame
     void Update()
     {
@@ -30,5 +29,6 @@ public class PlayerMovement : MonoBehaviour
         {
             player.transform.position += new Vector3(5 * Time.deltaTime, 0, 0);
         }
+
     }
 }
