@@ -3,7 +3,10 @@ using System.Collections.Generic;
 using System.Net.Sockets;
 using System.Net;
 using System.Threading;
+using System.Text;
+using System;
 using UnityEngine;
+using TCP;
 
 public class ClientScript : MonoBehaviour
 {
@@ -13,16 +16,26 @@ public class ClientScript : MonoBehaviour
     //adress where we are going to connect
     IPEndPoint ipep;
 
+    IPEndPoint ipep2;
+
+    TCPSocket c = new TCPSocket();
 
     // Start is called before the first frame update
     void Start()
     {
-        ipep = new IPEndPoint(IPAddress.Any, port);
+        c.Client("127.0.0.1", 27000);
+        c.Send("TEST!");
+
+        Console.WriteLine("Closed Server \n Press any key to exit");
+        Console.ReadKey();
     }
 
+    
     // Update is called once per frame
     void Update()
     {
         
     }
+
+    
 }
