@@ -6,6 +6,7 @@ public class ReadClient : MonoBehaviour
 {
     [HideInInspector]
     public string clientInput;
+    bool ipSent = false;
 
     // Start is called before the first frame update
     void Start()
@@ -24,7 +25,7 @@ public class ReadClient : MonoBehaviour
         clientInput = input;
         Debug.Log("ReadStringInput: " + input);
 
-        if (clientInput.Contains("."))
+        if (clientInput.Contains(".") && !ipSent)
         {
             // Get client script and connect to server
             switch (ServerController.MyServerInstance.GetSocketType)
@@ -34,6 +35,22 @@ public class ReadClient : MonoBehaviour
                     break;
                 case ServerController.SocketTypeProtocol.UDP:
                     GameObject.Find("ClientManager").GetComponent<UDPClient>().ConnectToServer(clientInput);
+                    break;
+                default:
+                    Debug.Log("Invalid protocol");
+                    break;
+            }
+            ipSent = true;
+        }
+        else
+        {
+            switch (ServerController.MyServerInstance.GetSocketType)
+            {
+                case ServerController.SocketTypeProtocol.TCP:
+                    GameObject.Find("ClientManager").GetComponent<TCPClient>().SendString(clientInput);
+                    break;
+                case ServerController.SocketTypeProtocol.UDP:
+                    //GameObject.Find("ClientManager").GetComponent<UDPClient>().SendString(clientInput);
                     break;
                 default:
                     Debug.Log("Invalid protocol");

@@ -83,7 +83,7 @@ public class TCPClient : MonoBehaviour
         tcpSocket.Close();
     }
 
-    private void SendString(string message)
+    public void SendString(string message)
     {
         try
         {
