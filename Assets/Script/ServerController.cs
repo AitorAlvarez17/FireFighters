@@ -8,6 +8,9 @@ public class ServerController : MonoBehaviour
 
     private static ServerController serverInstance;
 
+    public GameObject messgePrefab;
+    public GameObject chatParent;
+
     public static ServerController MyServerInstance
     {
         get
@@ -61,6 +64,7 @@ public class ServerController : MonoBehaviour
 
         if(serverType == ServerType.Client)
         {
+            CreateMessage("Hello");
             if (socketType == SocketTypeProtocol.TCP)
                 serverParent.AddComponent<TCPClient>();
 
@@ -72,6 +76,16 @@ public class ServerController : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        
+        //if (serverParent.GetComponent<TCPClient>().strings[] > 0)
+        {
+            //print the messages that has been created
+        }
+    }
+
+    public void CreateMessage(string _message)
+    {
+        GameObject newMessage = new GameObject();
+        newMessage = Instantiate(GameObject.Find("ClientManager").GetComponent<ServerController>().messgePrefab, Vector3.zero, Quaternion.identity, GameObject.Find("ClientManager").GetComponent<ServerController>().chatParent.transform);
+        newMessage.GetComponent<MessageHolder>().SetMessage(_message);
     }
 }

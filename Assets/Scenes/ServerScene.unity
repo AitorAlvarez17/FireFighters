@@ -153,6 +153,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   serverParent: {fileID: 470891543}
+  messgePrefab: {fileID: 1744014397473368182, guid: 059c80d1be7ed7447b262d38c0dc2119,
+    type: 3}
+  chatParent: {fileID: 0}
   socketType: 0
   serverType: 0
 --- !u!4 &470891545

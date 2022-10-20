@@ -24,6 +24,7 @@ public class TCPClient : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
+        
         // Get IP and port
         serverIP = ServerController.MyServerInstance.IPServer;
         serverPort = ServerController.MyServerInstance.serverPort;
@@ -95,4 +96,6 @@ public class TCPClient : MonoBehaviour
             Debug.Log("[CLIENT] Error sending string: " + e.ToString());
         }
     }
+
+    
 }
