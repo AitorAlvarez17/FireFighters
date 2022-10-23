@@ -18,6 +18,7 @@ public class TCPClient : MonoBehaviour
     private Thread clientThread;
     private Socket tcpSocket;
 
+    public string messageDecoded = null;
     // Destination EndPoint and IP
     private IPEndPoint serverIPEP;
     
@@ -77,10 +78,12 @@ public class TCPClient : MonoBehaviour
         // Debug.Log("[CLIENT] Receiving data from server...");
         data = new byte[1024];
         recv = tcpSocket.Receive(data);
+        messageDecoded = Encoding.Default.GetString(data, 0, recv);
         Debug.Log("[CLIENT] Data received from server: " + Encoding.Default.GetString(data, 0, recv));
 
         // Debug.Log("[CLIENT] Closing TCP socket...");
-        tcpSocket.Close();
+        //tcpSocket.Close();
+        //tcpSocket.Listen(10);
     }
 
     public void SendString(string message)

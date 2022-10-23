@@ -9,7 +9,7 @@ public class ServerController : MonoBehaviour
     private static ServerController serverInstance;
 
     public GameObject messgePrefab;
-    public GameObject chatParent;
+    public GameObject chatBillboard;
 
     public static ServerController MyServerInstance
     {
@@ -64,7 +64,7 @@ public class ServerController : MonoBehaviour
 
         if(serverType == ServerType.Client)
         {
-            CreateMessage("Hello");
+            //CreateMessage("Creating Server Type");
             if (socketType == SocketTypeProtocol.TCP)
                 serverParent.AddComponent<TCPClient>();
 
@@ -76,16 +76,33 @@ public class ServerController : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        //if (serverParent.GetComponent<TCPClient>().strings[] > 0)
+        if (serverParent.GetComponent<TCPClient>() != null)
         {
-            //print the messages that has been created
+            if (serverParent.GetComponent<TCPClient>().messageDecoded != null)
+            {
+                Debug.Log("Message checked and creating...!: " + serverParent.GetComponent<TCPClient>().messageDecoded);
+                CreateMessage(serverParent.GetComponent<TCPClient>().messageDecoded);
+                serverParent.GetComponent<TCPClient>().messageDecoded = null;
+                //print the messages that has been created
+            }
+        }
+
+        if (serverParent.GetComponent<TCPServer>() != null)
+        {
+            if (serverParent.GetComponent<TCPServer>().messageDecoded != null)
+            {
+                Debug.Log("Message checked and creating...!" + serverParent.GetComponent<TCPServer>().messageDecoded);
+                CreateMessage(serverParent.GetComponent<TCPServer>().messageDecoded);
+                serverParent.GetComponent<TCPServer>().messageDecoded = null;
+                //print the messages that has been created
+            }
         }
     }
 
     public void CreateMessage(string _message)
     {
         GameObject newMessage = new GameObject();
-        newMessage = Instantiate(GameObject.Find("ClientManager").GetComponent<ServerController>().messgePrefab, Vector3.zero, Quaternion.identity, GameObject.Find("ClientManager").GetComponent<ServerController>().chatParent.transform);
+        newMessage = Instantiate(messgePrefab, Vector3.zero, Quaternion.identity, chatBillboard.transform);
         newMessage.GetComponent<MessageHolder>().SetMessage(_message);
     }
 }

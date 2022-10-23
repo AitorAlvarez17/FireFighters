@@ -27,6 +27,7 @@ public class ReadClient : MonoBehaviour
 
         if (clientInput.Contains(".") && !ipSent)
         {
+            ipSent = true;
             // Get client script and connect to server
             switch (ServerController.MyServerInstance.GetSocketType)
             {
@@ -40,7 +41,6 @@ public class ReadClient : MonoBehaviour
                     Debug.Log("Invalid protocol");
                     break;
             }
-            ipSent = true;
         }
         else
         {

@@ -20,8 +20,8 @@ public class TCPServer : MonoBehaviour
 
     private Socket socket;
     private Thread thread;
-  
 
+    public string messageDecoded = null;
 
 
     void Start()
@@ -34,6 +34,8 @@ public class TCPServer : MonoBehaviour
 
     private void OnDisable()
     {
+        Debug.Log("[SERVER] Closing UDP socket & thread...");
+
         if (socket != null)
             socket.Close();
         if (thread != null)
@@ -77,11 +79,13 @@ public class TCPServer : MonoBehaviour
         socket.Listen(10);
         while (true) // Look at Promises, Async, Await
         {
+            Debug.Log("Server looping into the Listen While Loop");
             Socket clientSocket = socket.Accept();
             try
             {
                 recv = clientSocket.Receive(data);
                 Debug.Log("SERVER Client Message: " + Encoding.Default.GetString(data, 0, recv));
+                messageDecoded = Encoding.Default.GetString(data, 0, recv);
             }
             catch (Exception e)
             {
@@ -90,7 +94,7 @@ public class TCPServer : MonoBehaviour
 
             SendData(clientSocket ,"Heyyy client, I have received your message");
 
-            clientSocket.Close();
+            //clientSocket.Close();
         }
     }
     
