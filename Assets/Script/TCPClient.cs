@@ -15,32 +15,27 @@ public class TCPClient : MonoBehaviour
     private int recv;
     private byte[] data = new byte[1024];
 
-    private Thread clientThread;
+    private Thread Thread;
 
-    private Socket tcpSocket;
+    private Socket Socket;
 
     public string messageDecoded = null;
-    // Destination EndPoint and IP
     private IPEndPoint serverIPEP;
 
-    public Thread ClientThread1 { get => clientThread; set => clientThread = value; }
+    public Thread ClientThread1 { get => Thread; set => Thread = value; }
 
-    // Start is called before the first frame update
     void Start()
     {
-        
-        // Get IP and port
         serverIP = ServerController.MyServerInstance.IPServer;
         serverPort = ServerController.MyServerInstance.serverPort;
     }
 
     private void OnDisable()
     {
-        //Debug.Log("[CLIENT] Closing TCP socket & thread...");
-        if (tcpSocket != null)
-            tcpSocket.Close();
-        if (clientThread != null)
-            clientThread.Abort();
+        if (Socket != null)
+            Socket.Close();
+        if (Thread != null)
+            Thread.Abort();
     }
 
     public void ConnectToServer(string ip = null, int port = 0)
@@ -50,56 +45,50 @@ public class TCPClient : MonoBehaviour
         if (port != 0)
             serverPort = port;
 
-        InitializeTCPSocket();
-        InitializeThread();
+        InitSocket();
+        InitThread();
     }
 
-    private void InitializeTCPSocket()
+    private void InitSocket()
     {
-        //Debug.Log("[CLIENT] Initializing TCP socket...");
-        tcpSocket = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
+        Socket = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
     }
 
-    private void InitializeThread()
+    private void InitThread()
     {
-        //Debug.Log("[CLIENT] Initializing TCP thread...");
-        clientThread = new Thread(new ThreadStart(ClientThread));
-        clientThread.IsBackground = true;
-        clientThread.Start();
+        Thread = new Thread(new ThreadStart(ClientThread));
+        Thread.IsBackground = true;
+        Thread.Start();
     }
 
     private void ClientThread()
     {
-        // Debug.Log("[CLIENT] Connecting to server...");
         IPAddress ipAddress = IPAddress.Parse(serverIP);
         serverIPEP = new IPEndPoint(ipAddress, serverPort);
-        tcpSocket.Connect(serverIPEP);
+        Socket.Connect(serverIPEP);
 
-        // Debug.Log("[CLIENT] Connected to server!");
         SendString("Hello from client!");
 
-        // Debug.Log("[CLIENT] Receiving data from server...");
         data = new byte[1024];
-        recv = tcpSocket.Receive(data);
+        recv = Socket.Receive(data);
         messageDecoded = Encoding.Default.GetString(data, 0, recv);
-        Debug.Log("[CLIENT] Data received from server: " + Encoding.Default.GetString(data, 0, recv));
+        Debug.Log("CLIENT Data from server: " + Encoding.Default.GetString(data, 0, recv));
 
-        // Debug.Log("[CLIENT] Closing TCP socket...");
-        //tcpSocket.Close();
-        //tcpSocket.Listen(10);
+        //Debug.Log("CLIENT Closing TCP socket...");
+        //Socket.Close();
     }
 
     public void SendString(string message)
     {
         try
         {
-            Debug.Log("[CLIENT] Sending to server: " + serverIPEP.ToString() + " Message: " + message);
+            Debug.Log("CLIENT Sending to server: " + serverIPEP.ToString() + " Message: " + message);
             data = Encoding.Default.GetBytes(message);
-            tcpSocket.Send(data, data.Length, SocketFlags.None);
+            Socket.Send(data, data.Length, SocketFlags.None);
         }
         catch (Exception e)
         {
-            Debug.Log("[CLIENT] Error sending string: " + e.ToString());
+            Debug.Log("CLIENT Error sending string: " + e.ToString());
         }
     }
 

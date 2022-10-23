@@ -12,8 +12,6 @@ public class TCPServer : MonoBehaviour
     private string sIp;
     private int sPort;
 
-    public bool initialized = false;
-
     private byte[] data = new byte[1024];
     private int recv;
 
@@ -36,7 +34,7 @@ public class TCPServer : MonoBehaviour
 
     private void OnDisable()
     {
-        Debug.Log("[SERVER] Closing UDP socket & thread...");
+        Debug.Log("SERVER Closing TCP socket & thread...");
 
         if (socket != null)
             socket.Close();
@@ -72,15 +70,13 @@ public class TCPServer : MonoBehaviour
         try
         {
             socket.Bind(clientIPEP);
-            initialized = true;
-            Debug.Log("[SERVER] TCP socket bound to " + clientIPEP.ToString());
+            Debug.Log("SERVER TCP socket bound to " + clientIPEP.ToString());
         }
         catch (Exception e)
         {
-            Debug.Log("[ERROR SERVER] Failed to bind socket: " + e.Message);
+            Debug.Log("SERVER ERROR Failed to bind socket: " + e.Message);
         }
 
-        Debug.Log("Aaaaa server thread");
         socket.Listen(10);
         while (true) // Look at Promises, Async, Await
         {
@@ -97,9 +93,9 @@ public class TCPServer : MonoBehaviour
                 Debug.Log("SERVER ERROR Failed to receive data: " + e.Message);
             }
 
-            SendData(clientSocket ,"Heyyy client, I have received your message");
+            SendData(clientSocket ,"Hey, I have received your message");
 
-            clientSocket.Close();
+            //clientSocket.Close();
         }
     }
     
@@ -107,13 +103,13 @@ public class TCPServer : MonoBehaviour
     {
         try
         {
-            Debug.Log("[SERVER] Sending message to client: " + message);
+            Debug.Log("SERVER Sending message to client: " + message);
             data = Encoding.Default.GetBytes(message);
             socket.Send(data);
         }
         catch (Exception e)
         {
-            Debug.Log("[ERROR SERVER] Failed to send data: " + e.Message);
+            Debug.Log("SERVER ERROR Failed to send data: " + e.Message);
         }
     }
 
