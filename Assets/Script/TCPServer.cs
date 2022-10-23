@@ -12,6 +12,8 @@ public class TCPServer : MonoBehaviour
     private string sIp;
     private int sPort;
 
+    public bool initialized = false;
+
     private byte[] data = new byte[1024];
     private int recv;
 
@@ -62,20 +64,23 @@ public class TCPServer : MonoBehaviour
 
     private void ServerThread()
     {
+
         IPAddress ipAddress = IPAddress.Parse(sIp);
         clientIPEP = new IPEndPoint(ipAddress, sPort);
         clientEP = (EndPoint)clientIPEP;
-        
+
         try
         {
             socket.Bind(clientIPEP);
+            initialized = true;
             Debug.Log("[SERVER] TCP socket bound to " + clientIPEP.ToString());
         }
         catch (Exception e)
         {
             Debug.Log("[ERROR SERVER] Failed to bind socket: " + e.Message);
         }
-        
+
+        Debug.Log("Aaaaa server thread");
         socket.Listen(10);
         while (true) // Look at Promises, Async, Await
         {
@@ -94,7 +99,7 @@ public class TCPServer : MonoBehaviour
 
             SendData(clientSocket ,"Heyyy client, I have received your message");
 
-            //clientSocket.Close();
+            clientSocket.Close();
         }
     }
     

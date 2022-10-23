@@ -16,12 +16,15 @@ public class TCPClient : MonoBehaviour
     private byte[] data = new byte[1024];
 
     private Thread clientThread;
+
     private Socket tcpSocket;
 
     public string messageDecoded = null;
     // Destination EndPoint and IP
     private IPEndPoint serverIPEP;
-    
+
+    public Thread ClientThread1 { get => clientThread; set => clientThread = value; }
+
     // Start is called before the first frame update
     void Start()
     {
