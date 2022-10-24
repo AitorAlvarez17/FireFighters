@@ -8,26 +8,17 @@ public class ReadClient : MonoBehaviour
     public string clientInput;
     bool ipSent = false;
 
-    // Start is called before the first frame update
-    void Start()
-    {
-
-    }
-
-    // Update is called once per frame
-    void Update()
-    {
-
-    }
-
     public void ReadInputIP(string input)
     {
+        //Sets client's input
         clientInput = input;
         Debug.Log("ReadStringInput: " + input);
 
-        if (clientInput.Contains(".") && !ipSent)
+        if (clientInput.Contains(".") && !ipSent) //Checks if the ip has been sent.
         {
+            //Sets ip as sent.
             ipSent = true;
+
             // Get client script and connect to server
             switch (ServerController.MyServerInstance.GetSocketType)
             {
@@ -44,13 +35,14 @@ public class ReadClient : MonoBehaviour
         }
         else
         {
+            //In charge od sending the message after connecting with the server.
             switch (ServerController.MyServerInstance.GetSocketType)
             {
                 case ServerController.SocketTypeProtocol.TCP:
                     GameObject.Find("ClientManager").GetComponent<TCPClient>().SendString(clientInput);
                     break;
                 case ServerController.SocketTypeProtocol.UDP:
-                    //GameObject.Find("ClientManager").GetComponent<UDPClient>().SendString(clientInput);
+                    GameObject.Find("ClientManager").GetComponent<UDPClient>().SendString(clientInput);
                     break;
                 default:
                     Debug.Log("Invalid protocol");

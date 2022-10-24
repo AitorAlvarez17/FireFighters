@@ -9,35 +9,50 @@ using System;
 
 public class TCPClient : MonoBehaviour
 {
+
+    // Servers'IP and port
     private string serverIP;
     private int serverPort;
 
+    //Data matrix and number of bytes
     private int recv;
     private byte[] data = new byte[1024];
 
+    //declare thread and socket
     private Thread Thread;
-
     private Socket Socket;
 
+    // Message decoded for rendering on screen
     public string messageDecoded = null;
+
+    // Server end point (Ip + Port)
     private IPEndPoint serverIPEP;
 
+    //Client Thread
     public Thread ClientThread1 { get => Thread; set => Thread = value; }
 
+
+    //instanciation both variables
     void Start()
     {
         serverIP = ServerController.MyServerInstance.IPServer;
         serverPort = ServerController.MyServerInstance.serverPort;
     }
 
+    //closing both the socket and the thread on exit and all coroutines
     private void OnDisable()
     {
+        Debug.Log("CLIENT Closing TCP socket & thread...");
+
         if (Socket != null)
             Socket.Close();
         if (Thread != null)
             Thread.Abort();
+
+        StopAllCoroutines();
     }
 
+    //Initialize socket and thread
     public void ConnectToServer(string ip = null, int port = 0)
     {
         if (ip != null)
@@ -49,11 +64,13 @@ public class TCPClient : MonoBehaviour
         InitThread();
     }
 
+    //set socket
     private void InitSocket()
     {
         Socket = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
     }
 
+    //set and initialize thread
     private void InitThread()
     {
         Thread = new Thread(new ThreadStart(ClientThread));
@@ -61,6 +78,7 @@ public class TCPClient : MonoBehaviour
         Thread.Start();
     }
 
+    //Main thread 
     private void ClientThread()
     {
         IPAddress ipAddress = IPAddress.Parse(serverIP);
@@ -74,10 +92,9 @@ public class TCPClient : MonoBehaviour
         messageDecoded = Encoding.Default.GetString(data, 0, recv);
         Debug.Log("CLIENT Data from server: " + Encoding.Default.GetString(data, 0, recv));
 
-        //Debug.Log("CLIENT Closing TCP socket...");
-        //Socket.Close();
     }
 
+    //Main communication funtion. It sends strings when called
     public void SendString(string message)
     {
         try

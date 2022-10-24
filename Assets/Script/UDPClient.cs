@@ -9,36 +9,46 @@ using UnityEngine;
 
 public class UDPClient : MonoBehaviour
 {
+    // Servers'IP and port
     private string serverIP;
     private int serverPort;
 
+    //Data matrix and number of bytes
     private int recv;
     private byte[] data = new byte[1024];
 
+    // Message decoded for rendering on screen
+    public string messageDecoded = null;
+
+    //declare thread and socket
     private Thread clientThread;
     private Socket udpSocket;
 
-    // Destination EndPoint and IP
+    // Server end point (Ip + Port)
     private IPEndPoint serverIPEP;
     private EndPoint serverEP;
 
-    // Start is called before the first frame update
+    //instanciation both variables
     void Start()
     {
-        // Get IP and port
         serverIP = ServerController.MyServerInstance.IPServer;
         serverPort = ServerController.MyServerInstance.serverPort;
     }
-    
+
+    //closing both the socket and the thread on exit and all coroutines
     private void OnDisable()
     {
-        //Debug.Log("[CLIENT] Closing UDP socket & thread...");
+        Debug.Log("CLIENT Closing TCP socket & thread...");
+
         if (udpSocket != null)
             udpSocket.Close();
         if (clientThread != null)
             clientThread.Abort();
+
+        StopAllCoroutines();
     }
 
+    //Initialize socket and thread
     public void ConnectToServer(string ip = null, int port = 0)
     {
         if (ip != null)
@@ -46,38 +56,38 @@ public class UDPClient : MonoBehaviour
         if (port != 0)
             serverPort = port;
         
-        InitializeUDPSocket();
-        InitializeThread();
+        InitSocket();
+        InitThread();
     }
 
-    private void InitializeUDPSocket()
+    //set socket
+    private void InitSocket()
     {
-        //Debug.Log("[CLIENT] Initializing UDP socket...");
         udpSocket = new Socket(AddressFamily.InterNetwork, SocketType.Dgram, ProtocolType.Udp);
     }
 
-    private void InitializeThread()
+    //set and initialize thread
+    private void InitThread()
     {
-        //Debug.Log("[CLIENT] Initializing UDP thread...");
         clientThread = new Thread(ClientThread);
         clientThread.IsBackground = true;
         clientThread.Start();
     }
 
+    //Main thread 
     private void ClientThread()
     {
-        // Client IP EndPoint
         IPAddress ipAddress = IPAddress.Parse(serverIP);
         serverIPEP = new IPEndPoint(ipAddress, serverPort);
         serverEP = (EndPoint)serverIPEP;
 
-        // Send data to server
-        SendData("This is a message from the client");
+        SendString("This is a message from the client");
 
-        // Receive data from server
+        // Receive from server
         try
         {
             recv = udpSocket.Receive(data);
+            messageDecoded = Encoding.Default.GetString(data, 0, recv);
             Debug.Log("[CLIENT] Received: " + Encoding.Default.GetString(data, 0, recv));
         }
         catch (Exception e)
@@ -86,8 +96,8 @@ public class UDPClient : MonoBehaviour
         }
     }
 
-    // SendData to server
-    private void SendData(string message)
+    //Main communication funtion. It sends strings when called
+    public void SendString(string message)
     {
         try
         {

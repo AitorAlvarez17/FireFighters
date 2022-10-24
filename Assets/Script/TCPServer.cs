@@ -9,21 +9,25 @@ using UnityEngine;
 
 public class TCPServer : MonoBehaviour
 {
+    // Clients'IP and port
     private string sIp;
     private int sPort;
 
+    //Data matrix and number of bytes
     private byte[] data = new byte[1024];
     private int recv;
 
+    //declare Client's endpoint
     private IPEndPoint clientIPEP;
-    private EndPoint clientEP;
 
+    //declare thread and socket
     private Socket socket;
     private Thread thread;
 
+    // Message decoded for rendering on screen
     public string messageDecoded = null;
 
-
+    //instanciation both variables and starts server
     void Start()
     {
         sIp = ServerController.MyServerInstance.IPServer;
@@ -32,6 +36,7 @@ public class TCPServer : MonoBehaviour
         StartServer();
     }
 
+    //closing both the socket and the thread on exit and all coroutines
     private void OnDisable()
     {
         Debug.Log("SERVER Closing TCP socket & thread...");
@@ -44,29 +49,35 @@ public class TCPServer : MonoBehaviour
         StopAllCoroutines();
     }
 
+    //Initialize socket and thread
     public void StartServer()
     {
         InitSocket();
         InitThread();
     }
+
+    //set socket
     private void InitThread()
     {
         thread = new Thread(new ThreadStart(ServerThread));
         thread.IsBackground = true;
         thread.Start();
     }
+
+    //set and initialize thread
     private void InitSocket()
     {
         socket = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
     }
 
+    //Main thread 
     private void ServerThread()
     {
 
         IPAddress ipAddress = IPAddress.Parse(sIp);
         clientIPEP = new IPEndPoint(ipAddress, sPort);
-        clientEP = (EndPoint)clientIPEP;
 
+        //try the socket's bind, if not debugs
         try
         {
             socket.Bind(clientIPEP);
@@ -77,11 +88,14 @@ public class TCPServer : MonoBehaviour
             Debug.Log("SERVER ERROR Failed to bind socket: " + e.Message);
         }
 
+        //try the socket's bind, if not debugs
         socket.Listen(10);
+        Socket clientSocket = socket.Accept();
+
+        //loops the receive system. Messy but functional
         while (true) // Look at Promises, Async, Await
         {
             Debug.Log("Server looping into the Listen While Loop");
-            Socket clientSocket = socket.Accept();
             try
             {
                 recv = clientSocket.Receive(data);
@@ -93,13 +107,13 @@ public class TCPServer : MonoBehaviour
                 Debug.Log("SERVER ERROR Failed to receive data: " + e.Message);
             }
 
-            SendData(clientSocket ,"Hey, I have received your message");
+            SendString(clientSocket ,"Hey, I have received your message");
 
-            //clientSocket.Close();
         }
     }
-    
-    private void SendData(Socket socket, string message)
+
+    //Main communication funtion. It sends strings when called
+    private void SendString(Socket socket, string message)
     {
         try
         {

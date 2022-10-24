@@ -2,6 +2,8 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
+
+//Selects the type of connection and the type of object (Server or client).
 public class ServerController : MonoBehaviour
 {
     public GameObject serverParent;
@@ -50,7 +52,7 @@ public class ServerController : MonoBehaviour
     public string IPServer { get; set; } = "127.0.0.1";
     public int serverPort { get; set; } = 9500;
 
-    // Start is called before the first frame update
+    // Start is called before the first frame update and selects the type of client and server.
     void Start()
     {
         if (serverType == ServerType.Server)
@@ -64,7 +66,6 @@ public class ServerController : MonoBehaviour
 
         if(serverType == ServerType.Client)
         {
-            //CreateMessage("Creating Server Type");
             if (socketType == SocketTypeProtocol.TCP)
                 serverParent.AddComponent<TCPClient>();
 
@@ -73,7 +74,7 @@ public class ServerController : MonoBehaviour
         }
     }
 
-    // Update is called once per frame
+    //In charge of printing the received messages.
     void Update()
     {
         if (serverParent.GetComponent<TCPClient>() != null)
@@ -97,8 +98,31 @@ public class ServerController : MonoBehaviour
                 //print the messages that has been created
             }
         }
+
+        if (serverParent.GetComponent<UDPClient>() != null)
+        {
+            if (serverParent.GetComponent<UDPClient>().messageDecoded != null)
+            {
+                Debug.Log("Message checked and creating...!: " + serverParent.GetComponent<UDPClient>().messageDecoded);
+                CreateMessage(serverParent.GetComponent<UDPClient>().messageDecoded);
+                serverParent.GetComponent<UDPClient>().messageDecoded = null;
+                //print the messages that has been created
+            }
+        }
+
+        if (serverParent.GetComponent<UDPServer>() != null)
+        {
+            if (serverParent.GetComponent<UDPServer>().messageDecoded != null)
+            {
+                Debug.Log("Message checked and creating:" + serverParent.GetComponent<UDPServer>().messageDecoded);
+                CreateMessage(serverParent.GetComponent<UDPServer>().messageDecoded);
+                serverParent.GetComponent<UDPServer>().messageDecoded = null;
+                //print the messages that has been created
+            }
+        }
     }
 
+    //called when creating a server to be shown on screen.
     public void CreateMessage(string _message)
     {
         GameObject newMessage = new GameObject();
