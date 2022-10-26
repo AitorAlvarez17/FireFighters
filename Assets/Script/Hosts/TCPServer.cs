@@ -26,6 +26,7 @@ public class TCPServer : MonoBehaviour
 
     // Message decoded for rendering on screen
     public string messageDecoded = null;
+    public bool open = false;
 
     //instanciation both variables and starts server
     void Start()
@@ -52,6 +53,7 @@ public class TCPServer : MonoBehaviour
     //Initialize socket and thread
     public void StartServer()
     {
+        open = true;
         InitSocket();
         InitThread();
     }
@@ -93,11 +95,12 @@ public class TCPServer : MonoBehaviour
         Socket clientSocket = socket.Accept();
 
         //loops the receive system. Messy but functional
-        while (true) // Look at Promises, Async, Await
+        while (open) // Look at Promises, Async, Await
         {
             Debug.Log("Server looping into the Listen While Loop");
             try
             {
+                //RECEIVE DATA
                 recv = clientSocket.Receive(data);
                 Debug.Log("SERVER Client Message: " + Encoding.Default.GetString(data, 0, recv));
                 messageDecoded = Encoding.Default.GetString(data, 0, recv);

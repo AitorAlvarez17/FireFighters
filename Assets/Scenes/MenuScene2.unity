@@ -595,6 +595,7 @@ GameObject:
   - component: {fileID: 1019090307}
   - component: {fileID: 1019090306}
   - component: {fileID: 1019090305}
+  - component: {fileID: 1019090308}
   m_Layer: 5
   m_Name: Create Game Button
   m_TagString: Untagged
@@ -717,6 +718,19 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1019090303}
   m_CullTransparentMesh: 1
+--- !u!114 &1019090308
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1019090303}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5f6779b87cb7d6043a18764ffcbaeb17, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  buttonType: 0
 --- !u!1 &1069345107
 GameObject:
   m_ObjectHideFlags: 0
@@ -746,6 +760,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4fb753408e168b543b8e3914725aa021, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  createGame: {fileID: 1019090303}
+  joinGame: {fileID: 1827882623}
 --- !u!4 &1069345109
 Transform:
   m_ObjectHideFlags: 0
@@ -964,6 +980,7 @@ GameObject:
   - component: {fileID: 1827882627}
   - component: {fileID: 1827882626}
   - component: {fileID: 1827882625}
+  - component: {fileID: 1827882628}
   m_Layer: 5
   m_Name: Join Game Button
   m_TagString: Untagged
@@ -1086,6 +1103,19 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1827882623}
   m_CullTransparentMesh: 1
+--- !u!114 &1827882628
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1827882623}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5f6779b87cb7d6043a18764ffcbaeb17, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  buttonType: 1
 --- !u!1 &1939433083
 GameObject:
   m_ObjectHideFlags: 0

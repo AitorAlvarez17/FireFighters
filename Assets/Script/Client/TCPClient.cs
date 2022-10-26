@@ -21,7 +21,6 @@ public class TCPClient : MonoBehaviour
     //declare thread and socket
     private Thread Thread;
     private Socket Socket;
-
     // Message decoded for rendering on screen
     public string messageDecoded = null;
 
@@ -85,8 +84,10 @@ public class TCPClient : MonoBehaviour
         serverIPEP = new IPEndPoint(ipAddress, serverPort);
         Socket.Connect(serverIPEP);
 
+        //send data
         SendString("Hello from client!");
 
+        //receive
         data = new byte[1024];
         recv = Socket.Receive(data);
         messageDecoded = Encoding.Default.GetString(data, 0, recv);

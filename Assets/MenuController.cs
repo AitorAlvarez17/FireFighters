@@ -5,31 +5,21 @@ using UnityEngine.SceneManagement;
 
 public class MenuController : MonoBehaviour
 {
+    public GameObject createGame;
+    public GameObject joinGame;
 
     public void SetAsServer()
     {
         SceneManager.LoadScene("ServerScene", LoadSceneMode.Additive);
-        if (SceneManager.GetSceneByName("MenuScene").isLoaded)
-        {
-            SceneManager.UnloadScene("MenuScene");
-        }
-        else if (SceneManager.GetSceneByName("MenuScene2").isLoaded)
-        {
-            SceneManager.UnloadScene("MenuScene2");
-        }
+        SceneManager.UnloadSceneAsync(createGame.scene.name);
+        //Debug.Log(createGame.scene.name);
     }
 
     public void SetAsClient()
     {
         SceneManager.LoadScene("ClientScene", LoadSceneMode.Additive);
-        if (SceneManager.GetSceneByName("MenuScene").isLoaded)
-        {
-            SceneManager.UnloadScene("MenuScene");
-        }
-        else if(SceneManager.GetSceneByName("MenuScene2").isLoaded)
-        {
-            SceneManager.UnloadScene("MenuScene2");
-        }
+        SceneManager.UnloadSceneAsync(joinGame.scene.name);
+        //Debug.Log(createGame.scene.name);
     }
     // Start is called before the first frame update
     void Start()
