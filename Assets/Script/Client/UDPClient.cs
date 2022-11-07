@@ -87,7 +87,7 @@ public class UDPClient : MonoBehaviour
         try
         {
             recv = udpSocket.Receive(data);
-            messageDecoded = Encoding.Default.GetString(data, 0, recv);
+            messageDecoded = serializer.DeserializeInfo(data);
             Debug.Log("[CLIENT] Received: " + Encoding.Default.GetString(data, 0, recv));
         }
         catch (Exception e)
@@ -102,7 +102,7 @@ public class UDPClient : MonoBehaviour
         try
         {
             Debug.Log("[CLIENT] Sending to server: " + serverIPEP.ToString() + " Message: " + message);
-            data = Encoding.Default.GetBytes(message);
+            data = serializer.SerializeInfo(message);
             recv = udpSocket.SendTo(data, data.Length, SocketFlags.None, serverEP);
         }
         catch (Exception e)

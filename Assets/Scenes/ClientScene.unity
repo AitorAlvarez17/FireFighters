@@ -1671,7 +1671,7 @@ MonoBehaviour:
   messgePrefab: {fileID: 1744014397473368182, guid: 059c80d1be7ed7447b262d38c0dc2119,
     type: 3}
   chatBillboard: {fileID: 2004390420}
-  socketType: 0
+  socketType: 1
   serverType: 1
 --- !u!4 &1761054769
 Transform:

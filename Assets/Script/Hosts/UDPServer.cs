@@ -96,7 +96,7 @@ public class UDPServer : MonoBehaviour
         {
             recv = udpSocket.ReceiveFrom(data, ref clientEP);
             Debug.Log("SERVER Message received from " + clientEP.ToString() + ": " + Encoding.Default.GetString(data, 0, recv));
-            messageDecoded = Encoding.Default.GetString(data, 0, recv);
+            messageDecoded = serializer.DeserializeInfo(data);
         }
         catch (Exception e)
         {
@@ -107,7 +107,7 @@ public class UDPServer : MonoBehaviour
         while (true)// Look at Promises, Async, Await
         {
             recv = udpSocket.ReceiveFrom(data, ref clientEP);
-            messageDecoded = Encoding.Default.GetString(data, 0, recv);
+            messageDecoded = serializer.DeserializeInfo(data);
             SendData("received message");
 
         }
@@ -119,7 +119,7 @@ public class UDPServer : MonoBehaviour
         try
         {
             Debug.Log("SERVER Sending message to " + clientEP.ToString() + ": " + message);
-            data = Encoding.ASCII.GetBytes(message);
+            data = serializer.SerializeInfo(message);
             udpSocket.SendTo(data, data.Length, SocketFlags.None, clientEP);
         }
         catch (Exception e)

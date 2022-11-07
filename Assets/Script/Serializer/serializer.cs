@@ -7,32 +7,11 @@ using System.Text;
 using System.Xml;
 using System.Xml.Serialization;
 
-public class serializer : MonoBehaviour
+public static class serializer
 {
     static MemoryStream stream;
-    bool a = true;
     // Start is called before the first frame update
-    void Start()
-    {
-
-    }
-
-
-
-    // Update is called once per frame
-    void Update()
-    {
-        if (a)
-        {
-            serialize();
-            deserialize();
-            serializeJson();
-            deserializeJson();
-            serializeXML();
-            deserializeXML();
-            a = false;
-        }
-    }
+    
 
     public class testClass
     {
@@ -40,7 +19,7 @@ public class serializer : MonoBehaviour
         public List<int> pos = new List<int> { 3, 3, 3 };
     }
 
-    void serializeJson()
+    static void serializeJson()
     {
         var t = new testClass();
         t.hp = 40;
@@ -50,7 +29,7 @@ public class serializer : MonoBehaviour
         BinaryWriter writer = new BinaryWriter(stream);
         writer.Write(json);
     }
-    void deserializeJson()
+    static void deserializeJson()
     {
         var t = new testClass();
         BinaryReader reader = new BinaryReader(stream);
@@ -62,7 +41,7 @@ public class serializer : MonoBehaviour
         Debug.Log(t.hp.ToString() + " " + t.pos.ToString());
     }
 
-    void serializeXML()
+    static void serializeXML()
     {
         var t = new testClass();
         t.hp = 40;
@@ -73,7 +52,7 @@ public class serializer : MonoBehaviour
         bytes = stream.ToArray();
 
     }
-    void deserializeXML()
+    static void deserializeXML()
     {
         XmlSerializer serializer = new XmlSerializer(typeof(testClass));
         var t = new testClass();
@@ -83,8 +62,8 @@ public class serializer : MonoBehaviour
         t = (testClass)serializer.Deserialize(stream);
         Debug.Log("Xml " + t.hp.ToString() + " " + t.pos.ToString());
     }
-    byte[] bytes;
-    void serialize()
+    static byte[] bytes;
+    static void serialize()
     {
         double myfloat = 100f;
         int myint = 15;
@@ -103,7 +82,30 @@ public class serializer : MonoBehaviour
         bytes = stream.ToArray();
     }
 
-    void deserialize()
+    public static byte[] SerializeInfo(string message)
+    {
+        string mystring = message;
+        stream = new MemoryStream();
+        BinaryWriter writer = new BinaryWriter(stream);
+        writer.Write(mystring);
+        bytes = stream.ToArray();
+        Debug.Log("Serialized Message!");
+        return bytes;
+    }
+
+    public static string DeserializeInfo(byte[] bytes)
+    {
+        stream = new MemoryStream();
+        stream.Write(bytes, 0, bytes.Length);
+        BinaryReader reader = new BinaryReader(stream);
+        stream.Seek(0, SeekOrigin.Begin);
+
+        string newstring = reader.ReadString();
+
+        return newstring;
+    }
+
+    static void deserialize()
     {
         stream = new MemoryStream();
         stream.Write(bytes, 0, bytes.Length);

@@ -90,7 +90,7 @@ public class TCPClient : MonoBehaviour
         //receive
         data = new byte[1024];
         recv = Socket.Receive(data);
-        messageDecoded = Encoding.Default.GetString(data, 0, recv);
+        messageDecoded = serializer.DeserializeInfo(data);
         Debug.Log("CLIENT Data from server: " + Encoding.Default.GetString(data, 0, recv));
 
     }
@@ -101,7 +101,7 @@ public class TCPClient : MonoBehaviour
         try
         {
             Debug.Log("CLIENT Sending to server: " + serverIPEP.ToString() + " Message: " + message);
-            data = Encoding.Default.GetBytes(message);
+            data = serializer.SerializeInfo(message);
             Socket.Send(data, data.Length, SocketFlags.None);
         }
         catch (Exception e)

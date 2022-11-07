@@ -103,7 +103,7 @@ public class TCPServer : MonoBehaviour
                 //RECEIVE DATA
                 recv = clientSocket.Receive(data);
                 Debug.Log("SERVER Client Message: " + Encoding.Default.GetString(data, 0, recv));
-                messageDecoded = Encoding.Default.GetString(data, 0, recv);
+                messageDecoded = serializer.DeserializeInfo(data);
             }
             catch (Exception e)
             {
