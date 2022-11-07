@@ -59,6 +59,8 @@ public class TCPClient : MonoBehaviour
         if (port != 0)
             serverPort = port;
 
+        Debug.Log("Connected To Server!");
+
         InitSocket();
         InitThread();
     }

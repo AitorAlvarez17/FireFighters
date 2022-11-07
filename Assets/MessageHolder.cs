@@ -7,6 +7,7 @@ using TMPro;
 public class MessageHolder : MonoBehaviour
 {
     public TextMeshProUGUI message;
+    public TextMeshProUGUI username;
     // Start is called before the first frame update
     void Start()
     {
@@ -19,8 +20,9 @@ public class MessageHolder : MonoBehaviour
         
     }
 
-    public void SetMessage(string _message)
+    public void SetMessage(string _message, string _username)
     {
         message.text = _message;
+        username.text += _username;
     }
 }

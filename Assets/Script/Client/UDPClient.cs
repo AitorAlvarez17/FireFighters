@@ -28,11 +28,18 @@ public class UDPClient : MonoBehaviour
     private IPEndPoint serverIPEP;
     private EndPoint serverEP;
 
+    public Player thisPlayer;
+
     //instanciation both variables
     void Start()
     {
         serverIP = ServerController.MyServerInstance.IPServer;
         serverPort = ServerController.MyServerInstance.serverPort;
+    }
+
+    public void Awake()
+    {
+        //PlayerManager.AddPlayer();
     }
 
     //closing both the socket and the thread on exit and all coroutines
@@ -55,7 +62,7 @@ public class UDPClient : MonoBehaviour
             serverIP = ip;
         if (port != 0)
             serverPort = port;
-        
+
         InitSocket();
         InitThread();
     }
@@ -81,7 +88,11 @@ public class UDPClient : MonoBehaviour
         serverIPEP = new IPEndPoint(ipAddress, serverPort);
         serverEP = (EndPoint)serverIPEP;
 
-        SendString("This is a message from the client");
+        SendString("Hi! I just connected...");
+
+        thisPlayer = new Player("Player" + PlayerManager.playersOnline.ToString(), true );
+        PlayerManager.AddPlayer(thisPlayer);
+        PlayerManager.playerDirty = true;
 
         // Receive from server
         try

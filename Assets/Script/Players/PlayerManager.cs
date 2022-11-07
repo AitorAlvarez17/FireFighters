@@ -5,47 +5,47 @@ using TMPro;
 using UnityEngine.UI;
 using System;
 
-public class PlayerManager : MonoBehaviour
+public class Player
 {
+    public string username;
+    public bool onLine;
 
-    [Serializable]
-    public class Player
+    public Player(string _username, bool onLine)
     {
-        public string username;
-        public bool onLine;
+        this.username = _username;
+        this.onLine = onLine;
     }
+}
 
+
+
+public static class PlayerManager
+{
     [SerializeField]
-    public Dictionary<int, Player> Players = new Dictionary<int, Player>();
+    public static Dictionary<int, Player> Players = new Dictionary<int, Player>();
 
-    private bool playersDirty;
+    private static bool playersDirty;
 
-    public bool serverDirty;
-    public bool playerDirty;
+    public static bool serverDirty;
+    public static bool playerDirty;
 
-    private int playersOnline = 1;
+    public static int playersOnline = 0;
 
 
     // Start is called before the first frame update
-    void Start()
+    
+    public static void AddPlayer(Player newPlayer)
     {
-        AddPlayer(playersOnline);
+        playersOnline++;
+        Players.Add(playersOnline, newPlayer);
+        serverDirty = true;
     }
-
-    // Update is called once per frame
-    void Update()
-    {
-        
-    }
-
-    public void AddPlayer(int playersOnline)
-    {
-        //Players.Add(playersOnline, )
-    }
-    public void JoinPlayer(string username)
+    public static void JoinPlayer(string username)
     {
         playersDirty = true;
         playerDirty = true;
 
     }
+
+
 }
