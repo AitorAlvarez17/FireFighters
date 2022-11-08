@@ -93,6 +93,19 @@ public static class serializer
         return bytes;
     }
 
+    public static byte[] SerializeMessage(Message _message)
+    {
+        string message = _message.message;
+        string username = _message.username;
+        stream = new MemoryStream();
+        BinaryWriter writer = new BinaryWriter(stream);
+        writer.Write(message);
+        writer.Write(username);
+        bytes = stream.ToArray();
+        Debug.Log("Serialized Message!");
+        return bytes;
+    }
+
     public static string DeserializeInfo(byte[] bytes)
     {
         stream = new MemoryStream();
@@ -103,6 +116,21 @@ public static class serializer
         string newstring = reader.ReadString();
 
         return newstring;
+    }
+
+    public static Message DeserializeMessage(byte[] bytes)
+    {
+        stream = new MemoryStream();
+        stream.Write(bytes, 0, bytes.Length);
+        BinaryReader reader = new BinaryReader(stream);
+        stream.Seek(0, SeekOrigin.Begin);
+
+        string message = reader.ReadString();
+        string username = reader.ReadString();
+
+        Message newMessage = new Message(message, username);
+
+        return newMessage;
     }
 
     static void deserialize()

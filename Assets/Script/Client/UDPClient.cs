@@ -18,7 +18,8 @@ public class UDPClient : MonoBehaviour
     private byte[] data = new byte[1024];
 
     // Message decoded for rendering on screen
-    public string messageDecoded = null;
+    public string messageDecoded = "";
+    public Message message = new Message(null, "");
 
     //declare thread and socket
     private Thread clientThread;
@@ -91,6 +92,7 @@ public class UDPClient : MonoBehaviour
         SendString("Hi! I just connected...");
 
         thisPlayer = new Player("Player" + PlayerManager.playersOnline.ToString(), true );
+        message.SetUsername(thisPlayer.username);
         PlayerManager.AddPlayer(thisPlayer);
         PlayerManager.playerDirty = true;
 
@@ -98,7 +100,7 @@ public class UDPClient : MonoBehaviour
         try
         {
             recv = udpSocket.Receive(data);
-            messageDecoded = serializer.DeserializeInfo(data);
+            message = serializer.DeserializeMessage(data);
             Debug.Log("[CLIENT] Received: " + Encoding.Default.GetString(data, 0, recv));
         }
         catch (Exception e)
@@ -108,12 +110,13 @@ public class UDPClient : MonoBehaviour
     }
 
     //Main communication funtion. It sends strings when called
-    public void SendString(string message)
+    public void SendString(string _message)
     {
         try
         {
-            Debug.Log("[CLIENT] Sending to server: " + serverIPEP.ToString() + " Message: " + message);
-            data = serializer.SerializeInfo(message);
+            message.SetMessage(_message);
+            Debug.Log("[CLIENT] Sending to server: " + serverIPEP.ToString() + " Message: " + _message);
+            data = serializer.SerializeMessage(message);
             recv = udpSocket.SendTo(data, data.Length, SocketFlags.None, serverEP);
         }
         catch (Exception e)

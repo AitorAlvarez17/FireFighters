@@ -23,6 +23,7 @@ public class UDPServer : MonoBehaviour
 
     // Message decoded for rendering on screen
     public string messageDecoded = null;
+    public Message message = new Message(null, "");
 
     //declare Client's endpoint
     private IPEndPoint clientIPEP;
@@ -97,7 +98,7 @@ public class UDPServer : MonoBehaviour
             recv = udpSocket.ReceiveFrom(data, ref clientEP);
             Debug.Log("SERVER Message received from " + clientEP.ToString() + ": " + Encoding.Default.GetString(data, 0, recv));
             Debug.Log("Receiving Message from Try Section!");
-            messageDecoded = serializer.DeserializeInfo(data);
+            message = serializer.DeserializeMessage(data);
         }
         catch (Exception e)
         {
@@ -109,18 +110,19 @@ public class UDPServer : MonoBehaviour
         {
             recv = udpSocket.ReceiveFrom(data, ref clientEP);
             Debug.Log("Receiving Message from While Section!");
-            messageDecoded = serializer.DeserializeInfo(data);
+            message = serializer.DeserializeMessage(data);
             SendData("received message");
         }
     }
 
     //Main communication funtion. It sends strings when called
-    private void SendData(string message)
+    private void SendData(string _message)
     {
         try
         {
-            Debug.Log("SERVER Sending message to " + clientEP.ToString() + ": " + message);
-            data = serializer.SerializeInfo(message);
+            message.SetMessage(_message);
+            Debug.Log("SERVER Sending message to " + clientEP.ToString() + ": " + _message);
+            data = serializer.SerializeMessage(message);
             udpSocket.SendTo(data, data.Length, SocketFlags.None, clientEP);
         }
         catch (Exception e)
