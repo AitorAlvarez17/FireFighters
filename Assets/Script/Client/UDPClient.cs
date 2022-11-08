@@ -91,7 +91,7 @@ public class UDPClient : MonoBehaviour
 
         SendString("Hi! I just connected...");
 
-        thisPlayer = new Player("Player" + PlayerManager.playersOnline.ToString(), true );
+        thisPlayer = new Player("Player" + PlayerManager.playersOnline.ToString(), true);
         message.SetUsername(thisPlayer.username);
         PlayerManager.AddPlayer(thisPlayer);
         PlayerManager.playerDirty = true;
@@ -101,7 +101,7 @@ public class UDPClient : MonoBehaviour
         {
             recv = udpSocket.Receive(data);
             message = serializer.DeserializeMessage(data);
-            Debug.Log("[CLIENT] Received: " + Encoding.Default.GetString(data, 0, recv));
+            Debug.Log("[CLIENT] Received: " + " Message: " + serializer.DeserializeMessage(data).message + " Username: " + serializer.DeserializeMessage(data).username);
         }
         catch (Exception e)
         {
@@ -115,7 +115,7 @@ public class UDPClient : MonoBehaviour
         try
         {
             message.SetMessage(_message);
-            Debug.Log("[CLIENT] Sending to server: " + serverIPEP.ToString() + " Message: " + _message);
+            Debug.Log("[CLIENT] Sending to server: " + serverIPEP.ToString() + " Message: " + _message + "From:" + message.username);
             data = serializer.SerializeMessage(message);
             recv = udpSocket.SendTo(data, data.Length, SocketFlags.None, serverEP);
         }

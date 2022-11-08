@@ -95,10 +95,14 @@ public static class serializer
 
     public static byte[] SerializeMessage(Message _message)
     {
+
         string message = _message.message;
         string username = _message.username;
         stream = new MemoryStream();
         BinaryWriter writer = new BinaryWriter(stream);
+        //Header
+        writer.Write("/>Message:");
+        //Info
         writer.Write(message);
         writer.Write(username);
         bytes = stream.ToArray();
@@ -125,10 +129,16 @@ public static class serializer
         BinaryReader reader = new BinaryReader(stream);
         stream.Seek(0, SeekOrigin.Begin);
 
+        //Header
+        string header = reader.ReadString();
+        Debug.Log("Deserialize(): Header is " + header);
+        //Info
         string message = reader.ReadString();
         string username = reader.ReadString();
 
         Message newMessage = new Message(message, username);
+
+        bytes = null;
 
         return newMessage;
     }

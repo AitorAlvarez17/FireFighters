@@ -90,7 +90,7 @@ public class ServerController : MonoBehaviour
             if (serverParent.GetComponent<TCPClient>().messageDecoded != null)
             {
                 Debug.Log("Message checked and creating...!: " + serverParent.GetComponent<TCPClient>().messageDecoded);
-                CreateMessage(serverParent.GetComponent<TCPClient>().messageDecoded, "not implemented");
+                //CreateMessage(serverParent.GetComponent<TCPClient>().messageDecoded);
                 serverParent.GetComponent<TCPClient>().messageDecoded = null;
                 //print the messages that has been created
             }
@@ -103,7 +103,7 @@ public class ServerController : MonoBehaviour
             if (serverParent.GetComponent<TCPServer>().messageDecoded != null)
             {
                 Debug.Log("Message checked and creating...!" + serverParent.GetComponent<TCPServer>().messageDecoded);
-                CreateMessage(serverParent.GetComponent<TCPServer>().messageDecoded, "Server");
+                //CreateMessage(serverParent.GetComponent<TCPServer>().messageDecoded, "Server");
                 serverParent.GetComponent<TCPServer>().messageDecoded = null;
                 //print the messages that has been created
             }
@@ -114,10 +114,10 @@ public class ServerController : MonoBehaviour
             PlayerActions();
             if (serverParent.GetComponent<UDPClient>().message != null && serverParent.GetComponent<UDPClient>().message.message != null)
             {
-                Debug.Log("Message checked and creating...!: " + serverParent.GetComponent<UDPClient>().messageDecoded);
+                Debug.Log("Message checked and creating...!: " + serverParent.GetComponent<UDPClient>().message.message + "From:" + serverParent.GetComponent<UDPClient>().message.username);
                 //Later on take it from PlayerManager! Now just hard-took it for debug purposes.
                 //You can easily acces to the player with the key (index) of it
-                CreateMessage(serverParent.GetComponent<UDPClient>().message.message, "Server");
+                CreateMessage(serverParent.GetComponent<UDPClient>().message);
                 serverParent.GetComponent<UDPClient>().message.SetMessage(null);
                 //print the messages that has been created
             }
@@ -128,8 +128,8 @@ public class ServerController : MonoBehaviour
             ServerActions();
             if (serverParent.GetComponent<UDPServer>().message != null && serverParent.GetComponent<UDPServer>().message.message != null)
             {
-                Debug.Log("Message checked and creating:" + serverParent.GetComponent<UDPServer>().messageDecoded);
-                CreateMessage(serverParent.GetComponent<UDPServer>().message.message, serverParent.GetComponent<UDPServer>().message.username);
+                Debug.Log("Message checked and creating:" + serverParent.GetComponent<UDPServer>().message.message + " From: " + serverParent.GetComponent<UDPServer>().message.username);
+                CreateMessage(serverParent.GetComponent<UDPServer>().message);
                 serverParent.GetComponent<UDPServer>().message.SetMessage(null);
                 //print the messages that has been created
             }
@@ -157,14 +157,8 @@ public class ServerController : MonoBehaviour
         }
     }
     //called when creating a server to be shown on screen.
-    public void CreateMessage(string _message, string _username)
-    {
-        GameObject newMessage = new GameObject();
-        newMessage = Instantiate(messgePrefab, Vector3.zero, Quaternion.identity, chatBillboard.transform);
-        newMessage.GetComponent<MessageHolder>().SetMessage(_message, _username);
-    }
 
-    public void CreateMessage(Message _Message, string _username)
+    public void CreateMessage(Message _Message)
     {
         GameObject newMessage = new GameObject();
         newMessage = Instantiate(messgePrefab, Vector3.zero, Quaternion.identity, chatBillboard.transform);

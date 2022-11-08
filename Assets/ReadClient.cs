@@ -6,7 +6,7 @@ public class ReadClient : MonoBehaviour
 {
     [HideInInspector]
     public string clientInput;
-    bool ipSent = false;
+    public bool ipSent = false;
 
     public void ReadInputIP(string input)
     {

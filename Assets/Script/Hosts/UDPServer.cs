@@ -15,7 +15,7 @@ public class UDPServer : MonoBehaviour
 
     //Data matrix and number of bytes
     private int recv;
-    private byte[] data = new byte[1024];
+    //private byte[] data = new byte[1024];
 
     //declare thread and socket
     private Thread serverThread;
@@ -23,7 +23,7 @@ public class UDPServer : MonoBehaviour
 
     // Message decoded for rendering on screen
     public string messageDecoded = null;
-    public Message message = new Message(null, "");
+    public Message message = new Message(null, "Server");
 
     //declare Client's endpoint
     private IPEndPoint clientIPEP;
@@ -95,10 +95,11 @@ public class UDPServer : MonoBehaviour
         //listens for a connection, if not debugs
         try
         {
-            recv = udpSocket.ReceiveFrom(data, ref clientEP);
-            Debug.Log("SERVER Message received from " + clientEP.ToString() + ": " + Encoding.Default.GetString(data, 0, recv));
+            byte[] dataTMP = new byte[1024];
+            recv = udpSocket.ReceiveFrom(dataTMP, ref clientEP);
+            Debug.Log("SERVER Message received from " + clientEP.ToString() + ": Message: " + serializer.DeserializeMessage(dataTMP).message + " Username: " + serializer.DeserializeMessage(dataTMP).username);
             Debug.Log("Receiving Message from Try Section!");
-            message = serializer.DeserializeMessage(data);
+            message = serializer.DeserializeMessage(dataTMP);
         }
         catch (Exception e)
         {
@@ -108,22 +109,27 @@ public class UDPServer : MonoBehaviour
         //loops the receive system. Messy but functional
         while (true)// Look at Promises, Async, Await
         {
-            recv = udpSocket.ReceiveFrom(data, ref clientEP);
+            byte[] dataTMP = new byte[1024];
+            //Carefull with this, there is a bug because we fullfill the byte[] buffer
+            string s = BitConverter.ToString(dataTMP);
+            //Debug.Log("Bytes: " + s);
+            recv = udpSocket.ReceiveFrom(dataTMP, ref clientEP);
             Debug.Log("Receiving Message from While Section!");
-            message = serializer.DeserializeMessage(data);
-            SendData("received message");
+            message = serializer.DeserializeMessage(dataTMP);
+            SendData(message);
         }
     }
 
     //Main communication funtion. It sends strings when called
-    private void SendData(string _message)
+    private void SendData(Message _message)
     {
         try
         {
-            message.SetMessage(_message);
-            Debug.Log("SERVER Sending message to " + clientEP.ToString() + ": " + _message);
-            data = serializer.SerializeMessage(message);
-            udpSocket.SendTo(data, data.Length, SocketFlags.None, clientEP);
+            byte[] dataTMP = new byte[1024];
+            //message.SetMessage(_message);
+            Debug.Log("SERVER Sending message to " + clientEP.ToString() + ": " + _message.message);
+            dataTMP = serializer.SerializeMessage(message);
+            udpSocket.SendTo(dataTMP, dataTMP.Length, SocketFlags.None, clientEP);
         }
         catch (Exception e)
         {
