@@ -31,6 +31,9 @@ public class UDPClient : MonoBehaviour
 
     public Player thisPlayer;
 
+    //Debug Purposes
+    public int playerId = -1;
+
     //instanciation both variables
     void Start()
     {
@@ -43,6 +46,24 @@ public class UDPClient : MonoBehaviour
         //PlayerManager.AddPlayer();
     }
 
+    private void Update()
+    {
+        if (message != null && message.message != null)
+        {
+            Debug.Log("Message checked and creating...!: " + message.message + "From:" + message.username);
+            //Later on take it from PlayerManager! Now just hard-took it for debug purposes.
+            //You can easily acces to the player with the key (index) of it
+            CreateMessage(message);
+            message.SetMessage(null);
+            //print the messages that has been created
+        }
+    }
+    public void CreateMessage(Message _Message)
+    {
+        GameObject newMessage = new GameObject();
+        newMessage = Instantiate(this.gameObject.GetComponent<ServerController>().messgePrefab, Vector3.zero, Quaternion.identity, this.gameObject.GetComponent<ServerController>().chatBillboard.transform);
+        newMessage.GetComponent<MessageHolder>().SetMessage(_Message.message, _Message.username);
+    }
     //closing both the socket and the thread on exit and all coroutines
     private void OnDisable()
     {
@@ -89,12 +110,13 @@ public class UDPClient : MonoBehaviour
         serverIPEP = new IPEndPoint(ipAddress, serverPort);
         serverEP = (EndPoint)serverIPEP;
 
-        SendString("Hi! I just connected...");
-
-        thisPlayer = new Player("Player" + PlayerManager.playersOnline.ToString(), true);
+        //Really good place for name personalization
+        thisPlayer = PlayerManager.AddPlayer("Player");
         message.SetUsername(thisPlayer.username);
-        PlayerManager.AddPlayer(thisPlayer);
+        playerId = thisPlayer.id;
         PlayerManager.playerDirty = true;
+
+        SendString("Hi! I just connected...");
 
         // Receive from server
         try

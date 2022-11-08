@@ -112,27 +112,13 @@ public class ServerController : MonoBehaviour
         if (serverParent.GetComponent<UDPClient>() != null)
         {
             PlayerActions();
-            if (serverParent.GetComponent<UDPClient>().message != null && serverParent.GetComponent<UDPClient>().message.message != null)
-            {
-                Debug.Log("Message checked and creating...!: " + serverParent.GetComponent<UDPClient>().message.message + "From:" + serverParent.GetComponent<UDPClient>().message.username);
-                //Later on take it from PlayerManager! Now just hard-took it for debug purposes.
-                //You can easily acces to the player with the key (index) of it
-                CreateMessage(serverParent.GetComponent<UDPClient>().message);
-                serverParent.GetComponent<UDPClient>().message.SetMessage(null);
-                //print the messages that has been created
-            }
+            
         }
 
         if (serverParent.GetComponent<UDPServer>() != null)
         {
             ServerActions();
-            if (serverParent.GetComponent<UDPServer>().message != null && serverParent.GetComponent<UDPServer>().message.message != null)
-            {
-                Debug.Log("Message checked and creating:" + serverParent.GetComponent<UDPServer>().message.message + " From: " + serverParent.GetComponent<UDPServer>().message.username);
-                CreateMessage(serverParent.GetComponent<UDPServer>().message);
-                serverParent.GetComponent<UDPServer>().message.SetMessage(null);
-                //print the messages that has been created
-            }
+            
         }
 
         
@@ -143,7 +129,7 @@ public class ServerController : MonoBehaviour
     {
         if (PlayerManager.playerDirty == true)
         {
-            clientName.text = serverParent.GetComponent<UDPClient>().thisPlayer.username;
+            //clientName.text = serverParent.GetComponent<UDPClient>().thisPlayer.username;
             //clientIndex.text = serverParent.GetComponent<UDPClient>().thisPlayer.onLine;
             PlayerManager.playerDirty = false;
         }
@@ -152,7 +138,7 @@ public class ServerController : MonoBehaviour
     {
         if (PlayerManager.serverDirty == true)
         {
-            numberOfPlayers.text = "Number of Players: " + PlayerManager.playersOnline;
+            //numberOfPlayers.text = "Number of Players: " + PlayerManager.playersOnline;
             PlayerManager.serverDirty = false;
         }
     }

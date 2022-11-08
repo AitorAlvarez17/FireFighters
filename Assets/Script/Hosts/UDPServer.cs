@@ -39,6 +39,22 @@ public class UDPServer : MonoBehaviour
         StartServer();
     }
 
+    private void Update()
+    {
+        if (message != null && message.message != null)
+        {
+            Debug.Log("Message checked and creating:" + message.message + " From: " + message.username);
+            CreateMessage(message);
+            message.SetMessage(null);
+            //print the messages that has been created
+        }
+    }
+    public void CreateMessage(Message _Message)
+    {
+        GameObject newMessage = new GameObject();
+        newMessage = Instantiate(this.gameObject.GetComponent<ServerController>().messgePrefab, Vector3.zero, Quaternion.identity, this.gameObject.GetComponent<ServerController>().chatBillboard.transform);
+        newMessage.GetComponent<MessageHolder>().SetMessage(_Message.message, _Message.username);
+    }
     //closing both the socket and the thread on exit and all coroutines
     private void OnDisable()
     {

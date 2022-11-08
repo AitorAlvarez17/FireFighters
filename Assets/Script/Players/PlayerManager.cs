@@ -9,11 +9,12 @@ public class Player
 {
     public string username;
     public bool onLine;
-
-    public Player(string _username, bool onLine)
+    public int id;
+    public Player(string _username, bool onLine, int _id)
     {
         this.username = _username;
         this.onLine = onLine;
+        this.id = _id;
     }
 }
 
@@ -34,11 +35,17 @@ public static class PlayerManager
 
     // Start is called before the first frame update
     
-    public static void AddPlayer(Player newPlayer)
+    public static Player AddPlayer(string name)
     {
         playersOnline++;
+        Player newPlayer = new Player(name + playersOnline.ToString(), true, playersOnline);
+        Debug.Log("New Player Added!");
+        newPlayer.id = playersOnline;
         Players.Add(playersOnline, newPlayer);
+        
         serverDirty = true;
+
+        return newPlayer;
     }
     public static void JoinPlayer(string username)
     {
