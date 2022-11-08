@@ -166,4 +166,45 @@ public static class serializer
 
 
     }
+
+    public static byte[] SerializePlayerInfo(float[] positions)
+    {
+        float[] mylist = positions;
+        
+        stream = new MemoryStream();
+        BinaryWriter writer = new BinaryWriter(stream);
+        //Header
+        writer.Write("/>PlayerInfo:");
+        //Info
+        foreach (var i in mylist)
+        {
+            writer.Write(i);
+        }
+        bytes = stream.ToArray();
+        Debug.Log("Serialized Info!");
+        return bytes;
+    }
+
+    public static float[] DeserializePlayerInfo(byte[] bytes)
+    {
+        stream = new MemoryStream();
+        stream.Write(bytes, 0, bytes.Length);
+        BinaryReader reader = new BinaryReader(stream);
+        stream.Seek(0, SeekOrigin.Begin);
+
+        //Header
+        string header = reader.ReadString();
+        Debug.Log("Deserialize(): Header is " + header);
+        //Info
+        float[] newlist = new float[3];
+        for (int i = 0; i < newlist.Length; i++)
+        {
+            newlist[i] = reader.ReadInt32();
+        }
+
+        bytes = null;
+
+        return newlist;
+    }
+
 }

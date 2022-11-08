@@ -23,10 +23,10 @@ public class ReadClient : MonoBehaviour
             switch (ServerController.MyServerInstance.GetSocketType)
             {
                 case ServerController.SocketTypeProtocol.TCP:
-                    GameObject.Find("ClientManager").GetComponent<TCPClient>().ConnectToServer(clientInput);
+                    this.gameObject.GetComponent<TCPClient>().ConnectToServer(clientInput);
                     break;
                 case ServerController.SocketTypeProtocol.UDP:
-                    GameObject.Find("ClientManager").GetComponent<UDPClient>().ConnectToServer(clientInput);
+                    this.gameObject.GetComponent<UDPClient>().ConnectToServer(clientInput);
                     break;
                 default:
                     Debug.Log("Invalid protocol");
@@ -39,10 +39,10 @@ public class ReadClient : MonoBehaviour
             switch (ServerController.MyServerInstance.GetSocketType)
             {
                 case ServerController.SocketTypeProtocol.TCP:
-                    GameObject.Find("ClientManager").GetComponent<TCPClient>().SendString(clientInput);
+                    this.gameObject.GetComponent<TCPClient>().SendString(clientInput);
                     break;
                 case ServerController.SocketTypeProtocol.UDP:
-                    GameObject.Find("ClientManager").GetComponent<UDPClient>().SendString(clientInput);
+                    this.gameObject.GetComponent<UDPClient>().SendString(clientInput);
                     break;
                 default:
                     Debug.Log("Invalid protocol");

@@ -111,7 +111,7 @@ public class ServerController : MonoBehaviour
 
         if (serverParent.GetComponent<UDPClient>() != null)
         {
-            PlayerActions();
+            //PlayerActions();
             
         }
 
@@ -125,15 +125,15 @@ public class ServerController : MonoBehaviour
     }
 
     //we do this here as it is object-centered and we need a Monobehavioural script with reference to the exact client-player reference.
-    private void PlayerActions()
-    {
-        if (PlayerManager.playerDirty == true)
-        {
-            //clientName.text = serverParent.GetComponent<UDPClient>().thisPlayer.username;
-            //clientIndex.text = serverParent.GetComponent<UDPClient>().thisPlayer.onLine;
-            PlayerManager.playerDirty = false;
-        }
-    }
+    //private void PlayerActions()
+    //{
+    //    if (PlayerManager.playerDirty == true)
+    //    {
+    //        clientName.text = this.gameObject.GetComponent<UDPClient>().thisPlayer.username + " " + this.gameObject.GetComponent<UDPClient>().thisPlayer.id;
+    //        //clientIndex.text = serverParent.GetComponent<UDPClient>().thisPlayer.onLine;
+    //        PlayerManager.playerDirty = false;
+    //    }
+    //}
     private void ServerActions()
     {
         if (PlayerManager.serverDirty == true)

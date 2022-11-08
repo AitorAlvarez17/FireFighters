@@ -5,6 +5,7 @@ using UnityEngine;
 public class PlayerMovement : MonoBehaviour
 {
     public GameObject player;
+    public float speed;
     // Start is called before the first frame update
     void Start()
     {
@@ -13,22 +14,40 @@ public class PlayerMovement : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if (Input.GetKey(KeyCode.W))
+        if (this.gameObject.GetComponent<UDPClient>().thisPlayer != null && this.gameObject.GetComponent<UDPClient>().thisPlayer.onLine == true)
         {
-            player.transform.position += new Vector3(0, 0, 5 * Time.deltaTime);
-        }
-        if (Input.GetKey(KeyCode.S))
-        {
-            player.transform.position += new Vector3(0, 0, -5 * Time.deltaTime);
-        }
-        if (Input.GetKey(KeyCode.A))
-        {
-            player.transform.position += new Vector3(-5 * Time.deltaTime, 0, 0);
-        }
-        if (Input.GetKey(KeyCode.D))
-        {
-            player.transform.position += new Vector3(5 * Time.deltaTime, 0, 0);
-        }
+            if (Input.GetKey(KeyCode.W))
+            {
+                //Z+
+                player.transform.position += new Vector3(0, 0, 5 * Time.deltaTime * speed);
+                PlayerManager.Players[this.gameObject.GetComponent<UDPClient>().playerKey].positions[2] = player.transform.position.z;
+                this.gameObject.GetComponent<UDPClient>().PingMovement();
 
+            }
+            if (Input.GetKey(KeyCode.S))
+            {
+                //Z-
+                player.transform.position += new Vector3(0, 0, -5 * Time.deltaTime * speed);
+                PlayerManager.Players[this.gameObject.GetComponent<UDPClient>().playerKey].positions[2] = player.transform.position.z;
+                this.gameObject.GetComponent<UDPClient>().PingMovement();
+
+            }
+            if (Input.GetKey(KeyCode.A))
+            {
+                //X-
+                player.transform.position += new Vector3(-5 * Time.deltaTime * speed, 0, 0);
+                PlayerManager.Players[this.gameObject.GetComponent<UDPClient>().playerKey].positions[0] = player.transform.position.x;
+                this.gameObject.GetComponent<UDPClient>().PingMovement();
+
+            }
+            if (Input.GetKey(KeyCode.D))
+            {
+                //X+
+                player.transform.position += new Vector3(5 * Time.deltaTime * speed, 0, 0);
+                PlayerManager.Players[this.gameObject.GetComponent<UDPClient>().playerKey].positions[0] = player.transform.position.x;
+                this.gameObject.GetComponent<UDPClient>().PingMovement();
+
+            }
+        }
     }
 }

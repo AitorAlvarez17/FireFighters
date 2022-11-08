@@ -32,7 +32,7 @@ public class UDPClient : MonoBehaviour
     public Player thisPlayer;
 
     //Debug Purposes
-    public int playerId = -1;
+    public int playerKey = -1;
 
     //instanciation both variables
     void Start()
@@ -55,6 +55,8 @@ public class UDPClient : MonoBehaviour
             //You can easily acces to the player with the key (index) of it
             CreateMessage(message);
             message.SetMessage(null);
+
+            PlayerActions(message.username);
             //print the messages that has been created
         }
     }
@@ -63,6 +65,15 @@ public class UDPClient : MonoBehaviour
         GameObject newMessage = new GameObject();
         newMessage = Instantiate(this.gameObject.GetComponent<ServerController>().messgePrefab, Vector3.zero, Quaternion.identity, this.gameObject.GetComponent<ServerController>().chatBillboard.transform);
         newMessage.GetComponent<MessageHolder>().SetMessage(_Message.message, _Message.username);
+    }
+    private void PlayerActions(string username)
+    {
+        if (thisPlayer.dirty == true)
+        {
+            this.gameObject.GetComponent<ServerController>().clientName.text = this.gameObject.GetComponent<UDPClient>().thisPlayer.username;
+            //clientIndex.text = serverParent.GetComponent<UDPClient>().thisPlayer.onLine;
+            thisPlayer.dirty = false;
+        }
     }
     //closing both the socket and the thread on exit and all coroutines
     private void OnDisable()
@@ -113,8 +124,8 @@ public class UDPClient : MonoBehaviour
         //Really good place for name personalization
         thisPlayer = PlayerManager.AddPlayer("Player");
         message.SetUsername(thisPlayer.username);
-        playerId = thisPlayer.id;
-        PlayerManager.playerDirty = true;
+        playerKey = thisPlayer.id;
+        thisPlayer.dirty = true;
 
         SendString("Hi! I just connected...");
 
@@ -145,5 +156,21 @@ public class UDPClient : MonoBehaviour
         {
             Debug.Log("[CLIENT] Failed to send message. Error: " + e.ToString());
         }
+    }
+
+    public void PingMovement()
+    {
+        Debug.Log("Position on X in Player Class: " + thisPlayer.positions[0]);
+        Debug.Log("Position on Z in Player Class: " + thisPlayer.positions[2]);
+        //try
+        //{
+        //    Debug.Log("[CLIENT] Sending to server: " + serverIPEP.ToString() + "Position");
+        //    data = serializer.SerializePlayerInfo(thisPlayer.positions);
+        //    recv = udpSocket.SendTo(data, data.Length, SocketFlags.None, serverEP);
+        //}
+        //catch (Exception e)
+        //{
+        //    Debug.Log("[CLIENT] Failed to send message. Error: " + e.ToString());
+        //}
     }
 }

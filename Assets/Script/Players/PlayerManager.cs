@@ -10,15 +10,17 @@ public class Player
     public string username;
     public bool onLine;
     public int id;
+    public bool dirty;
+    public float[] positions = new float[3] { 0, 0, 0 };
     public Player(string _username, bool onLine, int _id)
     {
         this.username = _username;
         this.onLine = onLine;
         this.id = _id;
+        this.dirty = false;
+        
     }
 }
-
-
 
 public static class PlayerManager
 {
@@ -47,11 +49,12 @@ public static class PlayerManager
 
         return newPlayer;
     }
+
+
     public static void JoinPlayer(string username)
     {
         playersDirty = true;
         playerDirty = true;
-
     }
 
 
