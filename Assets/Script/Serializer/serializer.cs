@@ -106,7 +106,7 @@ public static class serializer
         writer.Write(message);
         writer.Write(username);
         bytes = stream.ToArray();
-        Debug.Log("Serialized Message!");
+        //Debug.Log("Serialized Message!");
         return bytes;
     }
 
@@ -131,7 +131,7 @@ public static class serializer
 
         //Header
         string header = reader.ReadString();
-        Debug.Log("Deserialize(): Header is " + header);
+        //Debug.Log("Deserialize(): Header is " + header);
         //Info
         string message = reader.ReadString();
         string username = reader.ReadString();

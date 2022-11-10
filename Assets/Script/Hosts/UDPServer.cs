@@ -29,6 +29,8 @@ public class UDPServer : MonoBehaviour
     private IPEndPoint clientIPEP;
     private EndPoint clientEP;
 
+    public List<IPEndPoint> UDPClientList = new List<IPEndPoint>();
+
     //instanciation both variables and starts server
     void Start()
     {
@@ -113,15 +115,28 @@ public class UDPServer : MonoBehaviour
         {
             byte[] dataTMP = new byte[1024];
             recv = udpSocket.ReceiveFrom(dataTMP, ref clientEP);
-            Debug.Log("SERVER Message received from " + clientEP.ToString() + ": Message: " + serializer.DeserializeMessage(dataTMP).message + " Username: " + serializer.DeserializeMessage(dataTMP).username);
-            Debug.Log("Receiving Message from Try Section!");
+            //Debug.Log("SERVER Message received from " + clientEP.ToString() + ": Message: " + serializer.DeserializeMessage(dataTMP).message + " Username: " + serializer.DeserializeMessage(dataTMP).username);
+            Debug.Log("Socket listen for connection");
+
+            //if (!UDPClientList.Contains(clientIPEP) && clientIPEP.ToString() != "")
+            //{
+            //    Debug.Log("Adding a new remote conection point!");
+            //    UDPClientList.Add(clientIPEP);
+
+            //    Debug.Log("Size of Client List:" + UDPClientList.Count);
+            //}
+
             message = serializer.DeserializeMessage(dataTMP);
+            //This is kind of a ping but we set it as a message but it's just PINGING
+            SendData(message);
+            Thread.Sleep(100);
         }
         catch (Exception e)
         {
             Debug.Log("SERVER ERROR Failed to receive data: " + e.Message);
         }
 
+        //This has to be a diferent thread
         //loops the receive system. Messy but functional
         while (true)// Look at Promises, Async, Await
         {
@@ -130,9 +145,11 @@ public class UDPServer : MonoBehaviour
             string s = BitConverter.ToString(dataTMP);
             //Debug.Log("Bytes: " + s);
             recv = udpSocket.ReceiveFrom(dataTMP, ref clientEP);
-            Debug.Log("Receiving Message from While Section!");
+            Debug.Log("Socket listening from WHILE");
             message = serializer.DeserializeMessage(dataTMP);
+            Debug.Log("Sending! B");
             SendData(message);
+            Thread.Sleep(100);
         }
     }
 
@@ -142,7 +159,7 @@ public class UDPServer : MonoBehaviour
         try
         {
             byte[] dataTMP = new byte[1024];
-            //message.SetMessage(_message);
+            message.SetMessage(_message.message);
             Debug.Log("SERVER Sending message to " + clientEP.ToString() + ": " + _message.message);
             dataTMP = serializer.SerializeMessage(message);
             udpSocket.SendTo(dataTMP, dataTMP.Length, SocketFlags.None, clientEP);
@@ -152,4 +169,26 @@ public class UDPServer : MonoBehaviour
             Debug.Log("SERVER ERROR Failed to send data. Error: " + e.Message);
         }
     }
+
+    public void EchoServerInfo(Message _message)
+    {
+        try
+        {
+            byte[] dataTMP = new byte[1024];
+            message.SetMessage(_message.message);
+            Debug.Log("SERVER Sending message to " + clientEP.ToString() + ": " + _message.message);
+            dataTMP = serializer.SerializeMessage(message);
+            foreach (IPEndPoint ip in UDPClientList)
+            {
+                EndPoint remote = (EndPoint)ip;
+                udpSocket.SendTo(dataTMP, dataTMP.Length, SocketFlags.None, remote);
+                Debug.Log("Echo to: " + ip);
+            }
+        }
+        catch (Exception e)
+        {
+            Debug.Log("SERVER ERROR Failed to send data. Error: " + e.Message);
+        }
+    }
+
 }
