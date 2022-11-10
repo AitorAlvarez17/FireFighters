@@ -23,6 +23,7 @@ public class UDPClient : MonoBehaviour
 
     //declare thread and socket
     private Thread clientThread;
+    private Thread receiveThread = null;
     private Socket udpSocket;
 
     // Server end point (Ip + Port)
@@ -127,6 +128,7 @@ public class UDPClient : MonoBehaviour
         thisPlayer = PlayerManager.AddPlayer("Player");
         message.SetUsername(thisPlayer.username);
         playerKey = thisPlayer.id;
+        Debug.Log("Greetings message!");
         SendString("Hi! I just connected...");
 
         // Receive from server
@@ -136,6 +138,9 @@ public class UDPClient : MonoBehaviour
             message = serializer.DeserializeMessage(data);
             Debug.Log("Receiving! A");
             thisPlayer.dirty = true;
+
+            receiveThread = new Thread(Receive);
+            receiveThread.Start();
         }
         catch (Exception e)
         {
@@ -143,6 +148,7 @@ public class UDPClient : MonoBehaviour
         }
     }
 
+    
     //Main communication funtion. It sends strings when called
     public void SendString(string _message)
     {
@@ -158,6 +164,32 @@ public class UDPClient : MonoBehaviour
             Debug.Log("[CLIENT] Failed to send message. Error: " + e.ToString());
         }
     }
+
+    private void Receive()
+    {
+        try
+        {
+            IPEndPoint sender = new IPEndPoint(IPAddress.Any, 0);
+            EndPoint Remote = (EndPoint)sender;
+
+            while(true)
+            {
+                int recv;
+                byte[] dataTMP = new byte[1024];
+
+                recv = udpSocket.ReceiveFrom(dataTMP, ref Remote);
+                message = serializer.DeserializeMessage(data);
+                thisPlayer.dirty = true;
+
+                Debug.Log("[CIENT] Receive data!: " + message.message);
+            }
+        }
+        catch(Exception e)
+        {
+            Debug.Log("Recieve(): Error receiving: " + e);
+        }
+    }
+
 
     public void PingMovement()
     {

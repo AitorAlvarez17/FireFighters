@@ -118,13 +118,13 @@ public class UDPServer : MonoBehaviour
             //Debug.Log("SERVER Message received from " + clientEP.ToString() + ": Message: " + serializer.DeserializeMessage(dataTMP).message + " Username: " + serializer.DeserializeMessage(dataTMP).username);
             Debug.Log("Socket listen for connection");
 
-            //if (!UDPClientList.Contains(clientIPEP) && clientIPEP.ToString() != "")
-            //{
-            //    Debug.Log("Adding a new remote conection point!");
-            //    UDPClientList.Add(clientIPEP);
+            if (!UDPClientList.Contains(clientIPEP) && clientIPEP.ToString() != "")
+            {
+                Debug.Log("Adding a new remote conection point!");
+                UDPClientList.Add(clientIPEP);
 
-            //    Debug.Log("Size of Client List:" + UDPClientList.Count);
-            //}
+                Debug.Log("Size of Client List:" + UDPClientList.Count);
+            }
 
             message = serializer.DeserializeMessage(dataTMP);
             //This is kind of a ping but we set it as a message but it's just PINGING
@@ -180,9 +180,11 @@ public class UDPServer : MonoBehaviour
             dataTMP = serializer.SerializeMessage(message);
             foreach (IPEndPoint ip in UDPClientList)
             {
-                EndPoint remote = (EndPoint)ip;
-                udpSocket.SendTo(dataTMP, dataTMP.Length, SocketFlags.None, remote);
-                Debug.Log("Echo to: " + ip);
+                IPAddress ipAddress = IPAddress.Parse(serverIP);
+                clientEP = (EndPoint)ip;
+
+                udpSocket.SendTo(dataTMP, dataTMP.Length, SocketFlags.None, clientEP);
+                Debug.Log("Echo to: " + clientEP);
             }
         }
         catch (Exception e)
