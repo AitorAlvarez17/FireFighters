@@ -135,7 +135,7 @@ public class UDPClient : MonoBehaviour
             recv = udpSocket.Receive(data);
             message = serializer.DeserializeMessage(data);
             Debug.Log("Receiving! A");
-           
+            thisPlayer.dirty = true;
         }
         catch (Exception e)
         {
