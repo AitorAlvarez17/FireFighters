@@ -98,7 +98,7 @@ public class ServerController : MonoBehaviour
 
         if (serverParent.GetComponent<TCPServer>() != null)
         {
-            ServerActions();
+           // ServerActions();
 
             if (serverParent.GetComponent<TCPServer>().messageDecoded != null)
             {
@@ -117,7 +117,7 @@ public class ServerController : MonoBehaviour
 
         if (serverParent.GetComponent<UDPServer>() != null)
         {
-            ServerActions();
+            //ServerActions();
             
         }
 
@@ -134,14 +134,7 @@ public class ServerController : MonoBehaviour
     //        PlayerManager.playerDirty = false;
     //    }
     //}
-    private void ServerActions()
-    {
-        if (PlayerManager.serverDirty == true)
-        {
-            //numberOfPlayers.text = "Number of Players: " + PlayerManager.playersOnline;
-            PlayerManager.serverDirty = false;
-        }
-    }
+    
     //called when creating a server to be shown on screen.
 
     public void CreateMessage(Message _Message)

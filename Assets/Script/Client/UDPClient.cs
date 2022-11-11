@@ -128,7 +128,7 @@ public class UDPClient : MonoBehaviour
         thisPlayer = PlayerManager.AddPlayer("Player");
         message.SetUsername(thisPlayer.username);
         playerKey = thisPlayer.id;
-        Debug.Log("Greetings message!");
+        Debug.Log("Resending the hello string!");
         SendString("Hi! I just connected...");
 
         // Receive from server
@@ -155,9 +155,12 @@ public class UDPClient : MonoBehaviour
         try
         {
             message.SetMessage(_message);
+            message.SetUsername(thisPlayer.username);
             Debug.Log("[CLIENT] Sending to server: " + serverIPEP.ToString() + " Message: " + _message + "From:" + message.username);
             data = serializer.SerializeMessage(message);
             recv = udpSocket.SendTo(data, data.Length, SocketFlags.None, serverEP);
+
+            //carefull with data as it keeps setted, this can be so confusing if you cross it with a local dataTMP value, just to know.
         }
         catch (Exception e)
         {
@@ -168,17 +171,14 @@ public class UDPClient : MonoBehaviour
     private void Receive()
     {
         try
-        {
-            IPEndPoint sender = new IPEndPoint(IPAddress.Any, 0);
-            EndPoint Remote = (EndPoint)sender;
-
+        { 
             while(true)
             {
                 int recv;
                 byte[] dataTMP = new byte[1024];
 
-                recv = udpSocket.ReceiveFrom(dataTMP, ref Remote);
-                message = serializer.DeserializeMessage(data);
+                recv = udpSocket.Receive(dataTMP);
+                message = serializer.DeserializeMessage(dataTMP);
                 thisPlayer.dirty = true;
 
                 Debug.Log("[CIENT] Receive data!: " + message.message);

@@ -45,7 +45,6 @@ public static class PlayerManager
         newPlayer.id = playersOnline;
         Players.Add(playersOnline, newPlayer);
         
-        serverDirty = true;
 
         return newPlayer;
     }
