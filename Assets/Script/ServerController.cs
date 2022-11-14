@@ -55,7 +55,7 @@ public class ServerController : MonoBehaviour
 
     public ServerType GetServerType { get => serverType; set => serverType = value; }
 
-    public string IPServer { get; set; } = "192.168.204.22";
+    public string IPServer { get; set; } = "127.0.0.1";
     public int serverPort { get; set; } = 9500;
 
     // Start is called before the first frame update and selects the type of client and server.

@@ -20,7 +20,6 @@ public class UDPClient : MonoBehaviour
     // Message decoded for rendering on screen
     public string messageDecoded = "";
     public Message message = new Message(null, "");
-    public PlayerInfo playerInfo = new PlayerInfo(new Message(null, ""), { 0, 0, 0 });
 
     //declare thread and socket
     private Thread clientThread;
@@ -58,23 +57,20 @@ public class UDPClient : MonoBehaviour
         newMessage = Instantiate(this.gameObject.GetComponent<ServerController>().messgePrefab, Vector3.zero, Quaternion.identity, this.gameObject.GetComponent<ServerController>().chatBillboard.transform);
         newMessage.GetComponent<MessageHolder>().SetMessage(_Message.message, _Message.username);
     }
-
     private void PlayerActions()
     {
         if (thisPlayer != null && thisPlayer.dirty == true)
         {
-            //segurament PlayerInfo.message ya que hay que pasar el paquete grande
-            if (playerInfo.message != null && playerInfo.message.message != null)
+            if (message != null && message.message != null)
             {
-                Debug.Log("Message checked and creating...!: " + playerInfo.message.message + "From Client:" + playerInfo.message.username);
+                Debug.Log("Message checked and creating...!: " + message.message + "From Client:" + message.username);
                 //Later on take it from PlayerManager! Now just hard-took it for debug purposes.
                 //You can easily acces to the player with the key (index) of it
-                CreateMessage(playerInfo.message);
-                playerInfo.message.SetMessage(null);
+                CreateMessage(message);
+                message.SetMessage(null);
 
                 //print the messages that has been created
             }
-            //IF IS MOVING MOVE THE PLAYER
 
             Debug.Log("Setting Text and dirtyness");
             this.gameObject.GetComponent<ServerController>().clientName.text = this.gameObject.GetComponent<UDPClient>().thisPlayer.username;
@@ -130,7 +126,7 @@ public class UDPClient : MonoBehaviour
 
         //Really good place for name personalization
         thisPlayer = PlayerManager.AddPlayer("Player");
-        playerInfo.message.SetUsername(thisPlayer.username);
+        message.SetUsername(thisPlayer.username);
         playerKey = thisPlayer.id;
         Debug.Log("Resending the hello string!");
         SendString("Hi! I just connected...");
@@ -139,7 +135,7 @@ public class UDPClient : MonoBehaviour
         try
         {
             recv = udpSocket.Receive(data);
-            playerInfo.message = serializer.DeserializeMessage(data);
+            message = serializer.DeserializeMessage(data);
             Debug.Log("Receiving! A");
             thisPlayer.dirty = true;
 
@@ -158,10 +154,10 @@ public class UDPClient : MonoBehaviour
     {
         try
         {
-            playerInfo.message.SetMessage(_message);
-            playerInfo.message.SetUsername(thisPlayer.username);
-            Debug.Log("[CLIENT] Sending to server: " + serverIPEP.ToString() + " Message: " + _message + "From:" + playerInfo.message.username);
-            data = serializer.SerializeMessage(playerInfo.message);
+            message.SetMessage(_message);
+            message.SetUsername(thisPlayer.username);
+            Debug.Log("[CLIENT] Sending to server: " + serverIPEP.ToString() + " Message: " + _message + "From:" + message.username);
+            data = serializer.SerializeMessage(message);
             recv = udpSocket.SendTo(data, data.Length, SocketFlags.None, serverEP);
 
             //carefull with data as it keeps setted, this can be so confusing if you cross it with a local dataTMP value, just to know.
@@ -182,10 +178,10 @@ public class UDPClient : MonoBehaviour
                 byte[] dataTMP = new byte[1024];
 
                 recv = udpSocket.Receive(dataTMP);
-                playerInfo.message = serializer.DeserializeMessage(dataTMP);
+                message = serializer.DeserializeMessage(dataTMP);
                 thisPlayer.dirty = true;
 
-                Debug.Log("[CIENT] Receive data!: " + playerInfo.message.message);
+                Debug.Log("[CIENT] Receive data!: " + message.message);
             }
         }
         catch(Exception e)

@@ -136,7 +136,7 @@ public static class serializer
         string message = reader.ReadString();
         string username = reader.ReadString();
 
-        Message newMessage = new Message(header, message, username);
+        Message newMessage = new Message(message, username);
 
         bytes = null;
 
