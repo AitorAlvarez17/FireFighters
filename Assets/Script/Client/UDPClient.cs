@@ -19,7 +19,6 @@ public class UDPClient : MonoBehaviour
 
     // Message decoded for rendering on screen
     public string messageDecoded = "";
-    public Message message = new Message(null, "");
 
     //declare thread and socket
     private Thread clientThread;
@@ -31,15 +30,23 @@ public class UDPClient : MonoBehaviour
     private EndPoint serverEP;
 
     public Player thisPlayer;
+    public PlayerPackage message = new PlayerPackage(null, "");
+
 
     //Debug Purposes
     public int playerKey = -1;
+
+    //public PlayerInfo playerInfo = new PlayerInfo(new PlayerPackage("test", "Username", thisPlayer.positions));
+
+    byte[] testBytes = new byte[1024];
+    string testString = "";
 
     //instanciation both variables
     void Start()
     {
         serverIP = ServerController.MyServerInstance.IPServer;
         serverPort = ServerController.MyServerInstance.serverPort;
+        //testBytes = serializer.SerializePlayerInfo(playerInfo);
     }
 
     public void Awake()
@@ -51,7 +58,7 @@ public class UDPClient : MonoBehaviour
     {
         PlayerActions();
     }
-    public void CreateMessage(Message _Message)
+    public void CreateMessage(PlayerPackage _Message)
     {
         GameObject newMessage = new GameObject();
         newMessage = Instantiate(this.gameObject.GetComponent<ServerController>().messgePrefab, Vector3.zero, Quaternion.identity, this.gameObject.GetComponent<ServerController>().chatBillboard.transform);
@@ -61,7 +68,7 @@ public class UDPClient : MonoBehaviour
     {
         if (thisPlayer != null && thisPlayer.dirty == true)
         {
-            if (message != null && message.message != null)
+            if (message != null && message.message != null && message.message != "")
             {
                 Debug.Log("Message checked and creating...!: " + message.message + "From Client:" + message.username);
                 //Later on take it from PlayerManager! Now just hard-took it for debug purposes.
@@ -81,6 +88,9 @@ public class UDPClient : MonoBehaviour
     //closing both the socket and the thread on exit and all coroutines
     private void OnDisable()
     {
+
+        //testString = serializer.DeserializePlayerInfo(testBytes).message.message;
+        Debug.Log("Test JSON Serialization:" + testString);
         Debug.Log("CLIENT Closing TCP socket & thread...");
 
         if (udpSocket != null)
@@ -135,7 +145,7 @@ public class UDPClient : MonoBehaviour
         try
         {
             recv = udpSocket.Receive(data);
-            message = serializer.DeserializeMessage(data);
+            message = serializer.DeserializePackage(data);
             Debug.Log("Receiving! A");
             thisPlayer.dirty = true;
 
@@ -157,7 +167,7 @@ public class UDPClient : MonoBehaviour
             message.SetMessage(_message);
             message.SetUsername(thisPlayer.username);
             Debug.Log("[CLIENT] Sending to server: " + serverIPEP.ToString() + " Message: " + _message + "From:" + message.username);
-            data = serializer.SerializeMessage(message);
+            data = serializer.SerializePackage(message);
             recv = udpSocket.SendTo(data, data.Length, SocketFlags.None, serverEP);
 
             //carefull with data as it keeps setted, this can be so confusing if you cross it with a local dataTMP value, just to know.
@@ -178,10 +188,12 @@ public class UDPClient : MonoBehaviour
                 byte[] dataTMP = new byte[1024];
 
                 recv = udpSocket.Receive(dataTMP);
-                message = serializer.DeserializeMessage(dataTMP);
+                message = serializer.DeserializePackage(dataTMP);
                 thisPlayer.dirty = true;
 
                 Debug.Log("[CIENT] Receive data!: " + message.message);
+
+                Debug.Log("[CLIENT] Received Movement!" + message.positions[1]);
             }
         }
         catch(Exception e)
@@ -191,19 +203,25 @@ public class UDPClient : MonoBehaviour
     }
 
 
-    public void PingMovement()
+    public void PingMovement(float[] packageMovement)
     {
-        Debug.Log("Position on X in Player Class: " + thisPlayer.positions[0]);
-        Debug.Log("Position on Z in Player Class: " + thisPlayer.positions[2]);
-        //try
-        //{
-        //    Debug.Log("[CLIENT] Sending to server: " + serverIPEP.ToString() + "Position");
-        //    data = serializer.SerializePlayerInfo(thisPlayer.positions);
-        //    recv = udpSocket.SendTo(data, data.Length, SocketFlags.None, serverEP);
-        //}
-        //catch (Exception e)
-        //{
-        //    Debug.Log("[CLIENT] Failed to send message. Error: " + e.ToString());
-        //}
+        Debug.Log("Message: " + message.message);
+        Debug.Log("Username: " + message.username);
+        Debug.Log("Pos X: " + message.positions[0]);
+        try
+        {
+            message.SetMessage("");
+            message.SetPositions(packageMovement);
+            message.SetUsername(thisPlayer.username);
+            Debug.Log("[CLIENT] Sending to server: " + serverIPEP.ToString() + " Message: " + packageMovement[0] + "From:" + message.username);
+            data = serializer.SerializePackage(message);
+            recv = udpSocket.SendTo(data, data.Length, SocketFlags.None, serverEP);
+
+            //carefull with data as it keeps setted, this can be so confusing if you cross it with a local dataTMP value, just to know.
+        }
+        catch (Exception e)
+        {
+            Debug.Log("[CLIENT] Failed to send message. Error: " + e.ToString());
+        }
     }
 }

@@ -137,7 +137,7 @@ public class ServerController : MonoBehaviour
     
     //called when creating a server to be shown on screen.
 
-    public void CreateMessage(Message _Message)
+    public void CreateMessage(PlayerPackage _Message)
     {
         GameObject newMessage = new GameObject();
         newMessage = Instantiate(messgePrefab, Vector3.zero, Quaternion.identity, chatBillboard.transform);

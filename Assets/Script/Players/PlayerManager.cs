@@ -5,6 +5,15 @@ using TMPro;
 using UnityEngine.UI;
 using System;
 
+public class PlayerInfo
+{
+    public PlayerPackage message;
+
+    public PlayerInfo(PlayerPackage _message)
+    {
+        message = _message;
+    }
+}
 public class Player
 {
     public string username;
@@ -12,6 +21,7 @@ public class Player
     public int id;
     public bool dirty;
     public float[] positions = new float[3] { 0, 0, 0 };
+
     public Player(string _username, bool onLine, int _id)
     {
         this.username = _username;

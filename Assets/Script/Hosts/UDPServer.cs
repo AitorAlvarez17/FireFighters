@@ -24,7 +24,8 @@ public class UDPServer : MonoBehaviour
     public bool serverDirty = false;
     // Message decoded for rendering on screen
     public string messageDecoded = null;
-    public Message message = new Message(null, "Server");
+    //check it
+    public PlayerPackage message = new PlayerPackage(null, "Server");
 
     //declare Client's endpoint
     private IPEndPoint clientIPEP;
@@ -53,7 +54,7 @@ public class UDPServer : MonoBehaviour
     {
         if (serverDirty == true)
         {
-            if (message != null && message.message != null)
+            if (message != null && message.message != null && message.message != "")
             {
                 Debug.Log("Message checked and creating:" + message.message + " From: " + message.username);
                 CreateMessage(message);
@@ -66,7 +67,7 @@ public class UDPServer : MonoBehaviour
         }
     }
 
-    public void CreateMessage(Message _Message)
+    public void CreateMessage(PlayerPackage _Message)
     {
         GameObject newMessage = new GameObject();
         newMessage = Instantiate(this.gameObject.GetComponent<ServerController>().messgePrefab, Vector3.zero, Quaternion.identity, this.gameObject.GetComponent<ServerController>().chatBillboard.transform);
@@ -142,11 +143,12 @@ public class UDPServer : MonoBehaviour
                 Debug.Log("Size of Client List:" + UDPClientList.Count);
             }
 
-            message = serializer.DeserializeMessage(dataTMP);
+            //Welcome Message!
+            message = serializer.DeserializePackage(dataTMP);
             serverDirty = true;
             //This is kind of a ping but we set it as a message but it's just PINGING
             SendData(message);
-            Thread.Sleep(100);
+            Thread.Sleep(50);
         }
         catch (Exception e)
         {
@@ -171,23 +173,22 @@ public class UDPServer : MonoBehaviour
             }
 
             Debug.Log("Socket listening from WHILE");
-            message = serializer.DeserializeMessage(dataTMP);
-            Debug.Log("Sending! B");
-            EchoServerInfo(message);
+            message = serializer.DeserializePackage(dataTMP);
+            EchoData(message);
             serverDirty = true;
-            Thread.Sleep(100);
+            Thread.Sleep(50);
         }
     }
 
     //Main communication funtion. It sends strings when called
-    private void SendData(Message _message)
+    private void SendData(PlayerPackage _message)
     {
         try
         {
             byte[] dataTMP = new byte[1024];
             message.SetMessage(_message.message);
             Debug.Log("SERVER Sending message to " + clientEP.ToString() + ": " + _message.message);
-            dataTMP = serializer.SerializeMessage(message);
+            dataTMP = serializer.SerializePackage(message);
             udpSocket.SendTo(dataTMP, dataTMP.Length, SocketFlags.None, clientEP);
         }
         catch (Exception e)
@@ -196,14 +197,14 @@ public class UDPServer : MonoBehaviour
         }
     }
 
-    public void EchoServerInfo(Message _message)
+    public void EchoData(PlayerPackage _message)
     {
         //SE LO ESTÀ ENVIANDO A SI MISMO
         try
         {
             byte[] dataTMP = new byte[1024];
             message.SetMessage(_message.message);
-            dataTMP = serializer.SerializeMessage(message);
+            dataTMP = serializer.SerializePackage(message);
             foreach (EndPoint ip in UDPClientList)
             {
                 Debug.Log("SERVER Sending message to " + ip.ToString() + ": " + _message.message);

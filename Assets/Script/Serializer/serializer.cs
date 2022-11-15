@@ -11,14 +11,65 @@ public static class serializer
 {
     static MemoryStream stream;
     // Start is called before the first frame update
-    
 
+    static byte[] bytes;
     public class testClass
     {
         public int hp = 12;
         public List<int> pos = new List<int> { 3, 3, 3 };
     }
 
+    public static byte[] SerializePackage(PlayerPackage _message)
+    {
+
+        string message = _message.message;
+        string username = _message.username;
+        stream = new MemoryStream();
+        BinaryWriter writer = new BinaryWriter(stream);
+        //Header
+        writer.Write("/>Message:");
+        //Info
+        writer.Write(message);
+        writer.Write(username);
+        foreach (float coordinate in _message.positions)
+        {
+            writer.Write(coordinate);
+        }
+        bytes = stream.ToArray();
+        //Debug.Log("Serialized Message!");
+        return bytes;
+    }
+    public static PlayerPackage DeserializePackage(byte[] bytes)
+    {
+        stream = new MemoryStream();
+        stream.Write(bytes, 0, bytes.Length);
+        BinaryReader reader = new BinaryReader(stream);
+        stream.Seek(0, SeekOrigin.Begin);
+
+        //Header
+        string header = reader.ReadString();
+        //Debug.Log("Deserialize(): Header is " + header);
+        //Info
+        string message = reader.ReadString();
+        string username = reader.ReadString();
+        float[] positions = new float[3];
+        positions[0] = reader.ReadSingle();
+        positions[1] = reader.ReadSingle();
+        positions[2] = reader.ReadSingle();
+
+        foreach (var item in positions)
+        {
+            Debug.Log("Position :" + item);
+        }
+
+        PlayerPackage newMessage = new PlayerPackage(message, username);
+
+        bytes = null;
+
+        return newMessage;
+    }
+
+    #region 
     static void serializeJson()
     {
         var t = new testClass();
@@ -62,7 +113,7 @@ public static class serializer
         t = (testClass)serializer.Deserialize(stream);
         Debug.Log("Xml " + t.hp.ToString() + " " + t.pos.ToString());
     }
-    static byte[] bytes;
+    
     static void serialize()
     {
         double myfloat = 100f;
@@ -93,22 +144,7 @@ public static class serializer
         return bytes;
     }
 
-    public static byte[] SerializeMessage(Message _message)
-    {
 
-        string message = _message.message;
-        string username = _message.username;
-        stream = new MemoryStream();
-        BinaryWriter writer = new BinaryWriter(stream);
-        //Header
-        writer.Write("/>Message:");
-        //Info
-        writer.Write(message);
-        writer.Write(username);
-        bytes = stream.ToArray();
-        //Debug.Log("Serialized Message!");
-        return bytes;
-    }
 
     public static string DeserializeInfo(byte[] bytes)
     {
@@ -122,26 +158,7 @@ public static class serializer
         return newstring;
     }
 
-    public static Message DeserializeMessage(byte[] bytes)
-    {
-        stream = new MemoryStream();
-        stream.Write(bytes, 0, bytes.Length);
-        BinaryReader reader = new BinaryReader(stream);
-        stream.Seek(0, SeekOrigin.Begin);
 
-        //Header
-        string header = reader.ReadString();
-        //Debug.Log("Deserialize(): Header is " + header);
-        //Info
-        string message = reader.ReadString();
-        string username = reader.ReadString();
-
-        Message newMessage = new Message(message, username);
-
-        bytes = null;
-
-        return newMessage;
-    }
 
     static void deserialize()
     {
@@ -167,44 +184,39 @@ public static class serializer
 
     }
 
-    public static byte[] SerializePlayerInfo(float[] positions)
+    public static byte[] SerializePlayerInfo(PlayerInfo info)
     {
-        float[] mylist = positions;
-        
+        var t = info;
+        Debug.Log(t.message.message);
+        //json only parses public elements
+        string json = JsonUtility.ToJson(t);
         stream = new MemoryStream();
         BinaryWriter writer = new BinaryWriter(stream);
-        //Header
-        writer.Write("/>PlayerInfo:");
-        //Info
-        foreach (var i in mylist)
-        {
-            writer.Write(i);
-        }
+        writer.Write(json);
+
+        Debug.Log(json.ToString());
+
         bytes = stream.ToArray();
-        Debug.Log("Serialized Info!");
         return bytes;
     }
 
-    public static float[] DeserializePlayerInfo(byte[] bytes)
+    public static PlayerInfo DeserializePlayerInfo(byte[] bytes)
     {
         stream = new MemoryStream();
         stream.Write(bytes, 0, bytes.Length);
+
+        var t = new PlayerInfo(null);
+
         BinaryReader reader = new BinaryReader(stream);
         stream.Seek(0, SeekOrigin.Begin);
 
-        //Header
-        string header = reader.ReadString();
-        Debug.Log("Deserialize(): Header is " + header);
-        //Info
-        float[] newlist = new float[3];
-        for (int i = 0; i < newlist.Length; i++)
-        {
-            newlist[i] = reader.ReadInt32();
-        }
+        string json = reader.ReadString();
+        Debug.Log(json);
+        t = JsonUtility.FromJson<PlayerInfo>(json);
+        Debug.Log(t.message.message.ToString() + " " + t.message.username.ToString());
 
-        bytes = null;
-
-        return newlist;
+        return t;
     }
 
+    #endregion 
 }
