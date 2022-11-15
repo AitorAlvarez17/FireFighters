@@ -9,6 +9,7 @@ public class PlayerPackage
 
     public float[] positions = new float[3];
 
+    public int id = -1;
     //Message constructor
     public PlayerPackage(string _message, string _username)
     {
@@ -20,13 +21,14 @@ public class PlayerPackage
     }   
 
     //position constructor
-    public PlayerPackage(string _message, string _username,float[] position)
+    public PlayerPackage(string _message, string _username,float[] position, int _id)
     {
         message = _message;
         username = _username;
         positions[0] = position[0];
         positions[1] = position[1];
         positions[2] = position[2];
+        id = _id;
     }
 
     public void SetMessage(string _message)
@@ -44,5 +46,10 @@ public class PlayerPackage
         positions[0] = _positions[0];
         positions[1] = _positions[1];
         positions[2] = _positions[2];
+    }
+
+    public void SetId(int _id)
+    {
+        id = _id;
     }
 }

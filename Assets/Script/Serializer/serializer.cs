@@ -35,6 +35,7 @@ public static class serializer
         {
             writer.Write(coordinate);
         }
+        writer.Write(_message.id);
         bytes = stream.ToArray();
         //Debug.Log("Serialized Message!");
         return bytes;
@@ -61,8 +62,8 @@ public static class serializer
         {
             Debug.Log("Position :" + item);
         }
-
-        PlayerPackage newMessage = new PlayerPackage(message, username,positions);
+        int id = reader.ReadInt32();
+        PlayerPackage newMessage = new PlayerPackage(message, username,positions,id);
 
         bytes = null;
 

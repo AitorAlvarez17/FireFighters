@@ -22,6 +22,11 @@ public class Player
     public bool dirty;
     public float[] positions = new float[3] { 0, 0, 0 };
 
+    public void UpdatePosition(float[] positions)
+    {
+        //UpdatePlayerInWorld
+    }
+
     public Player(string _username, bool onLine, int _id)
     {
         this.username = _username;
@@ -35,7 +40,7 @@ public class Player
 public static class PlayerManager
 {
     [SerializeField]
-    public static Dictionary<int, Player> Players = new Dictionary<int, Player>();
+    public static Dictionary<int, Player> PlayersBrainDictionary = new Dictionary<int, Player>();
 
     private static bool playersDirty;
 
@@ -52,8 +57,9 @@ public static class PlayerManager
         playersOnline++;
         Player newPlayer = new Player(name + playersOnline.ToString(), true, playersOnline);
         Debug.Log("New Player Added!");
+        //This is hardcorded
         newPlayer.id = playersOnline;
-        Players.Add(playersOnline, newPlayer);
+        PlayersBrainDictionary.Add(playersOnline, newPlayer);
         
 
         return newPlayer;
@@ -66,5 +72,9 @@ public static class PlayerManager
         playerDirty = true;
     }
 
+    public static void UpdatePlayerPosition(int index, float[] newPosition)
+    {
+        PlayersBrainDictionary[index].UpdatePosition(newPosition);
+    }
 
 }

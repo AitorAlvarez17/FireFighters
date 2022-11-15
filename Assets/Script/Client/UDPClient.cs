@@ -32,7 +32,6 @@ public class UDPClient : MonoBehaviour
     public Player thisPlayer;
     public PlayerPackage message = new PlayerPackage(null, "");
 
-
     //Debug Purposes
     public int playerKey = -1;
 
@@ -137,7 +136,7 @@ public class UDPClient : MonoBehaviour
         //Really good place for name personalization
         thisPlayer = PlayerManager.AddPlayer("Player");
         message.SetUsername(thisPlayer.username);
-        playerKey = thisPlayer.id;
+        message.SetId(thisPlayer.id);
         Debug.Log("Resending the hello string!");
         SendString("Hi! I just connected...");
 
@@ -191,9 +190,13 @@ public class UDPClient : MonoBehaviour
                 message = serializer.DeserializePackage(dataTMP);
                 thisPlayer.dirty = true;
 
+                //Update world
+                //PlayerManager.UpdatePlayerPosition(message.Key, message.positions);
+
                 Debug.Log("[CIENT] Receive data!: " + message.message);
 
                 Debug.Log("[CLIENT] Received Movement!" + message.positions[0] + message.positions[1]+ message.positions[2]);
+                Debug.Log("[CLIENT] Received Id!" + message.id);
             }
         }
         catch(Exception e)
@@ -213,6 +216,7 @@ public class UDPClient : MonoBehaviour
             message.SetMessage("");
             message.SetPositions(packageMovement);
             message.SetUsername(thisPlayer.username);
+            message.SetId(thisPlayer.id);
             Debug.Log("[CLIENT] Sending to server: " + serverIPEP.ToString() + " Message: " + packageMovement[0] + "From:" + message.username);
             data = serializer.SerializePackage(message);
             recv = udpSocket.SendTo(data, data.Length, SocketFlags.None, serverEP);

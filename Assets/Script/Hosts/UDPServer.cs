@@ -33,6 +33,8 @@ public class UDPServer : MonoBehaviour
 
     public List<EndPoint> UDPClientList = new List<EndPoint>();
 
+    //We need a "WorldElementsMonigotes" List perfectly linked to the dataLayer "keys" or watever.
+
     //instanciation both variables and starts server
     void Start()
     {
@@ -140,13 +142,14 @@ public class UDPServer : MonoBehaviour
                 Debug.Log("Adding a new remote conection point! :" + clientEP.ToString());
                 UDPClientList.Add(clientEP);
 
+                //Create world representation of the client that connected;
+
                 Debug.Log("Size of Client List:" + UDPClientList.Count);
             }
 
             //Welcome Message!
             message = serializer.DeserializePackage(dataTMP);
             serverDirty = true;
-            //This is kind of a ping but we set it as a message but it's just PINGING
             SendData(message);
             Thread.Sleep(50);
         }
@@ -218,4 +221,12 @@ public class UDPServer : MonoBehaviour
         }
     }
 
+    public void CreateMonigote()
+    {
+        //If a new client has connected create the visual representation.
+
+        //Every Client needs to have a list of monigotes that are linked to the SAME key as the data layer Dictionary.
+
+        //If a message containing movement and a key arrives we modify the Monigote with the same key.
+    }
 }
