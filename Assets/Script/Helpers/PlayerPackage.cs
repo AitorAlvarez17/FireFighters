@@ -15,17 +15,18 @@ public class PlayerPackage
         message = _message;
         username = _username;
         positions[0] = 0f;
-        positions[1] = 1f;
-        positions[2] = 2f;
-    }
+        positions[1] = 0f;
+        positions[2] = 0f;
+    }   
 
     //position constructor
-    public PlayerPackage(float[] _positions)
+    public PlayerPackage(string _message, string _username,float[] position)
     {
-        message = "";
-        positions[0] = _positions[0];
-        positions[1] = _positions[1];
-        positions[2] = _positions[2];
+        message = _message;
+        username = _username;
+        positions[0] = position[0];
+        positions[1] = position[1];
+        positions[2] = position[2];
     }
 
     public void SetMessage(string _message)

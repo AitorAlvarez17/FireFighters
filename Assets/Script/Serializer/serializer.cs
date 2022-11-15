@@ -62,7 +62,7 @@ public static class serializer
             Debug.Log("Position :" + item);
         }
 
-        PlayerPackage newMessage = new PlayerPackage(message, username);
+        PlayerPackage newMessage = new PlayerPackage(message, username,positions);
 
         bytes = null;
 

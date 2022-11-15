@@ -193,7 +193,7 @@ public class UDPClient : MonoBehaviour
 
                 Debug.Log("[CIENT] Receive data!: " + message.message);
 
-                Debug.Log("[CLIENT] Received Movement!" + message.positions[1]);
+                Debug.Log("[CLIENT] Received Movement!" + message.positions[0] + message.positions[1]+ message.positions[2]);
             }
         }
         catch(Exception e)
