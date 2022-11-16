@@ -21,34 +21,52 @@ public class PlayerMovement : MonoBehaviour
                 Debug.Log("KEY CODE on an infinte loop");
                 //Z+
                 player.transform.position += new Vector3(0, 0, 5 * Time.deltaTime * speed);
-                PlayerManager.PlayersBrainDictionary[this.gameObject.GetComponent<UDPClient>().thisPlayer.id].positions[2] = player.transform.position.z;
-                this.gameObject.GetComponent<UDPClient>().PingMovement(PlayerManager.PlayersBrainDictionary[this.gameObject.GetComponent<UDPClient>().thisPlayer.id].positions);
 
+                if (this.gameObject.GetComponent<UDPClient>() != null)
+                {
+                    PlayerManager.PlayersBrainDictionary[this.gameObject.GetComponent<UDPClient>().thisPlayer.id].positions[2] = player.transform.position.z;
+                    this.gameObject.GetComponent<UDPClient>().PingMovement(PlayerManager.PlayersBrainDictionary[this.gameObject.GetComponent<UDPClient>().thisPlayer.id].positions);
+                } 
             }
             if (Input.GetKey(KeyCode.S))
             {
                 //Z-
                 player.transform.position += new Vector3(0, 0, -5 * Time.deltaTime * speed);
-                PlayerManager.PlayersBrainDictionary[this.gameObject.GetComponent<UDPClient>().thisPlayer.id].positions[2] = player.transform.position.z;
-                this.gameObject.GetComponent<UDPClient>().PingMovement(PlayerManager.PlayersBrainDictionary[this.gameObject.GetComponent<UDPClient>().thisPlayer.id].positions);
 
+                if (this.gameObject.GetComponent<UDPClient>() != null)
+                {
+                    PlayerManager.PlayersBrainDictionary[this.gameObject.GetComponent<UDPClient>().thisPlayer.id].positions[2] = player.transform.position.z;
+                    this.gameObject.GetComponent<UDPClient>().PingMovement(PlayerManager.PlayersBrainDictionary[this.gameObject.GetComponent<UDPClient>().thisPlayer.id].positions);
+                }
             }
             if (Input.GetKey(KeyCode.A))
             {
                 //X-
                 player.transform.position += new Vector3(-5 * Time.deltaTime * speed, 0, 0);
-                PlayerManager.PlayersBrainDictionary[this.gameObject.GetComponent<UDPClient>().thisPlayer.id].positions[0] = player.transform.position.x;
-                this.gameObject.GetComponent<UDPClient>().PingMovement(PlayerManager.PlayersBrainDictionary[this.gameObject.GetComponent<UDPClient>().thisPlayer.id].positions);
-
+                if (this.gameObject.GetComponent<UDPClient>() != null)
+                {
+                    PlayerManager.PlayersBrainDictionary[this.gameObject.GetComponent<UDPClient>().thisPlayer.id].positions[0] = player.transform.position.x;
+                    this.gameObject.GetComponent<UDPClient>().PingMovement(PlayerManager.PlayersBrainDictionary[this.gameObject.GetComponent<UDPClient>().thisPlayer.id].positions);
+                }
             }
             if (Input.GetKey(KeyCode.D))
             {
                 //X+
                 player.transform.position += new Vector3(5 * Time.deltaTime * speed, 0, 0);
-                PlayerManager.PlayersBrainDictionary[this.gameObject.GetComponent<UDPClient>().thisPlayer.id].positions[0] = player.transform.position.x;
-                this.gameObject.GetComponent<UDPClient>().PingMovement(PlayerManager.PlayersBrainDictionary[this.gameObject.GetComponent<UDPClient>().thisPlayer.id].positions);
 
+                if (this.gameObject.GetComponent<UDPClient>() != null)
+                {
+                    PlayerManager.PlayersBrainDictionary[this.gameObject.GetComponent<UDPClient>().thisPlayer.id].positions[0] = player.transform.position.x;
+                    this.gameObject.GetComponent<UDPClient>().PingMovement(PlayerManager.PlayersBrainDictionary[this.gameObject.GetComponent<UDPClient>().thisPlayer.id].positions);
+                }
             }
         }
     }
+
+    public void Ping(float[] _positions)
+    {
+
+    }
 }
+
+

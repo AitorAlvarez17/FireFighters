@@ -32,9 +32,6 @@ public class UDPClient : MonoBehaviour
     public Player thisPlayer;
     public PlayerPackage message = new PlayerPackage(null, "");
 
-    //Debug Purposes
-    public int playerKey = -1;
-
     //public PlayerInfo playerInfo = new PlayerInfo(new PlayerPackage("test", "Username", thisPlayer.positions));
 
     byte[] testBytes = new byte[1024];

@@ -130,5 +130,9 @@ public class TCPServer : MonoBehaviour
         }
     }
 
-    
+    public void SetUsernameAndConnect(string username)
+    {
+        //thisPlayer.username = username;
+    }
+
 }

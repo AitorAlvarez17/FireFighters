@@ -22,10 +22,13 @@ public class UDPServer : MonoBehaviour
     private Socket udpSocket;
 
     public bool serverDirty = false;
+    public bool newConection = false;
     // Message decoded for rendering on screen
     public string messageDecoded = null;
     //check it
+    public Player thisPlayer;
     public PlayerPackage message = new PlayerPackage(null, "Server");
+    public bool onLine = false;
 
     //declare Client's endpoint
     private IPEndPoint clientIPEP;
@@ -49,9 +52,16 @@ public class UDPServer : MonoBehaviour
     private void Update()
     {
         ServerActions();
-        
     }
 
+    public void SetUsernameAndConnect(string username)
+    {
+        thisPlayer.username = username;
+        onLine = true;
+        this.gameObject.GetComponent<ServerController>().clientName.text = thisPlayer.username;
+        this.gameObject.GetComponent<ReadServer>().LoginInput.SetActive(false);
+
+    }
     private void ServerActions()
     {
         if (serverDirty == true)
@@ -63,7 +73,16 @@ public class UDPServer : MonoBehaviour
                 message.SetMessage(null);
                 //print the messages that has been created
             }
+            if (newConection == true)
+            {
+                this.gameObject.GetComponent<WorldController>().CreatePlayer(message.id);
+                newConection = false;
+            }
             this.gameObject.GetComponent<ServerController>().numberOfPlayers.text = "Number of Players: " + PlayerManager.playersOnline;
+            if (message.id != -1 && message.positions[0] != 0f || message.positions[2] != 0f)
+            {
+                UpdateWorld(message.id, message.positions);
+            }
             serverDirty = false;
             Debug.Log("Setting Text and Server Dirtyness");
         }
@@ -117,6 +136,8 @@ public class UDPServer : MonoBehaviour
         clientIPEP = new IPEndPoint(ipAddress, serverPort);
         clientEP = (EndPoint)clientIPEP;
 
+        thisPlayer = PlayerManager.AddPlayer("Player");
+
         //try the socket's bind, if not debugs
         try
         {
@@ -142,16 +163,14 @@ public class UDPServer : MonoBehaviour
                 Debug.Log("Adding a new remote conection point! :" + clientEP.ToString());
                 UDPClientList.Add(clientEP);
 
-                //Create world representation of the client that connected;
-
                 Debug.Log("Size of Client List:" + UDPClientList.Count);
             }
 
             //Welcome Message!
             message = serializer.DeserializePackage(dataTMP);
             serverDirty = true;
+            newConection = true;
             SendData(message);
-            Thread.Sleep(50);
         }
         catch (Exception e)
         {
@@ -171,6 +190,7 @@ public class UDPServer : MonoBehaviour
             {
                 Debug.Log("Adding a new remote conection point! :" + clientEP.ToString());
                 UDPClientList.Add(clientEP);
+                newConection = true;
 
                 Debug.Log("Size of Client List:" + UDPClientList.Count);
             }
@@ -178,8 +198,9 @@ public class UDPServer : MonoBehaviour
             Debug.Log("Socket listening from WHILE");
             message = serializer.DeserializePackage(dataTMP);
             EchoData(message);
+            
             serverDirty = true;
-            Thread.Sleep(50);
+            
         }
     }
 
@@ -228,5 +249,10 @@ public class UDPServer : MonoBehaviour
         //Every Client needs to have a list of monigotes that are linked to the SAME key as the data layer Dictionary.
 
         //If a message containing movement and a key arrives we modify the Monigote with the same key.
+    }
+
+    public void UpdateWorld(int _key, float[] _positions)
+    {
+        this.gameObject.GetComponent<WorldController>().MovePlayer(_key, _positions);
     }
 }
