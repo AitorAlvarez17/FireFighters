@@ -39,6 +39,7 @@ public class WorldController : MonoBehaviour
 
     public void WelcomeClient(int _key)
     {
+        Debug.Log("PlayersBrainDictionary Count" + PlayerManager.PlayersBrainDictionary.Values.Count);
         foreach (Player player in PlayerManager.PlayersBrainDictionary.Values)
         {
             if (player.id != _key)
