@@ -1872,6 +1872,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   player: {fileID: 723993146}
   speed: 2
+  serverType: 0
 --- !u!114 &1761054771
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2291,6 +2292,11 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 5636736408836846913, guid: 86cf92c35d531994985ec91ac20fec9c,
+        type: 3}
+      propertyPath: internalId
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 5998753301368964986, guid: 86cf92c35d531994985ec91ac20fec9c,
         type: 3}
       propertyPath: m_Name
@@ -2299,7 +2305,7 @@ PrefabInstance:
     - target: {fileID: 5998753301368964986, guid: 86cf92c35d531994985ec91ac20fec9c,
         type: 3}
       propertyPath: m_IsActive
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 5998753301368964990, guid: 86cf92c35d531994985ec91ac20fec9c,
         type: 3}

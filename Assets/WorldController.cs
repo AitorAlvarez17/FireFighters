@@ -36,4 +36,13 @@ public class WorldController : MonoBehaviour
     {
         worldDolls[_key].Move(_positions);
     }
+
+    public void WelcomeClient(int _key)
+    {
+        //foreach (Player player in PlayerManager.PlayersBrainDictionary.Values)
+        //{
+        //    if (player.id != _key)
+        //        CreatePlayer(player.id);
+        //}
+    }
 }

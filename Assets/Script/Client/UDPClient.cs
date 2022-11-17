@@ -17,6 +17,8 @@ public class UDPClient : MonoBehaviour
     private int recv;
     private byte[] data = new byte[1024];
 
+    public bool justConnected = false;
+
     // Message decoded for rendering on screen
     public string messageDecoded = "";
 
@@ -64,6 +66,11 @@ public class UDPClient : MonoBehaviour
     {
         if (thisPlayer != null && thisPlayer.dirty == true)
         {
+            if (justConnected == true)
+            {
+                WelcomeWorld();
+                justConnected = false;
+            }
             if (message != null && message.message != null && message.message != "")
             {
                 Debug.Log("Message checked and creating...!: " + message.message + "From Client:" + message.username);
@@ -143,6 +150,7 @@ public class UDPClient : MonoBehaviour
             recv = udpSocket.Receive(data);
             message = serializer.DeserializePackage(data);
             Debug.Log("Receiving! A");
+            justConnected = true;
             thisPlayer.dirty = true;
 
             receiveThread = new Thread(Receive);
@@ -224,5 +232,10 @@ public class UDPClient : MonoBehaviour
         {
             Debug.Log("[CLIENT] Failed to send message. Error: " + e.ToString());
         }
+    }
+
+    public void WelcomeWorld()
+    {
+        this.gameObject.GetComponent<WorldController>().WelcomeClient(thisPlayer.id);
     }
 }

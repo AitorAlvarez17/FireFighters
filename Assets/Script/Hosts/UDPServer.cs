@@ -7,7 +7,8 @@ using System.Text;
 using System.Threading;
 using UnityEngine;
 
-public class UDPServer : MonoBehaviour
+//Do a parent class that is MonoBehaviour and make this heritage from the parent in order to make it virtual for PlayerMovement
+public class UDPServer : MonoBehaviour 
 {
     // Clients'IP and port
     private string serverIP;
@@ -29,6 +30,7 @@ public class UDPServer : MonoBehaviour
     public Player thisPlayer;
     public PlayerPackage message = new PlayerPackage(null, "Server");
     public bool onLine = false;
+    public bool initServer = false;
 
     //declare Client's endpoint
     private IPEndPoint clientIPEP;
@@ -137,6 +139,9 @@ public class UDPServer : MonoBehaviour
         clientEP = (EndPoint)clientIPEP;
 
         thisPlayer = PlayerManager.AddPlayer("Player");
+        message.SetUsername(thisPlayer.username);
+        message.SetId(thisPlayer.id);
+        initServer = true;
 
         //try the socket's bind, if not debugs
         try
@@ -254,5 +259,28 @@ public class UDPServer : MonoBehaviour
     public void UpdateWorld(int _key, float[] _positions)
     {
         this.gameObject.GetComponent<WorldController>().MovePlayer(_key, _positions);
+    }
+
+    public void PingMovement(float[] packageMovement)
+    {
+        byte[] dataTMP = new byte[1024];
+        Debug.Log("Message: " + message.message);
+        Debug.Log("Username: " + message.username);
+        Debug.Log("Pos X: " + message.positions[0]);
+        //try
+        //{
+        //    message.SetMessage("");
+        //    message.SetPositions(packageMovement);
+        //    message.SetUsername(thisPlayer.username);
+        //    message.SetId(thisPlayer.id);
+        //    Debug.Log("[CLIENT] Sending to server: " + clientIPEP.ToString() + " Message: " + packageMovement[0] + "From:" + message.username);
+        //    dataTMP = serializer.SerializePackage(message);
+        //    recv = udpSocket.SendTo(dataTMP, dataTMP.Length, SocketFlags.None, clientEP);
+        //    //carefull with data as it keeps setted, this can be so confusing if you cross it with a local dataTMP value, just to know.
+        //}
+        //catch (Exception e)
+        //{
+        //    Debug.Log("[CLIENT] Failed to send message. Error: " + e.ToString());
+        //}
     }
 }
