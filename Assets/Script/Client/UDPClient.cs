@@ -69,6 +69,7 @@ public class UDPClient : MonoBehaviour
             if (justConnected == true)
             {
                 WelcomeWorld();
+                Debug.Log("Creating Server repre");
                 justConnected = false;
             }
             if (message != null && message.message != null && message.message != "")

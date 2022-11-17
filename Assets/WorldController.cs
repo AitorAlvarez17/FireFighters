@@ -39,10 +39,10 @@ public class WorldController : MonoBehaviour
 
     public void WelcomeClient(int _key)
     {
-        //foreach (Player player in PlayerManager.PlayersBrainDictionary.Values)
-        //{
-        //    if (player.id != _key)
-        //        CreatePlayer(player.id);
-        //}
+        foreach (Player player in PlayerManager.PlayersBrainDictionary.Values)
+        {
+            if (player.id != _key)
+                CreatePlayer(player.id);
+        }
     }
 }
