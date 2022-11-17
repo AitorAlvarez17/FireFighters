@@ -25,10 +25,9 @@ public class WorldController : MonoBehaviour
 
     public void CreatePlayer(int key)
     {
-        GameObject playerPref = Instantiate(playerGO, spawnPoints[key].position, Quaternion.identity);
+        GameObject playerPref = Instantiate(playerGO, spawnPoints[pos].position, Quaternion.identity);
         playerPref.GetComponent<Lumberjack>().Init(key);
         worldDolls.Add(key, playerPref.GetComponent<Lumberjack>());
-        pos = key;
         pos++;
         //playerGO.GetComponent<Lumberjack>().Init(key);
     }
@@ -41,13 +40,10 @@ public class WorldController : MonoBehaviour
     public void WelcomeClient(int _key)
     {
         Debug.Log("PlayersBrainDictionary Count" + PlayerManager.PlayersBrainDictionary.Values.Count);
-        
-        for (int i = 1; i < PlayerManager.playersOnline; i++)
+        foreach (Player player in PlayerManager.PlayersBrainDictionary.Values)
         {
-            if (i != _key)
-            {
-                CreatePlayer(i);
-            }
+            if (player.id != _key)
+                CreatePlayer(player.id);
         }
     }
 }

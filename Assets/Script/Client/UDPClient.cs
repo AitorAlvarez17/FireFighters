@@ -69,9 +69,7 @@ public class UDPClient : MonoBehaviour
             if (justConnected == true)
             {
                 WelcomeWorld();
-                PlayerManager.playersOnline = message.playersOnline;
-                Debug.Log("Players Online:" + message.playersOnline);
-
+                Debug.Log("Creating Server repre");
                 justConnected = false;
             }
             if (message != null && message.message != null && message.message != "")
@@ -144,7 +142,6 @@ public class UDPClient : MonoBehaviour
         thisPlayer = PlayerManager.AddPlayer("Player");
         message.SetUsername(thisPlayer.username);
         message.SetId(thisPlayer.id);
-        message.SetPlayersOnline(PlayerManager.playersOnline);
         Debug.Log("Resending the hello string!");
         SendString("Hi! I just connected...");
 

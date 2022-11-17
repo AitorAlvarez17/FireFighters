@@ -10,10 +10,6 @@ public class PlayerPackage
     public float[] positions = new float[3];
 
     public int id = -1;
-
-    //WorldState
-    public int playersOnline = 0;
-
     //Message constructor
     public PlayerPackage(string _message, string _username)
     {
@@ -22,11 +18,10 @@ public class PlayerPackage
         positions[0] = 0f;
         positions[1] = 0f;
         positions[2] = 0f;
-
-    }
+    }   
 
     //position constructor
-    public PlayerPackage(string _message, string _username,float[] position, int _id, int _playersOnline)
+    public PlayerPackage(string _message, string _username,float[] position, int _id)
     {
         message = _message;
         username = _username;
@@ -34,7 +29,6 @@ public class PlayerPackage
         positions[1] = position[1];
         positions[2] = position[2];
         id = _id;
-        playersOnline = _playersOnline;
     }
 
     public void SetMessage(string _message)
@@ -57,15 +51,5 @@ public class PlayerPackage
     public void SetId(int _id)
     {
         id = _id;
-    }
-
-    public void SetPlayersOnline(int _value)
-    {
-        playersOnline = _value;
-    }
-
-    public void AddPlayerOnline(int _sum)
-    {
-        playersOnline += _sum;
     }
 }
