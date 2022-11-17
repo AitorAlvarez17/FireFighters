@@ -78,6 +78,7 @@ public class UDPServer : MonoBehaviour
             if (newConection == true)
             {
                 this.gameObject.GetComponent<WorldController>().CreatePlayer(message.id);
+                message.SetPlayersOnline(PlayerManager.playersOnline);
                 newConection = false;
             }
             this.gameObject.GetComponent<ServerController>().numberOfPlayers.text = "Number of Players: " + PlayerManager.playersOnline;
@@ -141,6 +142,7 @@ public class UDPServer : MonoBehaviour
         thisPlayer = PlayerManager.AddPlayer("Player");
         message.SetUsername(thisPlayer.username);
         message.SetId(thisPlayer.id);
+        message.SetPlayersOnline(PlayerManager.playersOnline);
         initServer = true;
 
         //try the socket's bind, if not debugs
@@ -212,10 +214,16 @@ public class UDPServer : MonoBehaviour
     //Main communication funtion. It sends strings when called
     private void SendData(PlayerPackage _message)
     {
+        //Send world State
         try
         {
             byte[] dataTMP = new byte[1024];
             message.SetMessage(_message.message);
+
+            //the new connections understands that Server is a player and add its to the count
+            if (newConection == true)
+                message.AddPlayerOnline(1);
+
             Debug.Log("SERVER Sending message to " + clientEP.ToString() + ": " + _message.message);
             dataTMP = serializer.SerializePackage(message);
             udpSocket.SendTo(dataTMP, dataTMP.Length, SocketFlags.None, clientEP);
