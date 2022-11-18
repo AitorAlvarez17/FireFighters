@@ -247,7 +247,7 @@ public class UDPClient : MonoBehaviour
         Debug.Log("The number of players online is:" + message.playersOnline);
         gameMatrix = message.worldMatrix;
         //this bc is the second pos but 1 in index
-        thisPlayer.id = message.worldMatrix[playersOnline - 1];
+        thisPlayer.id = playersOnline;
         Debug.Log("Client was welcomed to world, ID:" + thisPlayer.id);
         this.gameObject.GetComponent<WorldController>().WelcomeClient(thisPlayer.id);
     }
