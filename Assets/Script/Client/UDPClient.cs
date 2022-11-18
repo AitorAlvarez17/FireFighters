@@ -189,6 +189,7 @@ public class UDPClient : MonoBehaviour
     {
         try
         {
+            sendMessage.SetUsername("Player" + thisPlayer.id);
             sendMessage.SetMessage(_message);
             Debug.Log("[CLIENT] Sending to server: " + serverIPEP.ToString() + " Message: " + _message + "From:" + sendMessage.username);
             data = serializer.SerializePackage(sendMessage);
@@ -254,7 +255,7 @@ public class UDPClient : MonoBehaviour
 
             //Debug.Log("[CLIENT] Sending to server: " + serverIPEP.ToString() + " Message: " + packageMovement[0] + "From:" + message.username);
             dataTMP = serializer.SerializePackage(sendMessage);
-            recv = udpSocket.SendTo(dataTMP, dataTMP.Length, SocketFlags.None, serverEP);
+            udpSocket.SendTo(dataTMP, dataTMP.Length, SocketFlags.None, serverEP);
 
             //carefull with data as it keeps setted, this can be so confusing if you cross it with a local dataTMP value, just to know.
         }
