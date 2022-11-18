@@ -161,8 +161,9 @@ public class UDPClient : MonoBehaviour
         // Receive from server and initialize the world
         try
         {
+            byte[] dataTMP = new byte[1024];
             recv = udpSocket.Receive(data);
-            message = serializer.DeserializePackage(data);
+            message = serializer.DeserializePackage(dataTMP);
             Debug.Log("Receiving Back To Client");
             justConnected = true;
             thisPlayer.dirty = true;

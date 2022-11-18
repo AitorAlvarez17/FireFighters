@@ -20,6 +20,7 @@ public class UDPServer : MonoBehaviour
 
     //declare thread and socket
     private Thread serverThread;
+    private Thread receiveThread = null;
     private Socket udpSocket;
 
     public bool serverDirty = false;
@@ -146,7 +147,6 @@ public class UDPServer : MonoBehaviour
         clientEP = (EndPoint)clientIPEP;
 
         thisPlayer = new Player("Player" + (playersOnline + 1).ToString(), true, (playersOnline + 1));
-        Debug.Log("BEGINNING OF THE GENERAL SERVER THREAD");
         message.SetUsername(thisPlayer.username);
         message.SetId(thisPlayer.id);
         UpdateGameMatrix(playersOnline);
@@ -187,6 +187,9 @@ public class UDPServer : MonoBehaviour
             UpdateGameMatrix(UDPClientList.Count);
             newConection = true;
             SendData(message);
+
+            receiveThread = new Thread(Receive);
+            receiveThread.Start();
         }
         catch (Exception e)
         {
@@ -195,32 +198,44 @@ public class UDPServer : MonoBehaviour
 
         //This has to be a diferent thread
         //loops the receive system. Messy but functional
-        while (true)// Look at Promises, Async, Await
-        {
-            byte[] dataTMP = new byte[1024];
-            //Carefull with this, there is a bug because we fullfill the byte[] buffer
-            recv = udpSocket.ReceiveFrom(dataTMP, ref clientEP);
-
-            //THIS IS SO DIRTY - TODO//
-            if (!UDPClientList.Contains(clientEP) && clientEP.ToString() != "")
-            {
-                Debug.Log("Adding a new remote conection point! :" + clientEP.ToString());
-                UDPClientList.Add(clientEP);
-                newConection = true;
-
-                //Debug.Log("Size of Client List:" + UDPClientList.Count);
-            }
-
-            Debug.Log("Socket listening from WHILE");
-            message = serializer.DeserializePackage(dataTMP);
-            Debug.Log("This player ID:" + thisPlayer.id);
-            //EchoData(message);
-            
-            serverDirty = true;
-            
-        }
+        
     }
 
+    private void Receive()
+    {
+        try
+        {
+            while (true)// Look at Promises, Async, Await
+            {
+                byte[] dataTMP = new byte[1024];
+                //Carefull with this, there is a bug because we fullfill the byte[] buffer
+                recv = udpSocket.ReceiveFrom(dataTMP, ref clientEP);
+
+                //THIS IS SO DIRTY - TODO//
+                if (!UDPClientList.Contains(clientEP) && clientEP.ToString() != "")
+                {
+                    Debug.Log("Adding a new remote conection point! :" + clientEP.ToString());
+                    UDPClientList.Add(clientEP);
+                    newConection = true;
+
+                    //Debug.Log("Size of Client List:" + UDPClientList.Count);
+                }
+
+                Debug.Log("Socket listening from Receive");
+                message = serializer.DeserializePackage(dataTMP);
+                Debug.Log("This player ID:" + thisPlayer.id);
+                Debug.Log("Received message ID:" + message.id);
+                //EchoData(message);
+
+                serverDirty = true;
+
+            }
+        }
+        catch(Exception e)
+        {
+            Debug.Log("Recieve(): Error receiving: " + e);
+        }
+    }
     //Main communication funtion. It sends strings when called
     private void SendData(PlayerPackage _message)
     {
@@ -244,8 +259,7 @@ public class UDPServer : MonoBehaviour
         try
         {
             byte[] dataTMP = new byte[1024];
-            message.SetMessage(_message.message);
-            dataTMP = serializer.SerializePackage(message);
+            dataTMP = serializer.SerializePackage(_message);
             foreach (EndPoint ip in UDPClientList)
             {
                 Debug.Log("SERVER Sending message to " + ip.ToString() + ": " + _message.message);
@@ -283,7 +297,7 @@ public class UDPServer : MonoBehaviour
             message.SetUsername(thisPlayer.username);
             message.SetId(thisPlayer.id);
             Debug.Log("Sending from Ping Server: ID: " + message.id);
-            EchoData(message);
+            SendData(message);
             //Debug.Log("[CLIENT] Sending to server: " + clientIPEP.ToString() + " Message: " + packageMovement[0] + "From:" + message.username);
             //dataTMP = serializer.SerializePackage(message);
             //recv = udpSocket.SendTo(dataTMP, dataTMP.Length, SocketFlags.None, clientEP);
@@ -300,13 +314,13 @@ public class UDPServer : MonoBehaviour
         //gameMatrix[id] is the DATA value // id + 1 is the VISUAL VALUE ... id's will be 1,2,3,4 not 0,1,2,3
         gameMatrix[id] = id + 1;
         playersOnline++;
-        Debug.Log("Matrix pos 0" + gameMatrix[0]);
-        Debug.Log("Matrix pos 1" + gameMatrix[1]);
-        Debug.Log("Matrix pos 2" + gameMatrix[2]);
-        Debug.Log("Matrix pos 3" + gameMatrix[3]);
+        //Debug.Log("Matrix pos 0" + gameMatrix[0]);
+        //Debug.Log("Matrix pos 1" + gameMatrix[1]);
+        //Debug.Log("Matrix pos 2" + gameMatrix[2]);
+        //Debug.Log("Matrix pos 3" + gameMatrix[3]);
         message.SetWorldMatrix(gameMatrix);
         //we tell the client his position is the X on the matrix
-        Debug.Log("Players Online Updating and Setting:" + playersOnline);
+        //Debug.Log("Players Online Updating and Setting:" + playersOnline);
         message.SetPlayersOnline(playersOnline);
     }
 }
