@@ -250,6 +250,6 @@ public class UDPClient : MonoBehaviour
         //this bc is the second pos but 1 in index
         thisPlayer.id = playersOnline;
         Debug.Log("Client was welcomed to world, ID:" + thisPlayer.id);
-        this.gameObject.GetComponent<WorldController>().WelcomeClient(thisPlayer.id);
+        this.gameObject.GetComponent<WorldController>().WelcomeClient(gameMatrix, thisPlayer.id);
     }
 }

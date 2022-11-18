@@ -38,8 +38,14 @@ public class WorldController : MonoBehaviour
         worldDolls[_key].Move(_positions);
     }
 
-    public void WelcomeClient(int _key)
+    public void WelcomeClient(int[] worldMatrix, int _key)
     {
-        
+        foreach (int index in worldMatrix)
+        {
+            if (index != 0 && index != _key)
+            {
+                CreatePlayer(index);
+            }
+        }
     }
 }
