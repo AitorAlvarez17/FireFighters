@@ -39,14 +39,14 @@ public class PlayerMovement : MonoBehaviour
 
                 if (serverType == 0)
                 {
-                    PlayerManager.PlayersBrainDictionary[this.gameObject.GetComponent<UDPClient>().thisPlayer.id].positions[2] = player.transform.position.z;
-                    this.gameObject.GetComponent<UDPClient>().PingMovement(PlayerManager.PlayersBrainDictionary[this.gameObject.GetComponent<UDPClient>().thisPlayer.id].positions);
+                    this.gameObject.GetComponent<UDPClient>().thisPlayer.positions[2] = player.transform.position.z;
+                    this.gameObject.GetComponent<UDPClient>().PingMovement(this.gameObject.GetComponent<UDPClient>().thisPlayer.positions);
                     WalkingAnimation();
                 }
                 if (serverType == 1)
                 {
-                    PlayerManager.PlayersBrainDictionary[this.gameObject.GetComponent<UDPServer>().thisPlayer.id].positions[2] = player.transform.position.z;
-                    this.gameObject.GetComponent<UDPServer>().PingMovement(PlayerManager.PlayersBrainDictionary[this.gameObject.GetComponent<UDPServer>().thisPlayer.id].positions);
+                    this.gameObject.GetComponent<UDPServer>().thisPlayer.positions[2] = player.transform.position.z;
+                    this.gameObject.GetComponent<UDPServer>().PingMovement(this.gameObject.GetComponent<UDPServer>().thisPlayer.positions);
                     WalkingAnimation();
                 }
             }
@@ -57,14 +57,14 @@ public class PlayerMovement : MonoBehaviour
 
                 if (serverType == 0)
                 {
-                    PlayerManager.PlayersBrainDictionary[this.gameObject.GetComponent<UDPClient>().thisPlayer.id].positions[2] = player.transform.position.z;
-                    this.gameObject.GetComponent<UDPClient>().PingMovement(PlayerManager.PlayersBrainDictionary[this.gameObject.GetComponent<UDPClient>().thisPlayer.id].positions);
+                    this.gameObject.GetComponent<UDPClient>().thisPlayer.positions[2] = player.transform.position.z;
+                    this.gameObject.GetComponent<UDPClient>().PingMovement(this.gameObject.GetComponent<UDPClient>().thisPlayer.positions);
                     WalkingAnimation();
                 }
                 if (serverType == 1)
                 {
-                    PlayerManager.PlayersBrainDictionary[this.gameObject.GetComponent<UDPServer>().thisPlayer.id].positions[2] = player.transform.position.z;
-                    this.gameObject.GetComponent<UDPServer>().PingMovement(PlayerManager.PlayersBrainDictionary[this.gameObject.GetComponent<UDPServer>().thisPlayer.id].positions);
+                    this.gameObject.GetComponent<UDPServer>().thisPlayer.positions[2] = player.transform.position.z;
+                    this.gameObject.GetComponent<UDPServer>().PingMovement(this.gameObject.GetComponent<UDPServer>().thisPlayer.positions);
                     WalkingAnimation();
                 }
             }
@@ -74,14 +74,14 @@ public class PlayerMovement : MonoBehaviour
                 player.transform.position += new Vector3(-5 * Time.deltaTime * speed, 0, 0);
                 if (serverType == 0)
                 {
-                    PlayerManager.PlayersBrainDictionary[this.gameObject.GetComponent<UDPClient>().thisPlayer.id].positions[0] = player.transform.position.x;
-                    this.gameObject.GetComponent<UDPClient>().PingMovement(PlayerManager.PlayersBrainDictionary[this.gameObject.GetComponent<UDPClient>().thisPlayer.id].positions);
+                    this.gameObject.GetComponent<UDPClient>().thisPlayer.positions[0] = player.transform.position.x;
+                    this.gameObject.GetComponent<UDPClient>().PingMovement(this.gameObject.GetComponent<UDPClient>().thisPlayer.positions);
                     WalkingAnimation();
                 }
                 if (serverType == 1)
                 {
-                    PlayerManager.PlayersBrainDictionary[this.gameObject.GetComponent<UDPServer>().thisPlayer.id].positions[0] = player.transform.position.x;
-                    this.gameObject.GetComponent<UDPServer>().PingMovement(PlayerManager.PlayersBrainDictionary[this.gameObject.GetComponent<UDPServer>().thisPlayer.id].positions);
+                    this.gameObject.GetComponent<UDPServer>().thisPlayer.positions[0] = player.transform.position.x;
+                    this.gameObject.GetComponent<UDPServer>().PingMovement(this.gameObject.GetComponent<UDPServer>().thisPlayer.positions);
                     WalkingAnimation();
                 }
             }
@@ -92,14 +92,14 @@ public class PlayerMovement : MonoBehaviour
 
                 if (serverType == 0)
                 {
-                    PlayerManager.PlayersBrainDictionary[this.gameObject.GetComponent<UDPClient>().thisPlayer.id].positions[0] = player.transform.position.x;
-                    this.gameObject.GetComponent<UDPClient>().PingMovement(PlayerManager.PlayersBrainDictionary[this.gameObject.GetComponent<UDPClient>().thisPlayer.id].positions);
+                    this.gameObject.GetComponent<UDPClient>().thisPlayer.positions[0] = player.transform.position.x;
+                    this.gameObject.GetComponent<UDPClient>().PingMovement(this.gameObject.GetComponent<UDPClient>().thisPlayer.positions);
                     WalkingAnimation();
                 }
                 if (serverType == 1)
                 {
-                    PlayerManager.PlayersBrainDictionary[this.gameObject.GetComponent<UDPServer>().thisPlayer.id].positions[0] = player.transform.position.x;
-                    this.gameObject.GetComponent<UDPServer>().PingMovement(PlayerManager.PlayersBrainDictionary[this.gameObject.GetComponent<UDPServer>().thisPlayer.id].positions);
+                    this.gameObject.GetComponent<UDPServer>().thisPlayer.positions[0] = player.transform.position.x;
+                    this.gameObject.GetComponent<UDPServer>().PingMovement(this.gameObject.GetComponent<UDPServer>().thisPlayer.positions);
                     WalkingAnimation();
                 }
             }

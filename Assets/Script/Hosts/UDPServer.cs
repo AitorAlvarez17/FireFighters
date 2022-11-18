@@ -266,7 +266,7 @@ public class UDPServer : MonoBehaviour
         byte[] dataTMP = new byte[1024];
         Debug.Log("Message: " + message.message);
         Debug.Log("Username: " + message.username);
-        Debug.Log("Pos X: " + message.positions[0]);
+        Debug.Log("Pos X: " + thisPlayer.positions[0]);
         //try
         //{
         //    message.SetMessage("");
