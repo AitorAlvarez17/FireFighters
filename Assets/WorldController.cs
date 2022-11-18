@@ -25,6 +25,7 @@ public class WorldController : MonoBehaviour
 
     public void CreatePlayer(int key)
     {
+        Debug.Log("New Lumberjack! KEY:" + key);
         GameObject playerPref = Instantiate(playerGO, spawnPoints[pos].position, Quaternion.identity);
         playerPref.GetComponent<Lumberjack>().Init(key);
         worldDolls.Add(key, playerPref.GetComponent<Lumberjack>());
