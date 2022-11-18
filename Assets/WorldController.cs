@@ -35,7 +35,10 @@ public class WorldController : MonoBehaviour
 
     public void MovePlayer(int _key, float[] _positions)
     {
-        worldDolls[_key].Move(_positions);
+        if (worldDolls.ContainsKey(_key))
+            worldDolls[_key].Move(_positions);
+        else
+            Debug.Log("Key" + _key + "was not supported!");
     }
 
     public void WelcomeClient(int[] worldMatrix, int _key)

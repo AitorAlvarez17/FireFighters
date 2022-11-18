@@ -86,8 +86,10 @@ public class UDPServer : MonoBehaviour
                 newConection = false;
             }
             this.gameObject.GetComponent<ServerController>().numberOfPlayers.text = "Number of Players: " + PlayerManager.playersOnline;
-            if (message.id != -1 && message.positions[0] != 0f || message.positions[2] != 0f)
+            if (message.id != 1 && message.id != thisPlayer.id && message.positions[0] != 0f || message.positions[2] != 0f)
             {
+                Debug.Log("Server Player ID:" + thisPlayer.id);
+                Debug.Log("Message ID:" + message.id);
                 UpdateWorld(message.id, message.positions);
             }
             serverDirty = false;
@@ -144,6 +146,7 @@ public class UDPServer : MonoBehaviour
         clientEP = (EndPoint)clientIPEP;
 
         thisPlayer = new Player("Player" + (playersOnline + 1).ToString(), true, (playersOnline + 1));
+        Debug.Log("BEGINNING OF THE GENERAL SERVER THREAD");
         message.SetUsername(thisPlayer.username);
         message.SetId(thisPlayer.id);
         UpdateGameMatrix(playersOnline);
@@ -210,7 +213,8 @@ public class UDPServer : MonoBehaviour
 
             Debug.Log("Socket listening from WHILE");
             message = serializer.DeserializePackage(dataTMP);
-            EchoData(message);
+            Debug.Log("This player ID:" + thisPlayer.id);
+            //EchoData(message);
             
             serverDirty = true;
             
@@ -272,15 +276,13 @@ public class UDPServer : MonoBehaviour
     public void PingMovement(float[] packageMovement)
     {
         byte[] dataTMP = new byte[1024];
-        Debug.Log("ID: " + message.id);
-        Debug.Log("Username: " + message.username);
-        Debug.Log("Pos X: " + thisPlayer.positions[0]);
         try
         {
             message.SetMessage("");
             message.SetPositions(packageMovement);
             message.SetUsername(thisPlayer.username);
             message.SetId(thisPlayer.id);
+            Debug.Log("Sending from Ping Server: ID: " + message.id);
             EchoData(message);
             //Debug.Log("[CLIENT] Sending to server: " + clientIPEP.ToString() + " Message: " + packageMovement[0] + "From:" + message.username);
             //dataTMP = serializer.SerializePackage(message);

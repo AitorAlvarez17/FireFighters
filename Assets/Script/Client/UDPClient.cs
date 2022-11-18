@@ -89,6 +89,8 @@ public class UDPClient : MonoBehaviour
             }
             if (message.id != -1 && message.id != thisPlayer.id && message.positions[0] != 0f || message.positions[2] != 0f)
             {
+                Debug.Log("This player ID:" + thisPlayer.id);
+                Debug.Log("Message ID: " + message.id);
                 UpdateWorld(message.id, message.positions);
             }
 
