@@ -20,6 +20,7 @@ public class UDPServer : MonoBehaviour
 
     //declare thread and socket
     private Thread serverThread;
+    private Thread receiveThread = null;
     private Socket udpSocket;
 
     public bool serverDirty = false;
@@ -187,6 +188,9 @@ public class UDPServer : MonoBehaviour
             UpdateGameMatrix(UDPClientList.Count);
             newConection = true;
             SendData(message);
+
+            receiveThread = new Thread(Receive);
+            receiveThread.Start();
         }
         catch (Exception e)
         {
@@ -195,29 +199,41 @@ public class UDPServer : MonoBehaviour
 
         //This has to be a diferent thread
         //loops the receive system. Messy but functional
-        while (true)// Look at Promises, Async, Await
+        
+    }
+
+    private void Receive()
+    {
+        try
         {
-            byte[] dataTMP = new byte[1024];
-            //Carefull with this, there is a bug because we fullfill the byte[] buffer
-            recv = udpSocket.ReceiveFrom(dataTMP, ref clientEP);
-
-            //THIS IS SO DIRTY - TODO//
-            if (!UDPClientList.Contains(clientEP) && clientEP.ToString() != "")
+            while (true)// Look at Promises, Async, Await
             {
-                Debug.Log("Adding a new remote conection point! :" + clientEP.ToString());
-                UDPClientList.Add(clientEP);
-                newConection = true;
+                byte[] dataTMP = new byte[1024];
+                //Carefull with this, there is a bug because we fullfill the byte[] buffer
+                recv = udpSocket.ReceiveFrom(dataTMP, ref clientEP);
 
-                //Debug.Log("Size of Client List:" + UDPClientList.Count);
+                //THIS IS SO DIRTY - TODO//
+                if (!UDPClientList.Contains(clientEP) && clientEP.ToString() != "")
+                {
+                    Debug.Log("Adding a new remote conection point! :" + clientEP.ToString());
+                    UDPClientList.Add(clientEP);
+                    newConection = true;
+
+                    //Debug.Log("Size of Client List:" + UDPClientList.Count);
+                }
+
+                Debug.Log("Socket listening from Receive");
+                message = serializer.DeserializePackage(dataTMP);
+                Debug.Log("This player ID:" + thisPlayer.id);
+                //EchoData(message);
+
+                serverDirty = true;
+
             }
-
-            Debug.Log("Socket listening from WHILE");
-            message = serializer.DeserializePackage(dataTMP);
-            Debug.Log("This player ID:" + thisPlayer.id);
-            //EchoData(message);
-            
-            serverDirty = true;
-            
+        }
+        catch (Exception e)
+        {
+            Debug.Log("Recieve(): Error receiving: " + e);
         }
     }
 
@@ -257,15 +273,6 @@ public class UDPServer : MonoBehaviour
         {
             Debug.Log("SERVER ERROR Failed to send data. Error: " + e.Message);
         }
-    }
-
-    public void CreateMonigote()
-    {
-        //If a new client has connected create the visual representation.
-
-        //Every Client needs to have a list of monigotes that are linked to the SAME key as the data layer Dictionary.
-
-        //If a message containing movement and a key arrives we modify the Monigote with the same key.
     }
 
     public void UpdateWorld(int _key, float[] _positions)
