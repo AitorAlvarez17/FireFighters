@@ -29,7 +29,11 @@ public class UDPServer : MonoBehaviour
     public string messageDecoded = null;
     //check it
     public Player thisPlayer;
-    public PlayerPackage message = new PlayerPackage(null, "Server");
+
+    //As the game is threaded we gotta difference from message Receive and message Send
+    public PlayerPackage receivedMessage = new PlayerPackage(null, "Server");
+    public PlayerPackage sendMessage = new PlayerPackage(null, "Server");
+
     public bool onLine = false;
     public bool initServer = false;
 
@@ -42,6 +46,8 @@ public class UDPServer : MonoBehaviour
     //This is the brain of the game
     public int[] gameMatrix = new int[4] { 0, 0, 0, 0 };
     public int playersOnline = 0;
+
+    public bool isMoving = false;
 
     //We need a "WorldElementsMonigotes" List perfectly linked to the dataLayer "keys" or watever.
 
@@ -74,11 +80,11 @@ public class UDPServer : MonoBehaviour
     {
         if (serverDirty == true)
         {
-            if (message != null && message.message != null && message.message != "")
+            if (receivedMessage != null && receivedMessage.message != null && receivedMessage.message != "")
             {
-                Debug.Log("Message checked and creating:" + message.message + " From: " + message.username);
-                CreateMessage(message);
-                message.SetMessage(null);
+                Debug.Log("Message checked and creating:" + receivedMessage.message + " From: " + receivedMessage.username);
+                CreateMessage(receivedMessage);
+                receivedMessage.SetMessage(null);
                 //print the messages that has been created
             }
             if (newConection == true)
@@ -87,11 +93,11 @@ public class UDPServer : MonoBehaviour
                 newConection = false;
             }
             this.gameObject.GetComponent<ServerController>().numberOfPlayers.text = "Number of Players: " + PlayerManager.playersOnline;
-            if (message.id != 1 && message.id != thisPlayer.id && message.positions[0] != 0f || message.positions[2] != 0f)
+            if (receivedMessage.positions[0] != 0f || receivedMessage.positions[2] != 0f && isMoving == true)
             {
                 Debug.Log("Server Player ID:" + thisPlayer.id);
-                Debug.Log("Message ID:" + message.id);
-                UpdateWorld(message.id, message.positions);
+                Debug.Log("Message ID:" + receivedMessage.id);
+                UpdateWorld(receivedMessage.id, receivedMessage.positions);
             }
             serverDirty = false;
             Debug.Log("Setting Text and Server Dirtyness");
@@ -148,9 +154,12 @@ public class UDPServer : MonoBehaviour
 
         thisPlayer = new Player("Player" + (playersOnline + 1).ToString(), true, (playersOnline + 1));
         Debug.Log("BEGINNING OF THE GENERAL SERVER THREAD");
-        message.SetUsername(thisPlayer.username);
-        message.SetId(thisPlayer.id);
+        sendMessage.SetUsername(thisPlayer.username);
+        sendMessage.SetId(thisPlayer.id);
+        sendMessage.SetPositions(thisPlayer.positions);
         UpdateGameMatrix(playersOnline);
+        sendMessage.SetWorldMatrix(gameMatrix);
+        sendMessage.SetPlayersOnline(playersOnline);
         initServer = true;
 
         //try the socket's bind, if not debugs
@@ -164,7 +173,7 @@ public class UDPServer : MonoBehaviour
             Debug.Log("SERVER ERROR Failed to bind socket: " + e.Message);
         }
 
-        //listens for a connection, if not debugs
+        //FIRST RECEIVE
         try
         {
             byte[] dataTMP = new byte[1024];
@@ -178,16 +187,19 @@ public class UDPServer : MonoBehaviour
                 //Debug.Log("Adding a new remote conection point! :" + clientEP.ToString());
                 UDPClientList.Add(clientEP);
 
+                UpdateGameMatrix(UDPClientList.Count);
+
                 //Debug.Log("Size of Client List:" + UDPClientList.Count);
             }
 
             //Welcome Message!
-            message = serializer.DeserializePackage(dataTMP);
+            receivedMessage = serializer.DeserializePackage(dataTMP);
+            ModifyReceivedMessage();
             //Comunicate to the client what his new id is
             serverDirty = true;
-            UpdateGameMatrix(UDPClientList.Count);
             newConection = true;
-            SendData(message);
+            isMoving = false;
+            SendData(receivedMessage);
 
             receiveThread = new Thread(Receive);
             receiveThread.Start();
@@ -222,13 +234,24 @@ public class UDPServer : MonoBehaviour
                     //Debug.Log("Size of Client List:" + UDPClientList.Count);
                 }
 
-                Debug.Log("Socket listening from Receive");
-                message = serializer.DeserializePackage(dataTMP);
-                Debug.Log("This player ID:" + thisPlayer.id);
-                //EchoData(message);
+                if (receivedMessage.id == thisPlayer.id)
+                {
+                    Debug.Log("Not Moving, this was MINE");
+                    isMoving = false;
+                }
+                else
+                {
+                    Debug.Log("This is not MINE!");
+                    isMoving = true;
+                }
+
+                //Debug.Log("Socket listening from Receive");
+                receivedMessage = serializer.DeserializePackage(dataTMP);
+                ModifyReceivedMessage();
+                Debug.Log("[SERVER] Received message ID:" + receivedMessage.id);
+                EchoData(receivedMessage);
 
                 serverDirty = true;
-
             }
         }
         catch (Exception e)
@@ -243,9 +266,8 @@ public class UDPServer : MonoBehaviour
         try
         {
             byte[] dataTMP = new byte[1024];
-            message.SetMessage(_message.message);
             Debug.Log("SERVER Sending message to " + clientEP.ToString() + ": " + _message.message);
-            dataTMP = serializer.SerializePackage(message);
+            dataTMP = serializer.SerializePackage(_message);
             udpSocket.SendTo(dataTMP, dataTMP.Length, SocketFlags.None, clientEP);
         }
         catch (Exception e)
@@ -260,8 +282,7 @@ public class UDPServer : MonoBehaviour
         try
         {
             byte[] dataTMP = new byte[1024];
-            message.SetMessage(_message.message);
-            dataTMP = serializer.SerializePackage(message);
+            dataTMP = serializer.SerializePackage(_message);
             foreach (EndPoint ip in UDPClientList)
             {
                 Debug.Log("SERVER Sending message to " + ip.ToString() + ": " + _message.message);
@@ -285,12 +306,12 @@ public class UDPServer : MonoBehaviour
         byte[] dataTMP = new byte[1024];
         try
         {
-            message.SetMessage("");
-            message.SetPositions(packageMovement);
-            message.SetUsername(thisPlayer.username);
-            message.SetId(thisPlayer.id);
-            Debug.Log("Sending from Ping Server: ID: " + message.id);
-            EchoData(message);
+            sendMessage.SetMessage("");
+            sendMessage.SetPositions(packageMovement);
+            sendMessage.SetUsername(thisPlayer.username);
+            sendMessage.SetId(thisPlayer.id);
+            Debug.Log("Sending from Ping Server: ID: " + sendMessage.id);
+            EchoData(sendMessage);
             //Debug.Log("[CLIENT] Sending to server: " + clientIPEP.ToString() + " Message: " + packageMovement[0] + "From:" + message.username);
             //dataTMP = serializer.SerializePackage(message);
             //recv = udpSocket.SendTo(dataTMP, dataTMP.Length, SocketFlags.None, clientEP);
@@ -311,9 +332,13 @@ public class UDPServer : MonoBehaviour
         Debug.Log("Matrix pos 1" + gameMatrix[1]);
         Debug.Log("Matrix pos 2" + gameMatrix[2]);
         Debug.Log("Matrix pos 3" + gameMatrix[3]);
-        message.SetWorldMatrix(gameMatrix);
         //we tell the client his position is the X on the matrix
         Debug.Log("Players Online Updating and Setting:" + playersOnline);
-        message.SetPlayersOnline(playersOnline);
+    }
+
+    public void ModifyReceivedMessage()
+    {
+        receivedMessage.SetWorldMatrix(gameMatrix);
+        receivedMessage.SetPlayersOnline(playersOnline);
     }
 }

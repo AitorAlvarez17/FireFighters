@@ -32,7 +32,8 @@ public class UDPClient : MonoBehaviour
     private EndPoint serverEP;
 
     public Player thisPlayer;
-    public PlayerPackage message = new PlayerPackage(null, "");
+    public PlayerPackage receiveMessage = new PlayerPackage(null, "");
+    public PlayerPackage sendMessage = new PlayerPackage(null, "");
 
     //This is the brain of the game
     public int[] gameMatrix = new int[4] { 0, 0, 0, 0 };
@@ -42,6 +43,8 @@ public class UDPClient : MonoBehaviour
 
     byte[] testBytes = new byte[1024];
     string testString = "";
+
+    public bool isMoving = false;
 
     //instanciation both variables
     void Start()
@@ -77,21 +80,21 @@ public class UDPClient : MonoBehaviour
                 Debug.Log("Creating Server repre");
                 justConnected = false;
             }
-            if (message != null && message.message != null && message.message != "")
+            if (receiveMessage != null && receiveMessage.message != null && receiveMessage.message != "")
             {
-                Debug.Log("Message checked and creating...!: " + message.message + "From Client:" + message.username);
+                Debug.Log("Message checked and creating...!: " + receiveMessage.message + "From Client:" + receiveMessage.username);
                 //Later on take it from PlayerManager! Now just hard-took it for debug purposes.
                 //You can easily acces to the player with the key (index) of it
-                CreateMessage(message);
-                message.SetMessage(null);
+                CreateMessage(receiveMessage);
+                receiveMessage.SetMessage(null);
 
                 //print the messages that has been created
             }
-            if (message.id != -1 && message.id != thisPlayer.id && message.positions[0] != 0f || message.positions[2] != 0f)
+            if (receiveMessage.positions[0] != 0f || receiveMessage.positions[2] != 0f && isMoving == true)
             {
-                Debug.Log("This player ID:" + thisPlayer.id);
-                Debug.Log("Message ID: " + message.id);
-                UpdateWorld(message.id, message.positions);
+                Debug.Log("This player ID (check):" + thisPlayer.id);
+                Debug.Log("Received message ID: " + receiveMessage.id);
+                UpdateWorld(receiveMessage.id, receiveMessage.positions);
             }
 
             Debug.Log("Setting Text and dirtyness");
@@ -151,10 +154,11 @@ public class UDPClient : MonoBehaviour
 
         //Here the client is Blind, he doesn't know anything of the world
         thisPlayer = new Player("Player" + playersOnline.ToString(), true, playersOnline);
-        message.SetUsername(thisPlayer.username);
-        message.SetId(thisPlayer.id);
-        message.SetWorldMatrix(gameMatrix);
-        message.SetPlayersOnline(0);
+        sendMessage.SetUsername(thisPlayer.username);
+        sendMessage.SetId(thisPlayer.id);
+        sendMessage.SetPositions(thisPlayer.positions);
+        sendMessage.SetWorldMatrix(gameMatrix);
+        sendMessage.SetPlayersOnline(0);
         //Debug.Log("Resending the hello string!");
         SendString("Hi! I just connected...");
 
@@ -162,10 +166,13 @@ public class UDPClient : MonoBehaviour
         try
         {
             recv = udpSocket.Receive(data);
-            message = serializer.DeserializePackage(data);
+            receiveMessage = serializer.DeserializePackage(data);
             Debug.Log("Receiving Back To Client");
             justConnected = true;
             thisPlayer.dirty = true;
+
+            isMoving = false;
+
 
             receiveThread = new Thread(Receive);
             receiveThread.Start();
@@ -182,10 +189,9 @@ public class UDPClient : MonoBehaviour
     {
         try
         {
-            message.SetMessage(_message);
-            message.SetUsername(thisPlayer.username);
-            Debug.Log("[CLIENT] Sending to server: " + serverIPEP.ToString() + " Message: " + _message + "From:" + message.username);
-            data = serializer.SerializePackage(message);
+            sendMessage.SetMessage(_message);
+            Debug.Log("[CLIENT] Sending to server: " + serverIPEP.ToString() + " Message: " + _message + "From:" + sendMessage.username);
+            data = serializer.SerializePackage(sendMessage);
             recv = udpSocket.SendTo(data, data.Length, SocketFlags.None, serverEP);
 
             //carefull with data as it keeps setted, this can be so confusing if you cross it with a local dataTMP value, just to know.
@@ -206,16 +212,26 @@ public class UDPClient : MonoBehaviour
                 byte[] dataTMP = new byte[1024];
 
                 recv = udpSocket.Receive(dataTMP);
-                message = serializer.DeserializePackage(dataTMP);
+                receiveMessage = serializer.DeserializePackage(dataTMP);
                 thisPlayer.dirty = true;
 
+                if (receiveMessage.id == thisPlayer.id)
+                {
+                    Debug.Log("Not Moving, this was MINE");
+                    isMoving = false;
+                }
+                else
+                {
+                    Debug.Log("This is not MINE!");
+                    isMoving = true;
+                }
                 //Update world
                 //PlayerManager.UpdatePlayerPosition(message.Key, message.positions);
 
-                Debug.Log("[CIENT] Receive data!: " + message.message);
+                Debug.Log("[CIENT] Receive data!: " + receiveMessage.message);
 
-                Debug.Log("[CLIENT] Received Movement!" + message.positions[0] + message.positions[1]+ message.positions[2]);
-                Debug.Log("[CLIENT] Received Id!" + message.id);
+                //Debug.Log("[CLIENT] Received Movement!" + message.positions[0] + message.positions[1]+ message.positions[2]);
+                Debug.Log("[CLIENT] Received Id!" + receiveMessage.id);
             }
         }
         catch(Exception e)
@@ -227,17 +243,16 @@ public class UDPClient : MonoBehaviour
 
     public void PingMovement(float[] packageMovement)
     {
-        Debug.Log("Message: " + message.message);
-        Debug.Log("Username: " + message.username);
-        Debug.Log("Pos X: " + message.positions[0]);
         try
         {
-            message.SetMessage("");
-            message.SetPositions(packageMovement);
-            message.SetUsername(thisPlayer.username);
-            message.SetId(thisPlayer.id);
-            Debug.Log("[CLIENT] Sending to server: " + serverIPEP.ToString() + " Message: " + packageMovement[0] + "From:" + message.username);
-            data = serializer.SerializePackage(message);
+            sendMessage.SetMessage("");
+            sendMessage.SetPositions(packageMovement);
+            sendMessage.SetUsername(thisPlayer.username);
+            sendMessage.SetId(thisPlayer.id);
+            Debug.Log("Pinging Mov from Client ID: " + sendMessage.id);
+
+            //Debug.Log("[CLIENT] Sending to server: " + serverIPEP.ToString() + " Message: " + packageMovement[0] + "From:" + message.username);
+            data = serializer.SerializePackage(sendMessage);
             recv = udpSocket.SendTo(data, data.Length, SocketFlags.None, serverEP);
 
             //carefull with data as it keeps setted, this can be so confusing if you cross it with a local dataTMP value, just to know.
@@ -250,9 +265,9 @@ public class UDPClient : MonoBehaviour
 
     public void WelcomeWorld()
     {
-        Debug.Log("The number of players online is:" + message.playersOnline);
-        playersOnline = message.playersOnline;
-        gameMatrix = message.worldMatrix;
+        Debug.Log("The number of players online is:" + receiveMessage.playersOnline);
+        playersOnline = receiveMessage.playersOnline;
+        gameMatrix = receiveMessage.worldMatrix;
         //this bc is the second pos but 1 in index
         thisPlayer.id = playersOnline;
         Debug.Log("Client was welcomed to world, ID:" + thisPlayer.id);
