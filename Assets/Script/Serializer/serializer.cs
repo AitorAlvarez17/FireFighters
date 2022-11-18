@@ -21,7 +21,6 @@ public static class serializer
 
     public static byte[] SerializePackage(PlayerPackage _message)
     {
-
         string message = _message.message;
         string username = _message.username;
         stream = new MemoryStream();
@@ -36,6 +35,11 @@ public static class serializer
             writer.Write(coordinate);
         }
         writer.Write(_message.id);
+        foreach (int worldPlayer in _message.worldMatrix)
+        {
+            writer.Write(worldPlayer);
+        }
+        writer.Write(_message.playersOnline);
         bytes = stream.ToArray();
         //Debug.Log("Serialized Message!");
         return bytes;
@@ -63,7 +67,20 @@ public static class serializer
             Debug.Log("Position :" + item);
         }
         int id = reader.ReadInt32();
-        PlayerPackage newMessage = new PlayerPackage(message, username,positions,id);
+        int[] worldMatrix = new int[4];
+        worldMatrix[0] = reader.ReadInt32();
+        worldMatrix[1] = reader.ReadInt32();
+        worldMatrix[2] = reader.ReadInt32();
+        worldMatrix[2] = reader.ReadInt32();
+
+        int playersOnline = reader.ReadInt32();
+
+        foreach (var item in positions)
+        {
+            Debug.Log("Position :" + item);
+        }
+
+        PlayerPackage newMessage = new PlayerPackage(message, username,positions,id, worldMatrix, playersOnline);
 
         bytes = null;
 

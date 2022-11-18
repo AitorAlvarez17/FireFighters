@@ -38,12 +38,17 @@ public class UDPServer : MonoBehaviour
 
     public List<EndPoint> UDPClientList = new List<EndPoint>();
 
+    //This is the brain of the game
+    public int[] gameMatrix = new int[4] { 0, 0, 0, 0 };
+    public int playersOnline = 0;
+
     //We need a "WorldElementsMonigotes" List perfectly linked to the dataLayer "keys" or watever.
 
     //instanciation both variables and starts server
     void Start()
     {
         serverDirty = false;
+        playersOnline = UDPClientList.Count;
         // Get IP and port
         serverIP = ServerController.MyServerInstance.IPServer;
         serverPort = ServerController.MyServerInstance.serverPort;
@@ -77,7 +82,7 @@ public class UDPServer : MonoBehaviour
             }
             if (newConection == true)
             {
-                this.gameObject.GetComponent<WorldController>().CreatePlayer(message.id);
+                this.gameObject.GetComponent<WorldController>().CreatePlayer(playersOnline);
                 newConection = false;
             }
             this.gameObject.GetComponent<ServerController>().numberOfPlayers.text = "Number of Players: " + PlayerManager.playersOnline;
@@ -138,9 +143,10 @@ public class UDPServer : MonoBehaviour
         clientIPEP = new IPEndPoint(ipAddress, serverPort);
         clientEP = (EndPoint)clientIPEP;
 
-        thisPlayer = PlayerManager.AddPlayer("Player");
+        thisPlayer = new Player("Player" + (playersOnline + 1).ToString(), true, (playersOnline + 1));
         message.SetUsername(thisPlayer.username);
         message.SetId(thisPlayer.id);
+        UpdateGameMatrix(playersOnline);
         initServer = true;
 
         //try the socket's bind, if not debugs
@@ -160,20 +166,22 @@ public class UDPServer : MonoBehaviour
             byte[] dataTMP = new byte[1024];
             recv = udpSocket.ReceiveFrom(dataTMP, ref clientEP);
             //Debug.Log("SERVER Message received from " + clientEP.ToString() + ": Message: " + serializer.DeserializeMessage(dataTMP).message + " Username: " + serializer.DeserializeMessage(dataTMP).username);
-            Debug.Log("Socket listen for connection");
+            //Debug.Log("Socket listen for connection");
 
             //THIS IS SO DIRTY - TODO//
             if (!UDPClientList.Contains(clientEP) && clientEP.ToString() != "")
             {
-                Debug.Log("Adding a new remote conection point! :" + clientEP.ToString());
+                //Debug.Log("Adding a new remote conection point! :" + clientEP.ToString());
                 UDPClientList.Add(clientEP);
 
-                Debug.Log("Size of Client List:" + UDPClientList.Count);
+                //Debug.Log("Size of Client List:" + UDPClientList.Count);
             }
 
             //Welcome Message!
             message = serializer.DeserializePackage(dataTMP);
+            //Comunicate to the client what his new id is
             serverDirty = true;
+            UpdateGameMatrix(UDPClientList.Count);
             newConection = true;
             SendData(message);
         }
@@ -197,7 +205,7 @@ public class UDPServer : MonoBehaviour
                 UDPClientList.Add(clientEP);
                 newConection = true;
 
-                Debug.Log("Size of Client List:" + UDPClientList.Count);
+                //Debug.Log("Size of Client List:" + UDPClientList.Count);
             }
 
             Debug.Log("Socket listening from WHILE");
@@ -282,5 +290,19 @@ public class UDPServer : MonoBehaviour
         //{
         //    Debug.Log("[CLIENT] Failed to send message. Error: " + e.ToString());
         //}
+    }
+
+    public void UpdateGameMatrix(int id)
+    {
+        //gameMatrix[id] is the DATA value // id + 1 is the VISUAL VALUE ... id's will be 1,2,3,4 not 0,1,2,3
+        gameMatrix[id] = id + 1;
+        playersOnline++;
+        Debug.Log("Matrix pos 0" + gameMatrix[0]);
+        Debug.Log("Matrix pos 1" + gameMatrix[1]);
+        Debug.Log("Matrix pos 2" + gameMatrix[2]);
+        Debug.Log("Matrix pos 3" + gameMatrix[3]);
+        message.SetWorldMatrix(gameMatrix);
+        //we tell the client his position is the X on the matrix
+        message.SetPlayersOnline(playersOnline);
     }
 }

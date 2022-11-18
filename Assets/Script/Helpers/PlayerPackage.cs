@@ -10,6 +10,11 @@ public class PlayerPackage
     public float[] positions = new float[3];
 
     public int id = -1;
+
+    public int[] worldMatrix = new int[4];
+
+    //this will work as an index
+    public int playersOnline = 0;
     //Message constructor
     public PlayerPackage(string _message, string _username)
     {
@@ -21,7 +26,7 @@ public class PlayerPackage
     }   
 
     //position constructor
-    public PlayerPackage(string _message, string _username,float[] position, int _id)
+    public PlayerPackage(string _message, string _username,float[] position, int _id, int[] _worldMatrix, int _playersOnline)
     {
         message = _message;
         username = _username;
@@ -29,6 +34,11 @@ public class PlayerPackage
         positions[1] = position[1];
         positions[2] = position[2];
         id = _id;
+        worldMatrix[0] = _worldMatrix[0];
+        worldMatrix[1] = _worldMatrix[1];
+        worldMatrix[2] = _worldMatrix[2];
+        worldMatrix[3] = _worldMatrix[3];
+        playersOnline = _playersOnline;
     }
 
     public void SetMessage(string _message)
@@ -51,5 +61,20 @@ public class PlayerPackage
     public void SetId(int _id)
     {
         id = _id;
+    }
+
+    public void SetWorldMatrixPos(int pos, int value)
+    {
+        worldMatrix.SetValue(value, pos);
+    }
+
+    public void SetWorldMatrix(int[] _worldMatrix)
+    {
+        worldMatrix = _worldMatrix;
+    }
+
+    public void SetPlayersOnline(int _value)
+    {
+        playersOnline = _value;
     }
 }

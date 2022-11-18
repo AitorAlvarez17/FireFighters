@@ -34,6 +34,10 @@ public class UDPClient : MonoBehaviour
     public Player thisPlayer;
     public PlayerPackage message = new PlayerPackage(null, "");
 
+    //This is the brain of the game
+    public int[] gameMatrix = new int[4] { 0, 0, 0, 0 };
+    public int playersOnline = 99;
+
     //public PlayerInfo playerInfo = new PlayerInfo(new PlayerPackage("test", "Username", thisPlayer.positions));
 
     byte[] testBytes = new byte[1024];
@@ -44,8 +48,9 @@ public class UDPClient : MonoBehaviour
     {
         serverIP = ServerController.MyServerInstance.IPServer;
         serverPort = ServerController.MyServerInstance.serverPort;
-        //testBytes = serializer.SerializePlayerInfo(playerInfo);
-    }
+        playersOnline = 99;
+    //testBytes = serializer.SerializePlayerInfo(playerInfo);
+}
 
     public void Awake()
     {
@@ -138,19 +143,21 @@ public class UDPClient : MonoBehaviour
         serverIPEP = new IPEndPoint(ipAddress, serverPort);
         serverEP = (EndPoint)serverIPEP;
 
-        //Really good place for name personalization
-        thisPlayer = PlayerManager.AddPlayer("Player");
+        //Here the client is Blind, he doesn't know anything of the world
+        thisPlayer = new Player("Player" + playersOnline.ToString(), true, playersOnline);
         message.SetUsername(thisPlayer.username);
         message.SetId(thisPlayer.id);
-        Debug.Log("Resending the hello string!");
+        message.SetWorldMatrix(gameMatrix);
+        message.SetPlayersOnline(0);
+        //Debug.Log("Resending the hello string!");
         SendString("Hi! I just connected...");
 
-        // Receive from server
+        // Receive from server and initialize the world
         try
         {
             recv = udpSocket.Receive(data);
             message = serializer.DeserializePackage(data);
-            Debug.Log("Receiving! A");
+            Debug.Log("Receiving Back To Client");
             justConnected = true;
             thisPlayer.dirty = true;
 
@@ -237,6 +244,11 @@ public class UDPClient : MonoBehaviour
 
     public void WelcomeWorld()
     {
+        Debug.Log("The number of players online is:" + message.playersOnline);
+        gameMatrix = message.worldMatrix;
+        //this bc is the second pos but 1 in index
+        thisPlayer.id = message.worldMatrix[playersOnline - 1];
+        Debug.Log("Client was welcomed to world, ID:" + thisPlayer.id);
         this.gameObject.GetComponent<WorldController>().WelcomeClient(thisPlayer.id);
     }
 }
