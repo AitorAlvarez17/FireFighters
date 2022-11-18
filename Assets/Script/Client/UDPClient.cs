@@ -245,6 +245,7 @@ public class UDPClient : MonoBehaviour
     public void WelcomeWorld()
     {
         Debug.Log("The number of players online is:" + message.playersOnline);
+        playersOnline = message.playersOnline;
         gameMatrix = message.worldMatrix;
         //this bc is the second pos but 1 in index
         thisPlayer.id = playersOnline;

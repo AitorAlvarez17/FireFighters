@@ -303,6 +303,7 @@ public class UDPServer : MonoBehaviour
         Debug.Log("Matrix pos 3" + gameMatrix[3]);
         message.SetWorldMatrix(gameMatrix);
         //we tell the client his position is the X on the matrix
+        Debug.Log("Players Online Updating and Setting:" + playersOnline);
         message.SetPlayersOnline(playersOnline);
     }
 }
