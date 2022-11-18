@@ -245,6 +245,7 @@ public class UDPClient : MonoBehaviour
     {
         try
         {
+            byte[] dataTMP = new byte[1024];
             sendMessage.SetMessage("");
             sendMessage.SetPositions(packageMovement);
             sendMessage.SetUsername(thisPlayer.username);
@@ -252,8 +253,8 @@ public class UDPClient : MonoBehaviour
             Debug.Log("Pinging Mov from Client ID: " + sendMessage.id);
 
             //Debug.Log("[CLIENT] Sending to server: " + serverIPEP.ToString() + " Message: " + packageMovement[0] + "From:" + message.username);
-            data = serializer.SerializePackage(sendMessage);
-            recv = udpSocket.SendTo(data, data.Length, SocketFlags.None, serverEP);
+            dataTMP = serializer.SerializePackage(sendMessage);
+            recv = udpSocket.SendTo(dataTMP, dataTMP.Length, SocketFlags.None, serverEP);
 
             //carefull with data as it keeps setted, this can be so confusing if you cross it with a local dataTMP value, just to know.
         }
