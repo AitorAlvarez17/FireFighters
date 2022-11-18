@@ -82,7 +82,7 @@ public class UDPServer : MonoBehaviour
             }
             if (newConection == true)
             {
-                this.gameObject.GetComponent<WorldController>().CreatePlayer(playersOnline);
+                this.gameObject.GetComponent<WorldController>().CreatePlayer(playersOnline + 1);
                 newConection = false;
             }
             this.gameObject.GetComponent<ServerController>().numberOfPlayers.text = "Number of Players: " + PlayerManager.playersOnline;
