@@ -272,24 +272,25 @@ public class UDPServer : MonoBehaviour
     public void PingMovement(float[] packageMovement)
     {
         byte[] dataTMP = new byte[1024];
-        Debug.Log("Message: " + message.message);
+        Debug.Log("ID: " + message.id);
         Debug.Log("Username: " + message.username);
         Debug.Log("Pos X: " + thisPlayer.positions[0]);
-        //try
-        //{
-        //    message.SetMessage("");
-        //    message.SetPositions(packageMovement);
-        //    message.SetUsername(thisPlayer.username);
-        //    message.SetId(thisPlayer.id);
-        //    Debug.Log("[CLIENT] Sending to server: " + clientIPEP.ToString() + " Message: " + packageMovement[0] + "From:" + message.username);
-        //    dataTMP = serializer.SerializePackage(message);
-        //    recv = udpSocket.SendTo(dataTMP, dataTMP.Length, SocketFlags.None, clientEP);
-        //    //carefull with data as it keeps setted, this can be so confusing if you cross it with a local dataTMP value, just to know.
-        //}
-        //catch (Exception e)
-        //{
-        //    Debug.Log("[CLIENT] Failed to send message. Error: " + e.ToString());
-        //}
+        try
+        {
+            message.SetMessage("");
+            message.SetPositions(packageMovement);
+            message.SetUsername(thisPlayer.username);
+            message.SetId(thisPlayer.id);
+            EchoData(message);
+            //Debug.Log("[CLIENT] Sending to server: " + clientIPEP.ToString() + " Message: " + packageMovement[0] + "From:" + message.username);
+            //dataTMP = serializer.SerializePackage(message);
+            //recv = udpSocket.SendTo(dataTMP, dataTMP.Length, SocketFlags.None, clientEP);
+            //carefull with data as it keeps setted, this can be so confusing if you cross it with a local dataTMP value, just to know.
+        }
+        catch (Exception e)
+        {
+            Debug.Log("[CLIENT] Failed to send message. Error: " + e.ToString());
+        }
     }
 
     public void UpdateGameMatrix(int id)

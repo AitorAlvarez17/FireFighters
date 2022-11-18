@@ -87,6 +87,10 @@ public class UDPClient : MonoBehaviour
 
                 //print the messages that has been created
             }
+            if (message.id != -1 && message.id != thisPlayer.id && message.positions[0] != 0f || message.positions[2] != 0f)
+            {
+                UpdateWorld(message.id, message.positions);
+            }
 
             Debug.Log("Setting Text and dirtyness");
             this.gameObject.GetComponent<ServerController>().clientName.text = this.gameObject.GetComponent<UDPClient>().thisPlayer.username;
@@ -251,5 +255,10 @@ public class UDPClient : MonoBehaviour
         thisPlayer.id = playersOnline;
         Debug.Log("Client was welcomed to world, ID:" + thisPlayer.id);
         this.gameObject.GetComponent<WorldController>().WelcomeClient(gameMatrix, thisPlayer.id);
+    }
+
+    public void UpdateWorld(int _key, float[] _positions)
+    {
+        this.gameObject.GetComponent<WorldController>().MovePlayer(_key, _positions);
     }
 }
