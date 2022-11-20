@@ -24,7 +24,7 @@ public class Player
 
     public void UpdatePosition(float[] positions)
     {
-        //UpdatePlayerInWorld
+        // UpdatePlayerInWorld
     }
 
     public Player(string _username, bool onLine, int _id)
@@ -57,6 +57,7 @@ public static class PlayerManager
         playersOnline++;
         Player newPlayer = new Player(name + playersOnline.ToString(), true, playersOnline);
         Debug.Log("New Player Added!");
+        
         //This is hardcorded
         newPlayer.id = playersOnline;
         PlayersBrainDictionary.Add(playersOnline, newPlayer);

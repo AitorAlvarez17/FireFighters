@@ -41,7 +41,6 @@ public static class serializer
         }
         writer.Write(_message.playersOnline);
         bytes = stream.ToArray();
-        //Debug.Log("Serialized Message!");
         return bytes;
     }
     public static PlayerPackage DeserializePackage(byte[] bytes)
@@ -53,7 +52,7 @@ public static class serializer
 
         //Header
         string header = reader.ReadString();
-        //Debug.Log("Deserialize(): Header is " + header);
+
         //Info
         string message = reader.ReadString();
         string username = reader.ReadString();
@@ -206,7 +205,7 @@ public static class serializer
     {
         var t = info;
         Debug.Log(t.message.message);
-        //json only parses public elements
+        // json only parses public elements
         string json = JsonUtility.ToJson(t);
         stream = new MemoryStream();
         BinaryWriter writer = new BinaryWriter(stream);

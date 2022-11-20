@@ -14,7 +14,7 @@ public class ReadClient : MonoBehaviour
         clientInput = input;
         Debug.Log("ReadStringInput: " + input);
 
-        if (clientInput.Contains(".") && !ipSent) //Checks if the ip has been sent.
+        if (clientInput.Contains(".") && !ipSent) // Checks if the ip has been sent.
         {
             //Sets ip as sent.
             ipSent = true;

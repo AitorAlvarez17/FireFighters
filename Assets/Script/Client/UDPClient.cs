@@ -39,8 +39,6 @@ public class UDPClient : MonoBehaviour
     public int[] gameMatrix = new int[4] { 0, 0, 0, 0 };
     public int playersOnline = 99;
 
-    //public PlayerInfo playerInfo = new PlayerInfo(new PlayerPackage("test", "Username", thisPlayer.positions));
-
     byte[] testBytes = new byte[1024];
     string testString = "";
 
@@ -84,12 +82,8 @@ public class UDPClient : MonoBehaviour
             if (receiveMessage != null && receiveMessage.message != null && receiveMessage.message != "")
             {
                 Debug.Log("Message checked and creating...!: " + receiveMessage.message + "From Client:" + receiveMessage.username);
-                //Later on take it from PlayerManager! Now just hard-took it for debug purposes.
-                //You can easily acces to the player with the key (index) of it
                 CreateMessage(receiveMessage);
                 receiveMessage.SetMessage(null);
-
-                //print the messages that has been created
             }
             if (receiveMessage.positions[0] != 0f || receiveMessage.positions[2] != 0f && isMoving == true)
             {
@@ -100,7 +94,6 @@ public class UDPClient : MonoBehaviour
 
             Debug.Log("Setting Text and dirtyness");
             this.gameObject.GetComponent<ServerController>().clientName.text = this.gameObject.GetComponent<UDPClient>().thisPlayer.username;
-            //clientIndex.text = serverParent.GetComponent<UDPClient>().thisPlayer.onLine;
             thisPlayer.dirty = false;
         }
     }
@@ -108,7 +101,6 @@ public class UDPClient : MonoBehaviour
     private void OnDisable()
     {
 
-        //testString = serializer.DeserializePlayerInfo(testBytes).message.message;
         Debug.Log("Test JSON Serialization:" + testString);
         Debug.Log("CLIENT Closing TCP socket & thread...");
 
@@ -227,12 +219,8 @@ public class UDPClient : MonoBehaviour
                     Debug.Log("This is not MINE!");
                     isMoving = true;
                 }
-                //Update world
-                //PlayerManager.UpdatePlayerPosition(message.Key, message.positions);
 
                 Debug.Log("[CIENT] Receive data!: " + receiveMessage.message);
-
-                //Debug.Log("[CLIENT] Received Movement!" + message.positions[0] + message.positions[1]+ message.positions[2]);
                 Debug.Log("[CLIENT] Received Id!" + receiveMessage.id);
             }
         }
