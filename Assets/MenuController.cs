@@ -8,28 +8,28 @@ public class MenuController : MonoBehaviour
     public GameObject createGame;
     public GameObject joinGame;
 
+    private string menuScene = "MenuScene";
     public void SetAsServer()
     {
-        SceneManager.LoadScene("ServerScene", LoadSceneMode.Additive);
-        SceneManager.UnloadSceneAsync(createGame.scene.name);
-        //Debug.Log(createGame.scene.name);
+        SceneManager.LoadScene("ServerScene", LoadSceneMode.Single);
+        // SceneManager.UnloadSceneAsync(createGame.scene.name);
     }
 
     public void SetAsClient()
     {
-        SceneManager.LoadScene("ClientScene", LoadSceneMode.Additive);
-        SceneManager.UnloadSceneAsync(joinGame.scene.name);
-        //Debug.Log(createGame.scene.name);
+        SceneManager.LoadScene("ClientScene", LoadSceneMode.Single);
+        // SceneManager.UnloadSceneAsync(joinGame.scene.name);
+
     }
     // Start is called before the first frame update
     void Start()
     {
-        
+
     }
 
     // Update is called once per frame
     void Update()
     {
-        
+
     }
 }
