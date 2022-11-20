@@ -174,7 +174,6 @@ public class UDPClient : MonoBehaviour
 
             isMoving = false;
 
-            Thread.Sleep(10);
 
             receiveThread = new Thread(Receive);
             receiveThread.Start();
@@ -233,7 +232,6 @@ public class UDPClient : MonoBehaviour
 
                 Debug.Log("[CIENT] Receive data!: " + receiveMessage.message);
 
-                Thread.Sleep(10);
                 //Debug.Log("[CLIENT] Received Movement!" + message.positions[0] + message.positions[1]+ message.positions[2]);
                 Debug.Log("[CLIENT] Received Id!" + receiveMessage.id);
             }
@@ -254,7 +252,7 @@ public class UDPClient : MonoBehaviour
             sendMessage.SetPositions(packageMovement);
             sendMessage.SetUsername(thisPlayer.username);
             sendMessage.SetId(thisPlayer.id);
-            //Debug.Log("Pinging Mov from Client ID: " + sendMessage.id);
+            Debug.Log("Pinging Mov from Client ID: " + sendMessage.id);
 
             //Debug.Log("[CLIENT] Sending to server: " + serverIPEP.ToString() + " Message: " + packageMovement[0] + "From:" + message.username);
             dataTMP = serializer.SerializePackage(sendMessage);

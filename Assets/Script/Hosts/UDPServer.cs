@@ -201,8 +201,6 @@ public class UDPServer : MonoBehaviour
             isMoving = false;
             SendData(receivedMessage);
 
-            Thread.Sleep(10);
-
             receiveThread = new Thread(Receive);
             receiveThread.Start();
         }
@@ -254,8 +252,6 @@ public class UDPServer : MonoBehaviour
                 EchoData(receivedMessage);
 
                 serverDirty = true;
-
-                Thread.Sleep(10);
             }
         }
         catch (Exception e)
