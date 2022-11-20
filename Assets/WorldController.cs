@@ -28,6 +28,7 @@ public class WorldController : MonoBehaviour
         Debug.Log("New Lumberjack! KEY:" + key);
         GameObject playerPref = Instantiate(playerGO, spawnPoints[pos].position, Quaternion.identity);
         playerPref.GetComponent<Lumberjack>().Init(key);
+        playerPref.transform.localScale = new Vector3(1.88f, 1.88f, 1.88f);
         worldDolls.Add(key, playerPref.GetComponent<Lumberjack>());
         pos++;
         //playerGO.GetComponent<Lumberjack>().Init(key);
