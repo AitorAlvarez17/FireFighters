@@ -1,20 +1,30 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using TMPro;
 
 public class Lumberjack : MonoBehaviour
 {
     // Start is called before the first frame update
     public int internalId;
     public Transform trans;
+    public TextMeshPro textInfo;
+    public string Username;
 
-    public void Init(int _id)
+    public void Init(int _id, string username)
     {
+        SetUsername(username);
         SetId(_id);
     }
     public void SetId(int _id)
     {
         internalId = _id;
+        textInfo.text += "Key ID:" + _id + "\n";
+    }
+    public void SetUsername(string username)
+    {
+        Username = username;
+        textInfo.text += "Name: " + username + "\n"; 
     }
 
     void Start()

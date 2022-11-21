@@ -1,5 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
+using System.Net;
+using System.Net.Sockets;
 using UnityEngine;
 using TMPro;
 
@@ -17,7 +19,6 @@ public class ServerController : MonoBehaviour
     public TextMeshProUGUI numberOfPlayers;
 
     public TextMeshProUGUI clientName;
-    //public TextMeshProUGUI clientIndex;
 
     public static ServerController MyServerInstance
     {
@@ -55,11 +56,12 @@ public class ServerController : MonoBehaviour
 
     public ServerType GetServerType { get => serverType; set => serverType = value; }
 
-    public string IPServer { get; set; } = "192.168.68.102";
+    public string IPServer { get; set; } = LocalIPAddress();
+
     public int serverPort { get; set; } = 9500;
 
     // Start is called before the first frame update and selects the type of client and server.
-    
+
     void Start()
     {
         if (serverType == ServerType.Server)
@@ -90,7 +92,6 @@ public class ServerController : MonoBehaviour
             if (serverParent.GetComponent<TCPClient>().messageDecoded != null)
             {
                 Debug.Log("Message checked and creating...!: " + serverParent.GetComponent<TCPClient>().messageDecoded);
-                //CreateMessage(serverParent.GetComponent<TCPClient>().messageDecoded);
                 serverParent.GetComponent<TCPClient>().messageDecoded = null;
                 //print the messages that has been created
             }
@@ -98,43 +99,34 @@ public class ServerController : MonoBehaviour
 
         if (serverParent.GetComponent<TCPServer>() != null)
         {
-           // ServerActions();
 
             if (serverParent.GetComponent<TCPServer>().messageDecoded != null)
             {
                 Debug.Log("Message checked and creating...!" + serverParent.GetComponent<TCPServer>().messageDecoded);
-                //CreateMessage(serverParent.GetComponent<TCPServer>().messageDecoded, "Server");
                 serverParent.GetComponent<TCPServer>().messageDecoded = null;
                 //print the messages that has been created
             }
         }
 
-        if (serverParent.GetComponent<UDPClient>() != null)
-        {
-            //PlayerActions();
-            
-        }
-
-        if (serverParent.GetComponent<UDPServer>() != null)
-        {
-            //ServerActions();
-            
-        }
-
         
     }
 
-    //we do this here as it is object-centered and we need a Monobehavioural script with reference to the exact client-player reference.
-    //private void PlayerActions()
-    //{
-    //    if (PlayerManager.playerDirty == true)
-    //    {
-    //        clientName.text = this.gameObject.GetComponent<UDPClient>().thisPlayer.username + " " + this.gameObject.GetComponent<UDPClient>().thisPlayer.id;
-    //        //clientIndex.text = serverParent.GetComponent<UDPClient>().thisPlayer.onLine;
-    //        PlayerManager.playerDirty = false;
-    //    }
-    //}
-    
+    public static string LocalIPAddress()
+    {
+        IPHostEntry host;
+        string localIP = "0.0.0.0";
+        host = Dns.GetHostEntry(Dns.GetHostName());
+        foreach (IPAddress ip in host.AddressList)
+        {
+            if (ip.AddressFamily == AddressFamily.InterNetwork)
+            {
+                localIP = ip.ToString();
+                break;
+            }
+        }
+        return localIP;
+    }
+
     //called when creating a server to be shown on screen.
 
     public void CreateMessage(PlayerPackage _Message)
