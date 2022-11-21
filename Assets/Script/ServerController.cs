@@ -1,5 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
+using System.Net;
+using System.Net.Sockets;
 using UnityEngine;
 using TMPro;
 
@@ -54,7 +56,8 @@ public class ServerController : MonoBehaviour
 
     public ServerType GetServerType { get => serverType; set => serverType = value; }
 
-    public string IPServer { get; set; } = "192.168.68.102";
+    public string IPServer { get; set; } = LocalIPAddress();
+
     public int serverPort { get; set; } = 9500;
 
     // Start is called before the first frame update and selects the type of client and server.
@@ -107,7 +110,23 @@ public class ServerController : MonoBehaviour
 
         
     }
-    
+
+    public static string LocalIPAddress()
+    {
+        IPHostEntry host;
+        string localIP = "0.0.0.0";
+        host = Dns.GetHostEntry(Dns.GetHostName());
+        foreach (IPAddress ip in host.AddressList)
+        {
+            if (ip.AddressFamily == AddressFamily.InterNetwork)
+            {
+                localIP = ip.ToString();
+                break;
+            }
+        }
+        return localIP;
+    }
+
     //called when creating a server to be shown on screen.
 
     public void CreateMessage(PlayerPackage _Message)
