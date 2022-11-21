@@ -74,8 +74,8 @@ public class UDPClient : MonoBehaviour
         {
             if (justConnected == true)
             {
-                WelcomeWorld();
                 receiveMessage.SetUsername("Player" + thisPlayer.id);
+                WelcomeWorld();
                 Debug.Log("Creating Server repre");
                 justConnected = false;
             }
@@ -261,8 +261,9 @@ public class UDPClient : MonoBehaviour
         gameMatrix = receiveMessage.worldMatrix;
         //this bc is the second pos but 1 in index
         thisPlayer.id = playersOnline;
+        this.gameObject.GetComponent<PlayerMovement>().player.GetComponent<Lumberjack>().Init(thisPlayer.id, thisPlayer.username);
         Debug.Log("Client was welcomed to world, ID:" + thisPlayer.id);
-        this.gameObject.GetComponent<WorldController>().WelcomeClient(gameMatrix, thisPlayer.id);
+        this.gameObject.GetComponent<WorldController>().WelcomeClient(gameMatrix, thisPlayer.id, receiveMessage.username);
     }
 
     public void UpdateWorld(int _key, float[] _positions)

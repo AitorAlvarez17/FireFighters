@@ -46,6 +46,7 @@ public class UDPServer : MonoBehaviour
     // This is the brain of the game
     public int[] gameMatrix = new int[4] { 0, 0, 0, 0 };
     public int playersOnline = 0;
+    public bool thisPlayerSetup = false;
 
     public bool isMoving = false;
 
@@ -69,17 +70,35 @@ public class UDPServer : MonoBehaviour
 
     public void SetUsernameAndConnect(string username)
     {
-        thisPlayer.username = username;
-        onLine = true;
+        //thisPlayer.username = username;
+        //onLine = true;
 
-        this.gameObject.GetComponent<ServerController>().clientName.text = thisPlayer.username;
-        this.gameObject.GetComponent<ReadServer>().LoginInput.SetActive(false);
+        //this.gameObject.GetComponent<ServerController>().clientName.text = thisPlayer.username;
+        //this.gameObject.GetComponent<ReadServer>().LoginInput.SetActive(false);
+        //this.gameObject.GetComponent<PlayerMovement>().player.GetComponent<Lumberjack>().Init(thisPlayer.id, thisPlayer.username);
 
+    }
+
+    public void SetServerInfo()
+    {
+        sendMessage.SetUsername(thisPlayer.username);
+        sendMessage.SetId(thisPlayer.id);
+        sendMessage.SetPositions(thisPlayer.positions);
+        UpdateGameMatrix(playersOnline);
+        sendMessage.SetWorldMatrix(gameMatrix);
+        sendMessage.SetPlayersOnline(playersOnline);
+        serverDirty = true;
+        thisPlayerSetup = true;
     }
     private void ServerActions()
     {
-        if (serverDirty == true)
-        {
+        if (serverDirty == false)
+            return;
+
+            if (thisPlayerSetup == true)
+            {
+                this.gameObject.GetComponent<PlayerMovement>().player.GetComponent<Lumberjack>().Init(sendMessage.id, sendMessage.username);
+            }
             if (receivedMessage != null && receivedMessage.message != null && receivedMessage.message != "")
             {
                 Debug.Log("Message checked and creating:" + receivedMessage.message + " From: " + receivedMessage.username);
@@ -88,7 +107,7 @@ public class UDPServer : MonoBehaviour
             }
             if (newConection == true)
             {
-                this.gameObject.GetComponent<WorldController>().CreatePlayer(playersOnline);
+                this.gameObject.GetComponent<WorldController>().CreatePlayer(playersOnline, receivedMessage.username);
                 newConection = false;
             }
             this.gameObject.GetComponent<ServerController>().numberOfPlayers.text = "Number of Players: " + PlayerManager.playersOnline;
@@ -100,7 +119,7 @@ public class UDPServer : MonoBehaviour
             }
             serverDirty = false;
             Debug.Log("Setting Text and Server Dirtyness");
-        }
+        
     }
 
     public void CreateMessage(PlayerPackage _Message)
@@ -154,12 +173,7 @@ public class UDPServer : MonoBehaviour
 
         thisPlayer = new Player("Player" + (playersOnline + 1).ToString(), true, (playersOnline + 1));
         Debug.Log("BEGINNING OF THE GENERAL SERVER THREAD");
-        sendMessage.SetUsername(thisPlayer.username);
-        sendMessage.SetId(thisPlayer.id);
-        sendMessage.SetPositions(thisPlayer.positions);
-        UpdateGameMatrix(playersOnline);
-        sendMessage.SetWorldMatrix(gameMatrix);
-        sendMessage.SetPlayersOnline(playersOnline);
+        SetServerInfo();
         initServer = true;
 
         // Try the socket's bind, if not debugs
