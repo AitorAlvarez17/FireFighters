@@ -18,8 +18,6 @@ public class ServerController : MonoBehaviour
 
     public TextMeshProUGUI clientName;
 
-    public TMP_InputField ipInput;
-
     public static ServerController MyServerInstance
     {
         get
@@ -56,7 +54,7 @@ public class ServerController : MonoBehaviour
 
     public ServerType GetServerType { get => serverType; set => serverType = value; }
 
-    public string IPServer { get; set; } = "192.168.56.1";
+    public string IPServer { get; set; } = "192.168.68.102";
     public int serverPort { get; set; } = 9500;
 
     // Start is called before the first frame update and selects the type of client and server.
@@ -117,11 +115,5 @@ public class ServerController : MonoBehaviour
         GameObject newMessage = new GameObject();
         newMessage = Instantiate(messgePrefab, Vector3.zero, Quaternion.identity, chatBillboard.transform);
         newMessage.GetComponent<MessageHolder>().SetMessage(_Message.message, _Message.username);
-    }
-
-    public void SetServerID()
-    {
-        IPServer = ipInput.text;
-        Debug.Log("Changed ip to:" + IPServer.ToString());
     }
 }
