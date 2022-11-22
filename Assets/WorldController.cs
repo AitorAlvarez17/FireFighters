@@ -41,7 +41,7 @@ public class WorldController : MonoBehaviour
             Debug.Log("Key" + _key + "was not supported!");
     }
 
-    public void WelcomeClient(int[] worldMatrix, int _key, string username)
+    public void WelcomeClient(int[] worldMatrix, int _key)
     {
         foreach (int index in worldMatrix)
         {

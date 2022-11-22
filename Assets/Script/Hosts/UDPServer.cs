@@ -203,6 +203,10 @@ public class UDPServer : MonoBehaviour
                 UDPClientList.Add(clientEP);
                 UpdateGameMatrix(UDPClientList.Count);
                 newConection = true;
+                //Temporal username setter, in the future it has to come included in the recivedMessage.
+                //Now it comes Player99 that stands for the trivial value we set to playersOnline in UDPClient when it is pending to connect.
+                //We set it to Player X, in this case it can be 2, 3 or 4.
+                receivedMessage.username = "Player" + playersOnline.ToString();
             }
 
             // Welcome Message!

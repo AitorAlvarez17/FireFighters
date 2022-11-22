@@ -261,9 +261,9 @@ public class UDPClient : MonoBehaviour
         gameMatrix = receiveMessage.worldMatrix;
         //this bc is the second pos but 1 in index
         thisPlayer.id = playersOnline;
-        this.gameObject.GetComponent<PlayerMovement>().player.GetComponent<Lumberjack>().Init(thisPlayer.id, thisPlayer.username);
+        this.gameObject.GetComponent<PlayerMovement>().player.GetComponent<Lumberjack>().Init(thisPlayer.id, receiveMessage.username);
         Debug.Log("Client was welcomed to world, ID:" + thisPlayer.id);
-        this.gameObject.GetComponent<WorldController>().WelcomeClient(gameMatrix, thisPlayer.id, receiveMessage.username);
+        this.gameObject.GetComponent<WorldController>().WelcomeClient(gameMatrix, thisPlayer.id);
     }
 
     public void UpdateWorld(int _key, float[] _positions)
