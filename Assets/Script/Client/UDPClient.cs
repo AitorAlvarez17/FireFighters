@@ -160,7 +160,7 @@ public class UDPClient : MonoBehaviour
         {
             recv = udpSocket.Receive(data);
             receiveMessage = serializer.DeserializePackage(data);
-            Debug.Log("Receiving Back To Client");
+            Debug.Log("Receiving Back To Client from TRY");
             justConnected = true;
             thisPlayer.dirty = true;
 

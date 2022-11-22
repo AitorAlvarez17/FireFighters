@@ -97,22 +97,28 @@ public class UDPServer : MonoBehaviour
 
             if (thisPlayerSetup == true)
             {
-                this.gameObject.GetComponent<PlayerMovement>().player.GetComponent<Lumberjack>().Init(sendMessage.id, sendMessage.username);
+                this.gameObject.GetComponent<PlayerMovement>().player.GetComponent<Lumberjack>().Init(thisPlayer.id, thisPlayer.username);
+                thisPlayerSetup = false;
+            }
+            if (newConection == true)
+            {
+            //Doll Instantiating
+                //When server receives a new Client Conection, client doesn't know WHO HE IS, so we set it
+                //TODO - In the first connection make Client set a username for itself and setup it here for now it will be: Player + key
+                this.gameObject.GetComponent<WorldController>().CreatePlayer(playersOnline);
+                newConection = false;
             }
             if (receivedMessage != null && receivedMessage.message != null && receivedMessage.message != "")
             {
+            //Message Printing
                 Debug.Log("Message checked and creating:" + receivedMessage.message + " From: " + receivedMessage.username);
                 CreateMessage(receivedMessage);
                 receivedMessage.SetMessage(null);
             }
-            if (newConection == true)
-            {
-                this.gameObject.GetComponent<WorldController>().CreatePlayer(playersOnline, receivedMessage.username);
-                newConection = false;
-            }
             this.gameObject.GetComponent<ServerController>().numberOfPlayers.text = "Number of Players: " + PlayerManager.playersOnline;
             if (receivedMessage.positions[0] != 0f || receivedMessage.positions[2] != 0f && isMoving == true)
             {
+            //Movement Printing
                 Debug.Log("Server Player ID:" + thisPlayer.id);
                 Debug.Log("Message ID:" + receivedMessage.id);
                 UpdateWorld(receivedMessage.id, receivedMessage.positions);
@@ -174,7 +180,6 @@ public class UDPServer : MonoBehaviour
         thisPlayer = new Player("Player" + (playersOnline + 1).ToString(), true, (playersOnline + 1));
         Debug.Log("BEGINNING OF THE GENERAL SERVER THREAD");
         SetServerInfo();
-        initServer = true;
 
         // Try the socket's bind, if not debugs
         try
@@ -197,7 +202,7 @@ public class UDPServer : MonoBehaviour
             {
                 UDPClientList.Add(clientEP);
                 UpdateGameMatrix(UDPClientList.Count);
-
+                newConection = true;
             }
 
             // Welcome Message!
@@ -206,7 +211,6 @@ public class UDPServer : MonoBehaviour
 
             // Comunicate to the client what his new id is
             serverDirty = true;
-            newConection = true;
             isMoving = false;
             SendData(receivedMessage);
 
