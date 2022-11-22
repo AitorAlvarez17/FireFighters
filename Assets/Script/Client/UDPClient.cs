@@ -74,7 +74,6 @@ public class UDPClient : MonoBehaviour
         {
             if (justConnected == true)
             {
-                receiveMessage.SetUsername("Player" + thisPlayer.id);
                 WelcomeWorld();
                 Debug.Log("Creating Server repre");
                 justConnected = false;
