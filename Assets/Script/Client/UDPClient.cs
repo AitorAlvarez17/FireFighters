@@ -112,12 +112,16 @@ public class UDPClient : MonoBehaviour
     }
 
     //Initialize socket and thread
-    public void ConnectToServer(string ip = null, int port = 0)
+    public void ConnectToServer(string ip = null, string username = "", int port = 0)
     {
         if (ip != null)
             serverIP = ip;
         if (port != 0)
             serverPort = port;
+
+        //this works but for developement reasons i ain't applying it, it's so visual to see Player 1,2,3,4 and not names on it.
+        if (username != "")
+            Debug.Log("Username:" + username);
 
         InitSocket();
         InitThread();

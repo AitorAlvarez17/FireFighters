@@ -6,6 +6,8 @@ public class ReadClient : MonoBehaviour
 {
     [HideInInspector]
     public string clientInput;
+    [HideInInspector]
+    public string clientUsername = "";
     public bool ipSent = false;
 
     public void ReadInputIP(string input)
@@ -23,10 +25,12 @@ public class ReadClient : MonoBehaviour
             switch (ServerController.MyServerInstance.GetSocketType)
             {
                 case ServerController.SocketTypeProtocol.TCP:
-                    this.gameObject.GetComponent<TCPClient>().ConnectToServer(clientInput);
+                    if (clientUsername != "")
+                        this.gameObject.GetComponent<TCPClient>().ConnectToServer(clientInput, clientUsername);
                     break;
                 case ServerController.SocketTypeProtocol.UDP:
-                    this.gameObject.GetComponent<UDPClient>().ConnectToServer(clientInput);
+                    if (clientUsername != "")
+                        this.gameObject.GetComponent<UDPClient>().ConnectToServer(clientInput, clientUsername);
                     break;
                 default:
                     Debug.Log("Invalid protocol");
@@ -49,5 +53,14 @@ public class ReadClient : MonoBehaviour
                     break;
             }
         }
+    }
+
+    public void ReadUsernameC(string input)
+    {
+        //Sets client's input
+        clientUsername = input;
+        Debug.Log("Username: " + input);
+
+        
     }
 }
