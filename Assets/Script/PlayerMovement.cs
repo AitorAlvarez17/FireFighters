@@ -29,8 +29,12 @@ public class PlayerMovement : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if (this.gameObject.GetComponent<UDPClient>().thisPlayer == null)
+        if (serverType == 0)
+            if (this.gameObject.GetComponent<UDPClient>().thisPlayer == null)
             return;
+        else
+            if (this.gameObject.GetComponent<UDPServer>().thisPlayer == null)
+                return;
 
         if (serverType != 3)
         {
