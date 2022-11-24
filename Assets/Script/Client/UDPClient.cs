@@ -202,16 +202,15 @@ public class UDPClient : MonoBehaviour
     private void Receive()
     {
         try
-        {
-            EndPoint Remote = (EndPoint)serverIPEP;
-            while (true)
+        { 
+            while(true)
             {
                 int recv;
                 byte[] dataTMP = new byte[1024];
 
-                recv = udpSocket.ReceiveFrom(dataTMP, ref Remote);
-                Debug.Log("New Receive!, from Client");
+                recv = udpSocket.Receive(dataTMP);
                 receiveMessage = serializer.DeserializePackage(dataTMP);
+                thisPlayer.dirty = true;
 
                 if (receiveMessage.id == thisPlayer.id)
                 {
@@ -223,11 +222,9 @@ public class UDPClient : MonoBehaviour
                     Debug.Log("This is not MINE!");
                     isMoving = true;
                 }
+
                 //Debug.Log("[CIENT] Receive data!: " + receiveMessage.message);
                 //Debug.Log("[CLIENT] Received Id!" + receiveMessage.id);
-                Thread.Sleep(100);
-
-                thisPlayer.dirty = true;
             }
         }
         catch(Exception e)

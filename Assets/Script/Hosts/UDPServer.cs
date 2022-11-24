@@ -253,8 +253,6 @@ public class UDPServer : MonoBehaviour
                 //Debug.Log("[SERVER] Received message ID:" + receivedMessage.id);
                 EchoData(receivedMessage);
 
-                Thread.Sleep(100);
-
                 serverDirty = true;
             }
         }

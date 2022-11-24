@@ -45,7 +45,7 @@ public class PlayerMovement : MonoBehaviour
         {
             if (Input.GetKey(KeyCode.W))
             {
-                //Debug.Log("KEY CODE on an infinte loop");
+                Debug.Log("KEY CODE on an infinte loop");
                 //Z+
                 player.transform.position += new Vector3(0, 0, 5 * Time.deltaTime * speed);
 

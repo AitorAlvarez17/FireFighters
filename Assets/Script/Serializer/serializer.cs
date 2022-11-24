@@ -41,13 +41,12 @@ public static class serializer
         }
         writer.Write(_message.playersOnline);
         bytes = stream.ToArray();
-        
         return bytes;
     }
-    public static PlayerPackage DeserializePackage(byte[] data)
+    public static PlayerPackage DeserializePackage(byte[] bytes)
     {
         stream = new MemoryStream();
-        stream.Write(data, 0, data.Length);
+        stream.Write(bytes, 0, bytes.Length);
         BinaryReader reader = new BinaryReader(stream);
         stream.Seek(0, SeekOrigin.Begin);
 
@@ -82,7 +81,6 @@ public static class serializer
 
         PlayerPackage newMessage = new PlayerPackage(message, username,positions,id, worldMatrix, playersOnline);
 
-        data = null;
         bytes = null;
 
         return newMessage;
