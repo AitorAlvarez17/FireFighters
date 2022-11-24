@@ -86,7 +86,7 @@ public class UDPClient : MonoBehaviour
             }
             if (receiveMessage.positions[0] != 0f || receiveMessage.positions[2] != 0f && isMoving == true)
             {
-                Debug.Log("This player ID (check):" + thisPlayer.id);
+                //Debug.Log("This player ID (check):" + thisPlayer.id);
                 Debug.Log("Received message ID: " + receiveMessage.id);
                 UpdateWorld(receiveMessage.id, receiveMessage.positions);
             }
@@ -214,7 +214,7 @@ public class UDPClient : MonoBehaviour
 
                 if (receiveMessage.id == thisPlayer.id)
                 {
-                    Debug.Log("Not Moving, this was MINE");
+                    //Debug.Log("Not Moving, this was MINE");
                     isMoving = false;
                 }
                 else
@@ -223,8 +223,8 @@ public class UDPClient : MonoBehaviour
                     isMoving = true;
                 }
 
-                Debug.Log("[CIENT] Receive data!: " + receiveMessage.message);
-                Debug.Log("[CLIENT] Received Id!" + receiveMessage.id);
+                //Debug.Log("[CIENT] Receive data!: " + receiveMessage.message);
+                //Debug.Log("[CLIENT] Received Id!" + receiveMessage.id);
             }
         }
         catch(Exception e)
@@ -243,7 +243,7 @@ public class UDPClient : MonoBehaviour
             sendMessage.SetPositions(packageMovement);
             sendMessage.SetUsername(thisPlayer.username);
             sendMessage.SetId(thisPlayer.id);
-            Debug.Log("Pinging Mov from Client ID: " + sendMessage.id);
+            //Debug.Log("Pinging Mov from Client ID: " + sendMessage.id);
 
             //Debug.Log("[CLIENT] Sending to server: " + serverIPEP.ToString() + " Message: " + packageMovement[0] + "From:" + message.username);
             dataTMP = serializer.SerializePackage(sendMessage);
@@ -253,13 +253,13 @@ public class UDPClient : MonoBehaviour
         }
         catch (Exception e)
         {
-            Debug.Log("[CLIENT] Failed to send message. Error: " + e.ToString());
+            //Debug.Log("[CLIENT] Failed to send message. Error: " + e.ToString());
         }
     }
 
     public void WelcomeWorld()
     {
-        Debug.Log("The number of players online is:" + receiveMessage.playersOnline);
+        //Debug.Log("The number of players online is:" + receiveMessage.playersOnline);
         playersOnline = receiveMessage.playersOnline;
         gameMatrix = receiveMessage.worldMatrix;
         //this bc is the second pos but 1 in index

@@ -68,17 +68,6 @@ public class UDPServer : MonoBehaviour
         ServerActions();
     }
 
-    public void SetUsernameAndConnect(string username)
-    {
-        //thisPlayer.username = username;
-        //onLine = true;
-
-        //this.gameObject.GetComponent<ServerController>().clientName.text = thisPlayer.username;
-        //this.gameObject.GetComponent<ReadServer>().LoginInput.SetActive(false);
-        //this.gameObject.GetComponent<PlayerMovement>().player.GetComponent<Lumberjack>().Init(thisPlayer.id, thisPlayer.username);
-
-    }
-
     public void SetServerInfo()
     {
         sendMessage.SetUsername(thisPlayer.username);
@@ -102,7 +91,7 @@ public class UDPServer : MonoBehaviour
             }
             if (newConection == true)
             {
-            //Doll Instantiating
+                //Doll Instantiating
                 //When server receives a new Client Conection, client doesn't know WHO HE IS, so we set it
                 //TODO - In the first connection make Client set a username for itself and setup it here for now it will be: Player + key
                 this.gameObject.GetComponent<WorldController>().CreatePlayer(playersOnline);
@@ -110,7 +99,7 @@ public class UDPServer : MonoBehaviour
             }
             if (receivedMessage != null && receivedMessage.message != null && receivedMessage.message != "")
             {
-            //Message Printing
+                //Message Printing
                 Debug.Log("Message checked and creating:" + receivedMessage.message + " From: " + receivedMessage.username);
                 CreateMessage(receivedMessage);
                 receivedMessage.SetMessage(null);
@@ -118,14 +107,12 @@ public class UDPServer : MonoBehaviour
             this.gameObject.GetComponent<ServerController>().numberOfPlayers.text = "Number of Players: " + PlayerManager.playersOnline;
             if (receivedMessage.positions[0] != 0f || receivedMessage.positions[2] != 0f && isMoving == true)
             {
-            //Movement Printing
-                Debug.Log("Server Player ID:" + thisPlayer.id);
+                //Movement Printing
+                //Debug.Log("Server Player ID:" + thisPlayer.id);
                 Debug.Log("Message ID:" + receivedMessage.id);
                 UpdateWorld(receivedMessage.id, receivedMessage.positions);
             }
             serverDirty = false;
-            Debug.Log("Setting Text and Server Dirtyness");
-        
     }
 
     public void CreateMessage(PlayerPackage _Message)
@@ -231,7 +218,6 @@ public class UDPServer : MonoBehaviour
 
         // This has to be a diferent thread
         // loops the receive system. Messy but functional
-
     }
 
     private void Receive()
@@ -253,7 +239,7 @@ public class UDPServer : MonoBehaviour
 
                 if (receivedMessage.id == thisPlayer.id)
                 {
-                    Debug.Log("Not Moving, this was MINE");
+                    //Debug.Log("Not Moving, this was MINE");
                     isMoving = false;
                 }
                 else
@@ -264,7 +250,7 @@ public class UDPServer : MonoBehaviour
 
                 receivedMessage = serializer.DeserializePackage(dataTMP);
                 ModifyReceivedMessage();
-                Debug.Log("[SERVER] Received message ID:" + receivedMessage.id);
+                //Debug.Log("[SERVER] Received message ID:" + receivedMessage.id);
                 EchoData(receivedMessage);
 
                 serverDirty = true;
@@ -325,7 +311,7 @@ public class UDPServer : MonoBehaviour
             sendMessage.SetPositions(packageMovement);
             sendMessage.SetUsername(thisPlayer.username);
             sendMessage.SetId(thisPlayer.id);
-            Debug.Log("Sending from Ping Server: ID: " + sendMessage.id);
+            //Debug.Log("Sending from Ping Server: ID: " + sendMessage.id);
             EchoData(sendMessage);
         }
         catch (Exception e)
@@ -339,10 +325,10 @@ public class UDPServer : MonoBehaviour
         // gameMatrix[id] is the DATA value // id + 1 is the VISUAL VALUE ... id's will be 1,2,3,4 not 0,1,2,3
         gameMatrix[id] = id + 1;
         playersOnline++;
-        Debug.Log("Matrix pos 0" + gameMatrix[0]);
-        Debug.Log("Matrix pos 1" + gameMatrix[1]);
-        Debug.Log("Matrix pos 2" + gameMatrix[2]);
-        Debug.Log("Matrix pos 3" + gameMatrix[3]);
+        //Debug.Log("Matrix pos 0" + gameMatrix[0]);
+        //Debug.Log("Matrix pos 1" + gameMatrix[1]);
+        //Debug.Log("Matrix pos 2" + gameMatrix[2]);
+        //Debug.Log("Matrix pos 3" + gameMatrix[3]);
         
         // We tell the client his position is the X on the matrix
         Debug.Log("Players Online Updating and Setting:" + playersOnline);
