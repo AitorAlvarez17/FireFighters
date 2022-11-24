@@ -45,7 +45,7 @@ public static class serializer
     }
     public static PlayerPackage DeserializePackage(byte[] bytes)
     {
-        stream = new MemoryStream();
+        MemoryStream stream = new MemoryStream();
         stream.Write(bytes, 0, bytes.Length);
         BinaryReader reader = new BinaryReader(stream);
         stream.Seek(0, SeekOrigin.Begin);
