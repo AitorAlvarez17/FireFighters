@@ -19,14 +19,15 @@ public class GeneralDebug : MonoBehaviour
     void Update()
     {
         nPlayers = controller.worldDolls.Count;
-        if(nPlayers == 1)
+        display.text = "";
+
+        if (nPlayers == 1)
         {
-            display.text = "";
             display.text += "Name: " + controller.worldDolls[1].name + "\n";
             display.text += "Key ID:" + controller.worldDolls[1].internalId + "\n";
             display.text += "Posx:" + controller.worldDolls[1].gameObject.transform.localPosition.x +"\n";
             display.text += "Posy:" + controller.worldDolls[1].gameObject.transform.localPosition.y + "\n";
-            display.text += "Posz:" + controller.worldDolls[1].gameObject.transform.localPosition.z + "\n";
+            display.text += "Posz:" + controller.worldDolls[1].gameObject.transform.localPosition. + "\n";
 
         }
     }
