@@ -226,6 +226,10 @@ public class UDPServer : MonoBehaviour
         {
             while (true)// Look at Promises, Async, Await
             {
+                IPEndPoint sender = new IPEndPoint(IPAddress.Any, 9050);
+                EndPoint clientEP = (EndPoint)(sender);
+
+                int recv;
                 byte[] dataTMP = new byte[1024];
                 // Carefull with this, there is a bug because we fullfill the byte[] buffer
                 recv = udpSocket.ReceiveFrom(dataTMP, ref clientEP);
