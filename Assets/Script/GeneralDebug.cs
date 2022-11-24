@@ -27,7 +27,7 @@ public class GeneralDebug : MonoBehaviour
             display.text += "Key ID:" + controller.worldDolls[1].internalId + "\n";
             display.text += "Posx:" + controller.worldDolls[1].gameObject.transform.localPosition.x +"\n";
             display.text += "Posy:" + controller.worldDolls[1].gameObject.transform.localPosition.y + "\n";
-            display.text += "Posz:" + controller.worldDolls[1].gameObject.transform.localPosition. + "\n";
+            display.text += "Posz:" + controller.worldDolls[1].gameObject.transform.localPosition.z + "\n";
 
         }
     }
