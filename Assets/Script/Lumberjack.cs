@@ -11,6 +11,11 @@ public class Lumberjack : MonoBehaviour
     public TextMeshPro textInfo;
     public string Username;
 
+    public Lumberjack()
+    {
+
+    }
+
     public void Init(int _id, string username)
     {
         SetUsername(username);
@@ -18,15 +23,11 @@ public class Lumberjack : MonoBehaviour
     }
     public void SetId(int _id)
     {
-        Debug.Log("Lumberjack Id Set to: " + _id);
-
         internalId = _id;
         textInfo.text += "Key ID:" + _id + "\n";
     }
     public void SetUsername(string username)
     {
-        Debug.Log("Lumberjack Username Set to: " + username);
-
         Username = username;
         textInfo.text += "Name: " + username + "\n"; 
     }

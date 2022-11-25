@@ -22,11 +22,11 @@ public class GeneralDebug : MonoBehaviour
         if(nPlayers == 1)
         {
             display.text = "";
-            display.text += "Name: " + controller.worldDolls[1].name + "\n";
-            display.text += "Key ID:" + controller.worldDolls[1].internalId + "\n";
-            display.text += "Posx:" + controller.worldDolls[1].gameObject.transform.localPosition.x +"\n";
-            display.text += "Posy:" + controller.worldDolls[1].gameObject.transform.localPosition.y + "\n";
-            display.text += "Posz:" + controller.worldDolls[1].gameObject.transform.localPosition.z + "\n";
+            display.text += "Name: " + controller.worldDolls[1].lumberjack.name + "\n";
+            display.text += "Key ID:" + controller.worldDolls[1].lumberjack.internalId + "\n";
+            display.text += "Posx:" + controller.worldDolls[1].lumberjack.gameObject.transform.localPosition.x +"\n";
+            display.text += "Posy:" + controller.worldDolls[1].lumberjack.gameObject.transform.localPosition.y + "\n";
+            display.text += "Posz:" + controller.worldDolls[1].lumberjack.gameObject.transform.localPosition.z + "\n";
 
         }
     }
