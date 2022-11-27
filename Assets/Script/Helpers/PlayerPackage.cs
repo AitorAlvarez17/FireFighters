@@ -11,10 +11,14 @@ public class PlayerPackage
 
     public int id = -1;
 
+    //int of the 4 players
     public int[] worldMatrix = new int[4];
 
     //this will work as an index
     public int playersOnline = 0;
+
+    public int fireAction = 0;
+    public int amount = 0;
     //Message constructor
     public PlayerPackage(string _message, string _username)
     {
@@ -26,7 +30,7 @@ public class PlayerPackage
     }   
 
     //position constructor
-    public PlayerPackage(string _message, string _username,float[] position, int _id, int[] _worldMatrix, int _playersOnline)
+    public PlayerPackage(string _message, string _username,float[] position, int _id, int[] _worldMatrix, int _playersOnline, int _fireAction, int _amount)
     {
         message = _message;
         username = _username;
@@ -39,6 +43,8 @@ public class PlayerPackage
         worldMatrix[2] = _worldMatrix[2];
         worldMatrix[3] = _worldMatrix[3];
         playersOnline = _playersOnline;
+        fireAction = _fireAction;
+        amount = _amount;
     }
 
     public void SetMessage(string _message)
@@ -63,6 +69,12 @@ public class PlayerPackage
         id = _id;
     }
 
+    public void SetFireAction(int _action, int _amount)
+    {
+        fireAction = _action;
+        amount = _amount;
+    }
+
     public void SetWorldMatrixPos(int pos, int value)
     {
         worldMatrix.SetValue(value, pos);
@@ -76,5 +88,18 @@ public class PlayerPackage
     public void SetPlayersOnline(int _value)
     {
         playersOnline = _value;
+    }
+}
+
+public class World
+{
+    //players ID -- with this we do fireplaces also
+    public int[] worldMatrix = new int[4];
+
+
+
+    public World()
+    {
+
     }
 }

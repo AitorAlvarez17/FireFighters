@@ -149,7 +149,7 @@ public class UDPClient : MonoBehaviour
         serverEP = (EndPoint)serverIPEP;
 
         //Here the client is Blind, he doesn't know anything of the world
-        thisPlayer = new Player("Player" + playersOnline.ToString(), true, playersOnline);
+        thisPlayer = new Player("Player" + playersOnline.ToString(), true, playersOnline, 0, 0);
         sendMessage.SetUsername(thisPlayer.username);
         sendMessage.SetId(thisPlayer.id);
         sendMessage.SetPositions(thisPlayer.positions);
@@ -224,6 +224,7 @@ public class UDPClient : MonoBehaviour
                     isMoving = true;
                 }
 
+                Debug.Log("Fire action: " + receiveMessage.fireAction + "With an amount of" + receiveMessage.amount);
                 //Debug.Log("[CIENT] Receive data!: " + receiveMessage.message);
                 //Debug.Log("[CLIENT] Received Id!" + receiveMessage.id);
             }
@@ -256,6 +257,13 @@ public class UDPClient : MonoBehaviour
         {
             //Debug.Log("[CLIENT] Failed to send message. Error: " + e.ToString());
         }
+    }
+
+    public void PingFireAction(int action, int amount)
+    {
+        //ping to everybody;
+        //now just debug
+        Debug.Log("Pinging FirePlace!");
     }
 
     public void WelcomeWorld()

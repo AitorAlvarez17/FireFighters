@@ -164,7 +164,7 @@ public class UDPServer : MonoBehaviour
         clientIPEP = new IPEndPoint(ipAddress, serverPort);
         clientEP = (EndPoint)clientIPEP;
 
-        thisPlayer = new Player("Player" + (playersOnline + 1).ToString(), true, (playersOnline + 1));
+        thisPlayer = new Player("Player" + (playersOnline + 1).ToString(), true, (playersOnline + 1), 0, 0);
         Debug.Log("BEGINNING OF THE GENERAL SERVER THREAD");
         SetServerInfo();
 
@@ -253,6 +253,8 @@ public class UDPServer : MonoBehaviour
                 //Debug.Log("[SERVER] Received message ID:" + receivedMessage.id);
                 EchoData(receivedMessage);
 
+                Debug.Log("Fire action: " + receivedMessage.fireAction + "With an amount of" + receivedMessage.amount);
+
                 serverDirty = true;
             }
         }
@@ -318,6 +320,14 @@ public class UDPServer : MonoBehaviour
         {
             Debug.Log("[CLIENT] Failed to send message. Error: " + e.ToString());
         }
+    }
+
+    public void PingFireAction(int action, int amount)
+    {
+        //ping to everybody;
+        sendMessage.SetFireAction(action, amount);
+        EchoData(sendMessage);
+        Debug.Log("Interacting with fireplace");
     }
 
     public void UpdateGameMatrix(int id)

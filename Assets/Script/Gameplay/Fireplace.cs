@@ -4,6 +4,7 @@ using UnityEngine;
 
 public class Fireplace : MonoBehaviour
 {
+    public GameObject GC;
     public int internalID;
     public string fireName;
 
@@ -14,6 +15,7 @@ public class Fireplace : MonoBehaviour
 
     public void Init(int _key, string _name)
     {
+        GC = GameObject.FindGameObjectWithTag("GameController");
         internalID = _key;
         fireName = _name;
     }
@@ -31,5 +33,26 @@ public class Fireplace : MonoBehaviour
     void Update()
     {
         
+    }
+
+    public void Heal(int _amount)
+    {
+        life += _amount;
+    }
+
+    public void OnTriggerEnter(Collider other)
+    {
+        //get the action from the lumberjack and put it into it
+        if (GC.GetComponent<UDPClient>() != null)
+        {
+            GC.GetComponent<UDPClient>().PingFireAction(0, 0);
+
+        }
+        else if (GC.GetComponent<UDPServer>() != null)
+        {
+            GC.GetComponent<UDPServer>().PingFireAction(0, 0);
+        }
+        //PingFireAction(int action, int amount);
+
     }
 }

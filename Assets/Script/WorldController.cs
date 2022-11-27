@@ -17,6 +17,7 @@ public class PlayerSawmill
 
 public class WorldController : MonoBehaviour
 {
+
     public GameObject playerGO;
     public GameObject fireGO;
 
@@ -27,6 +28,11 @@ public class WorldController : MonoBehaviour
 
 
     int pos = 0;
+
+    private void Awake()
+    {
+        
+    }
     // Start is called before the first frame update
     void Start()
     {
@@ -61,6 +67,11 @@ public class WorldController : MonoBehaviour
             worldDolls[_key].lumberjack.Move(_positions);
         else
             Debug.Log("Key" + _key + "was not supported!");
+    }
+
+    public void HealFire(int _key, int amount)
+    {
+        worldDolls[_key].firePlace.Heal(amount);
     }
 
     public void WelcomeClient(int[] worldMatrix, int _key)
