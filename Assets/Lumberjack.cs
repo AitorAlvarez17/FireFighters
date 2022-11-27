@@ -10,11 +10,16 @@ public class Lumberjack : MonoBehaviour
     public Transform trans;
     public TextMeshPro textInfo;
     public string Username;
+    public Material[] hats;
+    public Material[] shirts;
+    public Material[] hair;
+
 
     public void Init(int _id, string username)
     {
         SetUsername(username);
         SetId(_id);
+        SetOutfit(_id);
     }
     public void SetId(int _id)
     {
@@ -27,6 +32,30 @@ public class Lumberjack : MonoBehaviour
         textInfo.text += "Name: " + username + "\n"; 
     }
 
+    public void SetOutfit(int id)
+    {
+        GameObject avatar = GameObject.Find("character");
+        Material[] mats = avatar.GetComponent<Renderer>().materials;
+        switch (id)
+        {
+            case 2:
+                mats[0] = hats[0];
+                mats[2] = hair[0];
+                mats[3] = shirts[0];
+                break;
+            case 3:
+                mats[0] = hats[1];
+                mats[2] = hair[1];
+                mats[3] = shirts[1];
+                break;
+            case 4:
+                mats[0] = hats[2];
+                mats[2] = hair[2];
+                mats[3] = shirts[2];
+                break;
+        }
+        avatar.GetComponent<Renderer>().materials = mats;
+    }
     void Start()
     {
         trans = this.gameObject.GetComponent<Transform>();
