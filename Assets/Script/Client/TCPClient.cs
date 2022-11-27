@@ -52,14 +52,12 @@ public class TCPClient : MonoBehaviour
     }
 
     //Initialize socket and thread
-    public void ConnectToServer(string ip = null, string username = "", int port = 0)
+    public void ConnectToServer(string ip = null, int port = 0)
     {
         if (ip != null)
             serverIP = ip;
         if (port != 0)
             serverPort = port;
-        if (username != "")
-            Debug.Log("Username:" + username);
 
         Debug.Log("Connected To Server!");
 

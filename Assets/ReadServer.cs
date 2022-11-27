@@ -19,10 +19,10 @@ public class ReadServer : MonoBehaviour
         switch (ServerController.MyServerInstance.GetSocketType)
         {
             case ServerController.SocketTypeProtocol.TCP:
-                //this.gameObject.GetComponent<TCPServer>().SetUsernameAndConnect(clientInput);
+                this.gameObject.GetComponent<TCPServer>().SetUsernameAndConnect(clientInput);
                 break;
             case ServerController.SocketTypeProtocol.UDP:
-                //this.gameObject.GetComponent<UDPServer>().SetUsernameAndConnect(clientInput);
+                this.gameObject.GetComponent<UDPServer>().SetUsernameAndConnect(clientInput);
                 break;
             default:
                 Debug.Log("Invalid protocol");
