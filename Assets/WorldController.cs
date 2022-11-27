@@ -23,14 +23,13 @@ public class WorldController : MonoBehaviour
         
     }
 
-    public void CreatePlayer(int key, string username)
+    public void CreatePlayer(int key)
     {
         Debug.Log("New Lumberjack! KEY:" + key);
-        GameObject playerPref = Instantiate(playerGO, spawnPoints[pos].position, Quaternion.identity);
-        playerPref.GetComponent<Lumberjack>().Init(key, username);
+        GameObject playerPref = Instantiate(playerGO, spawnPoints[key-1].position, Quaternion.identity);
+        playerPref.GetComponent<Lumberjack>().Init(key, "Player" + key.ToString());
         playerPref.transform.localScale = new Vector3(1.88f, 1.88f, 1.88f);
         worldDolls.Add(key, playerPref.GetComponent<Lumberjack>());
-        pos++;
         //playerGO.GetComponent<Lumberjack>().Init(key);
     }
 
@@ -42,13 +41,13 @@ public class WorldController : MonoBehaviour
             Debug.Log("Key" + _key + "was not supported!");
     }
 
-    public void WelcomeClient(int[] worldMatrix, int _key, string username)
+    public void WelcomeClient(int[] worldMatrix, int _key)
     {
         foreach (int index in worldMatrix)
         {
             if (index != 0 && index != _key)
             {
-                CreatePlayer(index, username);
+                CreatePlayer(index);
             }
         }
     }

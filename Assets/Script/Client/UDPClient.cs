@@ -74,7 +74,6 @@ public class UDPClient : MonoBehaviour
         {
             if (justConnected == true)
             {
-                receiveMessage.SetUsername("Player" + thisPlayer.id);
                 WelcomeWorld();
                 Debug.Log("Creating Server repre");
                 justConnected = false;
@@ -87,7 +86,7 @@ public class UDPClient : MonoBehaviour
             }
             if (receiveMessage.positions[0] != 0f || receiveMessage.positions[2] != 0f && isMoving == true)
             {
-                Debug.Log("This player ID (check):" + thisPlayer.id);
+                //Debug.Log("This player ID (check):" + thisPlayer.id);
                 Debug.Log("Received message ID: " + receiveMessage.id);
                 UpdateWorld(receiveMessage.id, receiveMessage.positions);
             }
@@ -113,12 +112,16 @@ public class UDPClient : MonoBehaviour
     }
 
     //Initialize socket and thread
-    public void ConnectToServer(string ip = null, int port = 0)
+    public void ConnectToServer(string ip = null, string username = "", int port = 0)
     {
         if (ip != null)
             serverIP = ip;
         if (port != 0)
             serverPort = port;
+
+        //this works but for developement reasons i ain't applying it, it's so visual to see Player 1,2,3,4 and not names on it.
+        if (username != "")
+            Debug.Log("Username:" + username);
 
         InitSocket();
         InitThread();
@@ -160,7 +163,7 @@ public class UDPClient : MonoBehaviour
         {
             recv = udpSocket.Receive(data);
             receiveMessage = serializer.DeserializePackage(data);
-            Debug.Log("Receiving Back To Client");
+            Debug.Log("Receiving Back To Client from TRY");
             justConnected = true;
             thisPlayer.dirty = true;
 
@@ -199,19 +202,20 @@ public class UDPClient : MonoBehaviour
     private void Receive()
     {
         try
-        { 
-            while(true)
+        {
+            EndPoint Remote = (EndPoint)serverIPEP;
+            while (true)
             {
                 int recv;
                 byte[] dataTMP = new byte[1024];
 
-                recv = udpSocket.Receive(dataTMP);
+                recv = udpSocket.ReceiveFrom(dataTMP, ref Remote);
                 receiveMessage = serializer.DeserializePackage(dataTMP);
                 thisPlayer.dirty = true;
 
                 if (receiveMessage.id == thisPlayer.id)
                 {
-                    Debug.Log("Not Moving, this was MINE");
+                    //Debug.Log("Not Moving, this was MINE");
                     isMoving = false;
                 }
                 else
@@ -220,8 +224,8 @@ public class UDPClient : MonoBehaviour
                     isMoving = true;
                 }
 
-                Debug.Log("[CIENT] Receive data!: " + receiveMessage.message);
-                Debug.Log("[CLIENT] Received Id!" + receiveMessage.id);
+                //Debug.Log("[CIENT] Receive data!: " + receiveMessage.message);
+                //Debug.Log("[CLIENT] Received Id!" + receiveMessage.id);
             }
         }
         catch(Exception e)
@@ -240,7 +244,7 @@ public class UDPClient : MonoBehaviour
             sendMessage.SetPositions(packageMovement);
             sendMessage.SetUsername(thisPlayer.username);
             sendMessage.SetId(thisPlayer.id);
-            Debug.Log("Pinging Mov from Client ID: " + sendMessage.id);
+            //Debug.Log("Pinging Mov from Client ID: " + sendMessage.id);
 
             //Debug.Log("[CLIENT] Sending to server: " + serverIPEP.ToString() + " Message: " + packageMovement[0] + "From:" + message.username);
             dataTMP = serializer.SerializePackage(sendMessage);
@@ -250,20 +254,20 @@ public class UDPClient : MonoBehaviour
         }
         catch (Exception e)
         {
-            Debug.Log("[CLIENT] Failed to send message. Error: " + e.ToString());
+            //Debug.Log("[CLIENT] Failed to send message. Error: " + e.ToString());
         }
     }
 
     public void WelcomeWorld()
     {
-        Debug.Log("The number of players online is:" + receiveMessage.playersOnline);
+        //Debug.Log("The number of players online is:" + receiveMessage.playersOnline);
         playersOnline = receiveMessage.playersOnline;
         gameMatrix = receiveMessage.worldMatrix;
         //this bc is the second pos but 1 in index
         thisPlayer.id = playersOnline;
-        this.gameObject.GetComponent<PlayerMovement>().player.GetComponent<Lumberjack>().Init(thisPlayer.id, thisPlayer.username);
+        this.gameObject.GetComponent<PlayerMovement>().player.GetComponent<Lumberjack>().Init(thisPlayer.id, receiveMessage.username);
         Debug.Log("Client was welcomed to world, ID:" + thisPlayer.id);
-        this.gameObject.GetComponent<WorldController>().WelcomeClient(gameMatrix, thisPlayer.id, receiveMessage.username);
+        this.gameObject.GetComponent<WorldController>().WelcomeClient(gameMatrix, thisPlayer.id);
     }
 
     public void UpdateWorld(int _key, float[] _positions)

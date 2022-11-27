@@ -6,7 +6,15 @@ public class ReadClient : MonoBehaviour
 {
     [HideInInspector]
     public string clientInput;
+    [HideInInspector]
+    public string clientUsername = "";
     public bool ipSent = false;
+    public GameObject LoginPanel;
+
+    public void Awake()
+    {
+        LoginPanel.SetActive(true);
+    }
 
     public void ReadInputIP(string input)
     {
@@ -14,35 +22,48 @@ public class ReadClient : MonoBehaviour
         clientInput = input;
         Debug.Log("ReadStringInput: " + input);
 
-        if (clientInput.Contains(".") && !ipSent) // Checks if the ip has been sent.
-        {
-            //Sets ip as sent.
-            ipSent = true;
+        //In charge od sending the message after connecting with the server.
+        if (!ipSent)
+            return;
 
-            // Get client script and connect to server
-            switch (ServerController.MyServerInstance.GetSocketType)
-            {
-                case ServerController.SocketTypeProtocol.TCP:
-                    this.gameObject.GetComponent<TCPClient>().ConnectToServer(clientInput);
-                    break;
-                case ServerController.SocketTypeProtocol.UDP:
-                    this.gameObject.GetComponent<UDPClient>().ConnectToServer(clientInput);
-                    break;
-                default:
-                    Debug.Log("Invalid protocol");
-                    break;
-            }
-        }
-        else
+        switch (ServerController.MyServerInstance.GetSocketType)
         {
-            //In charge od sending the message after connecting with the server.
+            case ServerController.SocketTypeProtocol.TCP:
+                this.gameObject.GetComponent<TCPClient>().SendString(clientInput);
+                break;
+            case ServerController.SocketTypeProtocol.UDP:
+                this.gameObject.GetComponent<UDPClient>().SendString(clientInput);
+                break;
+            default:
+                Debug.Log("Invalid protocol");
+                break;
+        }
+    }
+
+    public void ReadUsernameC(string input)
+    {
+        //Sets client's input
+        clientUsername = input;
+        Debug.Log("Username: " + input);
+
+        
+    }
+
+    public void Connect()
+    {
+        if (clientUsername != "" && clientInput.Contains(".") && !ipSent)
+        {
             switch (ServerController.MyServerInstance.GetSocketType)
             {
                 case ServerController.SocketTypeProtocol.TCP:
-                    this.gameObject.GetComponent<TCPClient>().SendString(clientInput);
+                        ipSent = true;
+                        this.gameObject.GetComponent<TCPClient>().ConnectToServer(clientInput, clientUsername);
+                        LoginPanel.SetActive(false);
                     break;
                 case ServerController.SocketTypeProtocol.UDP:
-                    this.gameObject.GetComponent<UDPClient>().SendString(clientInput);
+                        ipSent = true;
+                        this.gameObject.GetComponent<UDPClient>().ConnectToServer(clientInput, clientUsername);
+                        LoginPanel.SetActive(false);
                     break;
                 default:
                     Debug.Log("Invalid protocol");
