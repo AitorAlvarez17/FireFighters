@@ -297,9 +297,9 @@ public class UDPServer : MonoBehaviour
             dataTMP = serializer.SerializePackage(_message);
             foreach (EndPoint ip in UDPClientList)
             {
-                Debug.Log("SERVER Sending message to " + ip.ToString() + ": " + _message.message);
+                //Debug.Log("SERVER Sending message to " + ip.ToString() + ": " + _message.message);
                 udpSocket.SendTo(dataTMP, dataTMP.Length, SocketFlags.None, ip);
-                Debug.Log("Echo to: " + ip);
+                //Debug.Log("Echo to: " + ip);
             }
         }
         catch (Exception e)
