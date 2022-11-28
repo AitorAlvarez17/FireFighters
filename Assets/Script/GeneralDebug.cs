@@ -9,26 +9,40 @@ public class GeneralDebug : MonoBehaviour
     public WorldController controller;
     public TextMeshProUGUI display;
     int nPlayers;
+    bool active = true;
 
     // Start is called before the first frame update
     void Start()
     {
+
+    }
+
+    void DebugOn()
+    {
+    }
+
+    void DebugOff()
+    {
+
+    }
+    void Display()
+    {
+        nPlayers = controller.worldDolls.Count;
+        display.text = "";
+        for(int i = 1; i<nPlayers+1; i++)
+        {
+            display.text += "Name: " + controller.worldDolls[i].name + " ";
+            display.text += "Key ID:" + controller.worldDolls[i].internalId + " ";
+            display.text += "Posx:" + controller.worldDolls[i].gameObject.transform.localPosition.x + " ";
+            display.text += "Posy:" + controller.worldDolls[i].gameObject.transform.localPosition.y + " ";
+            display.text += "Posz:" + controller.worldDolls[i].gameObject.transform.localPosition.z + "/n";
+        }
+       
     }
 
     // Update is called once per frame
     void Update()
     {
-        nPlayers = controller.worldDolls.Count;
-        display.text = "";
-
-        if (nPlayers == 1)
-        {
-            display.text += "Name: " + controller.worldDolls[1].name + "\n";
-            display.text += "Key ID:" + controller.worldDolls[1].internalId + "\n";
-            display.text += "Posx:" + controller.worldDolls[1].gameObject.transform.localPosition.x +"\n";
-            display.text += "Posy:" + controller.worldDolls[1].gameObject.transform.localPosition.y + "\n";
-            display.text += "Posz:" + controller.worldDolls[1].gameObject.transform.localPosition.z + "\n";
-
-        }
+        if (active) Display();
     }
 }
