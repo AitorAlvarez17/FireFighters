@@ -97,7 +97,7 @@ public class UDPServer : MonoBehaviour
 
             if (thisPlayerSetup == true)
             {
-                this.gameObject.GetComponent<PlayerMovement>().player.GetComponent<Lumberjack>().Init(sendMessage.id, sendMessage.username);
+                this.gameObject.GetComponent<PlayerMovement>().player.GetComponent<Lumberjack>().Init(sendMessage.id);
                 thisPlayerSetup = false;
             }
             if (receivedMessage != null && receivedMessage.message != null && receivedMessage.message != "")
@@ -108,7 +108,7 @@ public class UDPServer : MonoBehaviour
             }
             if (newConection == true)
             {
-                this.gameObject.GetComponent<WorldController>().CreatePlayer(playersOnline, receivedMessage.username);
+                this.gameObject.GetComponent<WorldController>().CreatePlayer(playersOnline);
                 newConection = false;
             }
             this.gameObject.GetComponent<ServerController>().numberOfPlayers.text = "Number of Players: " + PlayerManager.playersOnline;
@@ -199,6 +199,8 @@ public class UDPServer : MonoBehaviour
                 UDPClientList.Add(clientEP);
                 UpdateGameMatrix(UDPClientList.Count);
 
+                newConection = true;
+
             }
 
             // Welcome Message!
@@ -207,7 +209,6 @@ public class UDPServer : MonoBehaviour
 
             // Comunicate to the client what his new id is
             serverDirty = true;
-            newConection = true;
             isMoving = false;
             SendData(receivedMessage);
 
@@ -230,6 +231,10 @@ public class UDPServer : MonoBehaviour
         {
             while (true)// Look at Promises, Async, Await
             {
+                IPEndPoint sender = new IPEndPoint(IPAddress.Any, 9050);
+                EndPoint clientEP = (EndPoint)(sender);
+
+                int recv = 0;
                 byte[] dataTMP = new byte[1024];
                 // Carefull with this, there is a bug because we fullfill the byte[] buffer
                 recv = udpSocket.ReceiveFrom(dataTMP, ref clientEP);
@@ -347,10 +352,10 @@ public class UDPServer : MonoBehaviour
         // gameMatrix[id] is the DATA value // id + 1 is the VISUAL VALUE ... id's will be 1,2,3,4 not 0,1,2,3
         gameMatrix[id] = id + 1;
         playersOnline++;
-        Debug.Log("Matrix pos 0" + gameMatrix[0]);
-        Debug.Log("Matrix pos 1" + gameMatrix[1]);
-        Debug.Log("Matrix pos 2" + gameMatrix[2]);
-        Debug.Log("Matrix pos 3" + gameMatrix[3]);
+        //Debug.Log("Matrix pos 0" + gameMatrix[0]);
+        //Debug.Log("Matrix pos 1" + gameMatrix[1]);
+        //Debug.Log("Matrix pos 2" + gameMatrix[2]);
+        //Debug.Log("Matrix pos 3" + gameMatrix[3]);
         
         // We tell the client his position is the X on the matrix
         Debug.Log("Players Online Updating and Setting:" + playersOnline);

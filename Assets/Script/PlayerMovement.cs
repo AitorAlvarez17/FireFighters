@@ -29,11 +29,22 @@ public class PlayerMovement : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        if (serverType == 0)
+        {
+            if (this.gameObject.GetComponent<UDPClient>().thisPlayer == null)
+                return;
+        }
+        else
+        {
+            if (this.gameObject.GetComponent<UDPServer>().thisPlayer == null)
+                return;
+        }
+
         if (serverType != 3)
         {
             if (Input.GetKey(KeyCode.W))
             {
-                Debug.Log("KEY CODE on an infinte loop");
+                //Debug.Log("KEY CODE on an infinte loop");
                 //Z+
                 player.transform.position += new Vector3(0, 0, 5 * Time.deltaTime * speed);
 

@@ -22,9 +22,9 @@ public class Lumberjack : MonoBehaviour
 
     }
 
-    public void Init(int _id, string username)
+    public void Init(int _id)
     {
-        SetUsername(username);
+        SetUsername("Player" + _id);
         SetId(_id);
         SetOutfit(_id);
     }

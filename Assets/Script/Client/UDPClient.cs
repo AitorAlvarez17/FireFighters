@@ -203,13 +203,14 @@ public class UDPClient : MonoBehaviour
     private void Receive()
     {
         try
-        { 
-            while(true)
+        {
+            EndPoint Remote = (EndPoint)serverIPEP;
+            while (true)
             {
                 int recv;
                 byte[] dataTMP = new byte[1024];
 
-                recv = udpSocket.Receive(dataTMP);
+                recv = udpSocket.ReceiveFrom(dataTMP, ref Remote);
                 receiveMessage = serializer.DeserializePackage(dataTMP);
                 thisPlayer.dirty = true;
 
@@ -246,7 +247,7 @@ public class UDPClient : MonoBehaviour
             sendMessage.SetPositions(packageMovement);
             sendMessage.SetUsername(thisPlayer.username);
             sendMessage.SetId(thisPlayer.id);
-            Debug.Log("Pinging Mov from Client ID: " + sendMessage.id);
+            //Debug.Log("Pinging Mov from Client ID: " + sendMessage.id);
 
             //Debug.Log("[CLIENT] Sending to server: " + serverIPEP.ToString() + " Message: " + packageMovement[0] + "From:" + message.username);
             dataTMP = serializer.SerializePackage(sendMessage);
@@ -286,9 +287,9 @@ public class UDPClient : MonoBehaviour
         gameMatrix = receiveMessage.worldMatrix;
         //this bc is the second pos but 1 in index
         thisPlayer.id = playersOnline;
-        this.gameObject.GetComponent<PlayerMovement>().player.GetComponent<Lumberjack>().Init(thisPlayer.id, thisPlayer.username);
+        this.gameObject.GetComponent<PlayerMovement>().player.GetComponent<Lumberjack>().Init(thisPlayer.id);
         Debug.Log("Client was welcomed to world, ID:" + thisPlayer.id);
-        this.gameObject.GetComponent<WorldController>().WelcomeClient(gameMatrix, thisPlayer.id, receiveMessage.username);
+        this.gameObject.GetComponent<WorldController>().WelcomeClient(gameMatrix, thisPlayer.id);
     }
 
     public void UpdateWorld(int _key, float[] _positions)
