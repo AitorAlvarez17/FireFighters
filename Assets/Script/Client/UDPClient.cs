@@ -261,9 +261,19 @@ public class UDPClient : MonoBehaviour
 
     public void PingFireAction(int action, int amount)
     {
-        //ping to everybody;
-        //now just debug
-        Debug.Log("Pinging FirePlace!");
+        try
+        {
+            byte[] dataTMP = new byte[1024];
+            //ping to everybody;
+            sendMessage.SetFireAction(action, amount);
+            dataTMP = serializer.SerializePackage(sendMessage);
+            udpSocket.SendTo(dataTMP, dataTMP.Length, SocketFlags.None, serverEP);
+            Debug.Log("Interacting with fireplace");
+        }
+        catch (Exception ex)
+        {
+            Debug.Log("[CLIENT] Failed to send message. Error: " + ex.ToString());
+        }
     }
 
     public void WelcomeWorld()

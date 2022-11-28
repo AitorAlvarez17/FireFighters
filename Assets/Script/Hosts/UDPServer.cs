@@ -324,10 +324,18 @@ public class UDPServer : MonoBehaviour
 
     public void PingFireAction(int action, int amount)
     {
-        //ping to everybody;
-        sendMessage.SetFireAction(action, amount);
-        EchoData(sendMessage);
-        Debug.Log("Interacting with fireplace");
+        try
+        {
+            byte[] dataTMP = new byte[1024];
+            //ping to everybody;
+            sendMessage.SetFireAction(action, amount);
+            EchoData(sendMessage);
+            Debug.Log("Interacting with fireplace");
+        }
+        catch (Exception ex)
+        {
+            Debug.Log("[CLIENT] Failed to send message. Error: " + ex.ToString());
+        }
     }
 
     public void UpdateGameMatrix(int id)

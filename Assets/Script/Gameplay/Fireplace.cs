@@ -45,12 +45,12 @@ public class Fireplace : MonoBehaviour
         //get the action from the lumberjack and put it into it
         if (GC.GetComponent<UDPClient>() != null)
         {
-            GC.GetComponent<UDPClient>().PingFireAction(0, 0);
+            GC.GetComponent<UDPClient>().PingFireAction(0, 1);
 
         }
         else if (GC.GetComponent<UDPServer>() != null)
         {
-            GC.GetComponent<UDPServer>().PingFireAction(0, 0);
+            GC.GetComponent<UDPServer>().PingFireAction(0, 1);
         }
         //PingFireAction(int action, int amount);
 
