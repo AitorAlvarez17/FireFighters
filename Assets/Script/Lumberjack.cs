@@ -15,6 +15,11 @@ public class Lumberjack : MonoBehaviour
     public Material[] hair;
 
 
+    public Lumberjack()
+    {
+
+    }
+
     public void Init(int _id, string username)
     {
         SetUsername(username);

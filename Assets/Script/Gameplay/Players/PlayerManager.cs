@@ -22,17 +22,23 @@ public class Player
     public bool dirty;
     public float[] positions = new float[3] { 0, 0, 0 };
 
+    //0 for nothing, 1 for wood, 2 for water
+    public int charge;
+    public int amount;
+
     public void UpdatePosition(float[] positions)
     {
         // UpdatePlayerInWorld
     }
 
-    public Player(string _username, bool onLine, int _id)
+    public Player(string _username, bool onLine, int _id, int _charge, int _amount)
     {
         this.username = _username;
         this.onLine = onLine;
         this.id = _id;
         this.dirty = false;
+        this.charge = _charge;
+        this.amount = _amount;
         
     }
 }
@@ -55,7 +61,7 @@ public static class PlayerManager
     public static Player AddPlayer(string name)
     {
         playersOnline++;
-        Player newPlayer = new Player(name + playersOnline.ToString(), true, playersOnline);
+        Player newPlayer = new Player(name + playersOnline.ToString(), true, playersOnline, 0, 0);
         Debug.Log("New Player Added!");
         
         //This is hardcorded

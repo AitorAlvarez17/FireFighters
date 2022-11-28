@@ -146,7 +146,7 @@ public class UDPClient : MonoBehaviour
         serverEP = (EndPoint)serverIPEP;
 
         //Here the client is Blind, he doesn't know anything of the world
-        thisPlayer = new Player("Player" + playersOnline.ToString(), true, playersOnline);
+        thisPlayer = new Player("Player" + playersOnline.ToString(), true, playersOnline, 0, 0);
         sendMessage.SetUsername(thisPlayer.username);
         sendMessage.SetId(thisPlayer.id);
         sendMessage.SetPositions(thisPlayer.positions);
@@ -220,8 +220,10 @@ public class UDPClient : MonoBehaviour
                     isMoving = true;
                 }
 
-                Debug.Log("[CIENT] Receive data!: " + receiveMessage.message);
-                Debug.Log("[CLIENT] Received Id!" + receiveMessage.id);
+                Debug.Log("Fire action: " + receiveMessage.fireAction + "With an amount of" + receiveMessage.amount);
+                //Debug.Log("[CIENT] Receive data!: " + receiveMessage.message);
+                //Debug.Log("[CLIENT] Received Id!" + receiveMessage.id);
+
             }
         }
         catch(Exception e)
@@ -251,6 +253,23 @@ public class UDPClient : MonoBehaviour
         catch (Exception e)
         {
             Debug.Log("[CLIENT] Failed to send message. Error: " + e.ToString());
+        }
+    }
+
+    public void PingFireAction(int action, int amount)
+    {
+        try
+        {
+            byte[] dataTMP = new byte[1024];
+            //ping to everybody;
+            sendMessage.SetFireAction(action, amount);
+            dataTMP = serializer.SerializePackage(sendMessage);
+            udpSocket.SendTo(dataTMP, dataTMP.Length, SocketFlags.None, serverEP);
+            Debug.Log("Interacting with fireplace");
+        }
+        catch (Exception ex)
+        {
+            Debug.Log("[CLIENT] Failed to send message. Error: " + ex.ToString());
         }
     }
 
