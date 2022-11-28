@@ -98,6 +98,7 @@ public class UDPServer : MonoBehaviour
             if (thisPlayerSetup == true)
             {
                 this.gameObject.GetComponent<PlayerMovement>().player.GetComponent<Lumberjack>().Init(sendMessage.id, sendMessage.username);
+                thisPlayerSetup = false;
             }
             if (receivedMessage != null && receivedMessage.message != null && receivedMessage.message != "")
             {
