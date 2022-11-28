@@ -265,6 +265,8 @@ public class UDPClient : MonoBehaviour
             sendMessage.SetFireAction(action, amount);
             dataTMP = serializer.SerializePackage(sendMessage);
             udpSocket.SendTo(dataTMP, dataTMP.Length, SocketFlags.None, serverEP);
+
+            sendMessage.SetFireAction(0, 0);
             Debug.Log("Interacting with fireplace");
         }
         catch (Exception ex)

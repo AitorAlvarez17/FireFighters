@@ -290,12 +290,19 @@ MonoBehaviour:
   trans: {fileID: 5998753301368964990}
   textInfo: {fileID: 455920738}
   Username: Server
-  hat2: {fileID: 2100000, guid: f98708e6d5c0a46408083e9bb13b519f, type: 2}
-  hat3: {fileID: 2100000, guid: 1737f18ddb04c5844b37f3c022809840, type: 2}
-  hat4: {fileID: 2100000, guid: 3be75a418d6c5fb4699f659c87ffa01d, type: 2}
-  shirt2: {fileID: 2100000, guid: 553298fc6e4b61d49a864c4136c31125, type: 2}
-  shirt3: {fileID: 2100000, guid: b2b3e115f9fc5284bbd4dbbdf2f88f69, type: 2}
-  shirt4: {fileID: 2100000, guid: 9adb50507aac0b14fb0365a7e7d58b00, type: 2}
+  hats:
+  - {fileID: 2100000, guid: f98708e6d5c0a46408083e9bb13b519f, type: 2}
+  - {fileID: 2100000, guid: 1737f18ddb04c5844b37f3c022809840, type: 2}
+  - {fileID: 2100000, guid: 3be75a418d6c5fb4699f659c87ffa01d, type: 2}
+  shirts:
+  - {fileID: 2100000, guid: 553298fc6e4b61d49a864c4136c31125, type: 2}
+  - {fileID: 2100000, guid: b2b3e115f9fc5284bbd4dbbdf2f88f69, type: 2}
+  - {fileID: 2100000, guid: 9adb50507aac0b14fb0365a7e7d58b00, type: 2}
+  hair:
+  - {fileID: 2100000, guid: 2930828d8da86b0479beccde3b9e2bb6, type: 2}
+  - {fileID: 2100000, guid: 5b6cb5ec5e70637479c49254734de713, type: 2}
+  - {fileID: 2100000, guid: 9fbfd7773fdbb234db9d4547599522f8, type: 2}
+  avatar: {fileID: 5359579699084540786}
 --- !u!54 &1059698253
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -422,6 +429,12 @@ PrefabInstance:
 --- !u!4 &4695809634142020040 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: -8679921383154817045, guid: 6ae0c6dfc5fd21946b28d76aec7e9274,
+    type: 3}
+  m_PrefabInstance: {fileID: 5089178109531981347}
+  m_PrefabAsset: {fileID: 0}
+--- !u!1 &5359579699084540786 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 919132149155446097, guid: 6ae0c6dfc5fd21946b28d76aec7e9274,
     type: 3}
   m_PrefabInstance: {fileID: 5089178109531981347}
   m_PrefabAsset: {fileID: 0}

@@ -14,6 +14,8 @@ public class Lumberjack : MonoBehaviour
     public Material[] shirts;
     public Material[] hair;
 
+    //visuals
+    public GameObject avatar;
 
     public Lumberjack()
     {
@@ -39,7 +41,6 @@ public class Lumberjack : MonoBehaviour
 
     public void SetOutfit(int id)
     {
-        GameObject avatar = GameObject.Find("character");
         Material[] mats = avatar.GetComponent<Renderer>().materials;
         switch (id)
         {
@@ -57,6 +58,9 @@ public class Lumberjack : MonoBehaviour
                 mats[0] = hats[2];
                 mats[2] = hair[2];
                 mats[3] = shirts[2];
+                break;
+            default:
+                Debug.Log("No id supported");
                 break;
         }
         avatar.GetComponent<Renderer>().materials = mats;
