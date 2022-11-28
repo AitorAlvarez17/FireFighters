@@ -64,10 +64,10 @@ public static class serializer
         positions[1] = reader.ReadSingle();
         positions[2] = reader.ReadSingle();
 
-        foreach (var item in positions)
-        {
-            Debug.Log("Position :" + item);
-        }
+        //foreach (var item in positions)
+        //{
+            //Debug.Log("Position :" + item);
+        //}
         int id = reader.ReadInt32();
         int[] worldMatrix = new int[4];
         worldMatrix[0] = reader.ReadInt32();
@@ -80,10 +80,10 @@ public static class serializer
         int fireaction = reader.ReadInt32();
         int amount = reader.ReadInt32();
 
-        foreach (var item in positions)
-        {
-            Debug.Log("Position :" + item);
-        }
+        //foreach (var item in positions)
+        //{
+            //Debug.Log("Position :" + item);
+        //}
 
         PlayerPackage newMessage = new PlayerPackage(message, username,positions,id, worldMatrix, playersOnline, fireaction, amount);
 

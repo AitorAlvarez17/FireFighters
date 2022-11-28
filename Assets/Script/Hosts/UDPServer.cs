@@ -102,7 +102,7 @@ public class UDPServer : MonoBehaviour
             }
             if (receivedMessage != null && receivedMessage.message != null && receivedMessage.message != "")
             {
-                Debug.Log("Message checked and creating:" + receivedMessage.message + " From: " + receivedMessage.username);
+                //Debug.Log("Message checked and creating:" + receivedMessage.message + " From: " + receivedMessage.username);
                 CreateMessage(receivedMessage);
                 receivedMessage.SetMessage(null);
             }
@@ -114,12 +114,12 @@ public class UDPServer : MonoBehaviour
             this.gameObject.GetComponent<ServerController>().numberOfPlayers.text = "Number of Players: " + PlayerManager.playersOnline;
             if (receivedMessage.positions[0] != 0f || receivedMessage.positions[2] != 0f && isMoving == true)
             {
-                Debug.Log("Server Player ID:" + thisPlayer.id);
-                Debug.Log("Message ID:" + receivedMessage.id);
+                //Debug.Log("Server Player ID:" + thisPlayer.id);
+                //Debug.Log("Message ID:" + receivedMessage.id);
                 UpdateWorld(receivedMessage.id, receivedMessage.positions);
             }
             serverDirty = false;
-            Debug.Log("Setting Text and Server Dirtyness");
+            //Debug.Log("Setting Text and Server Dirtyness");
         
     }
 

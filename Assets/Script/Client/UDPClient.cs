@@ -81,18 +81,18 @@ public class UDPClient : MonoBehaviour
             }
             if (receiveMessage != null && receiveMessage.message != null && receiveMessage.message != "")
             {
-                Debug.Log("Message checked and creating...!: " + receiveMessage.message + "From Client:" + receiveMessage.username);
+                //Debug.Log("Message checked and creating...!: " + receiveMessage.message + "From Client:" + receiveMessage.username);
                 CreateMessage(receiveMessage);
                 receiveMessage.SetMessage(null);
             }
             if (receiveMessage.positions[0] != 0f || receiveMessage.positions[2] != 0f && isMoving == true)
             {
-                Debug.Log("This player ID (check):" + thisPlayer.id);
-                Debug.Log("Received message ID: " + receiveMessage.id);
+                //Debug.Log("This player ID (check):" + thisPlayer.id);
+                //Debug.Log("Received message ID: " + receiveMessage.id);
                 UpdateWorld(receiveMessage.id, receiveMessage.positions);
             }
 
-            Debug.Log("Setting Text and dirtyness");
+            //Debug.Log("Setting Text and dirtyness");
             this.gameObject.GetComponent<ServerController>().clientName.text = this.gameObject.GetComponent<UDPClient>().thisPlayer.username;
             thisPlayer.dirty = false;
         }
@@ -216,7 +216,7 @@ public class UDPClient : MonoBehaviour
 
                 if (receiveMessage.id == thisPlayer.id)
                 {
-                    Debug.Log("Not Moving, this was MINE");
+                    //Debug.Log("Not Moving, this was MINE");
                     isMoving = false;
                 }
                 else
