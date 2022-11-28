@@ -8,6 +8,8 @@ public class Fireplace : MonoBehaviour
     public int internalID;
     public string fireName;
 
+    public float life;
+
     public Fireplace()
     {
 
@@ -18,10 +20,8 @@ public class Fireplace : MonoBehaviour
         GC = GameObject.FindGameObjectWithTag("GameController");
         internalID = _key;
         fireName = _name;
+        life = 100f;
     }
-
-    public float life;
-
 
     // Start is called before the first frame update
     void Start()
@@ -38,6 +38,7 @@ public class Fireplace : MonoBehaviour
     public void Heal(int _amount)
     {
         life += _amount;
+        //Ping Life();
     }
 
     public void OnTriggerEnter(Collider other)
@@ -55,4 +56,6 @@ public class Fireplace : MonoBehaviour
         //PingFireAction(int action, int amount);
 
     }
+
+
 }

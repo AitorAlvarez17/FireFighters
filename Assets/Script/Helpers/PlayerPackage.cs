@@ -19,6 +19,8 @@ public class PlayerPackage
 
     public int fireAction = 0;
     public int amount = 0;
+
+    public int[] fireLifeMatrix = new int[4];
     //Message constructor
     public PlayerPackage(string _message, string _username)
     {
