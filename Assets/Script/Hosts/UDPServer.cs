@@ -316,7 +316,7 @@ public class UDPServer : MonoBehaviour
             sendMessage.SetPositions(packageMovement);
             sendMessage.SetUsername(thisPlayer.username);
             sendMessage.SetId(thisPlayer.id);
-            Debug.Log("Sending from Ping Server: ID: " + sendMessage.id);
+            //Debug.Log("Sending from Ping Server: ID: " + sendMessage.id);
             EchoData(sendMessage);
         }
         catch (Exception e)

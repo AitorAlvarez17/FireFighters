@@ -52,9 +52,7 @@ public class WorldController : MonoBehaviour
         GameObject playerPref = Instantiate(playerGO, spawnPoints[pos].position, Quaternion.identity);
         playerPref.GetComponent<Lumberjack>().Init(key, username);
         playerPref.transform.localScale = new Vector3(1.88f, 1.88f, 1.88f);
-
-        worldDolls.Add(key, playerPref.GetComponent<Lumberjack>());
-        pos++;
+        
         //playerGO.GetComponent<Lumberjack>().Init(key);
 
         //Create fireplace
@@ -62,7 +60,7 @@ public class WorldController : MonoBehaviour
         firePref.GetComponent<Fireplace>().Init(key, "Fire" + key.ToString());
 
 
-
+        pos++;
         worldDolls.Add(key, new PlayerSawmill(playerPref.GetComponent<Lumberjack>(), firePref.GetComponent<Fireplace>()));
 
     }
@@ -80,7 +78,7 @@ public class WorldController : MonoBehaviour
         worldDolls[_key].firePlace.Heal(amount);
     }
 
-    public void WelcomeClient(int[] worldMatrix, int _key)
+    public void WelcomeClient(int[] worldMatrix, int _key, string username)
     {
         foreach (int index in worldMatrix)
         {
