@@ -36,7 +36,7 @@ public class WorldController : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-
+        
     }
 
     // Update is called once per frame
@@ -85,6 +85,12 @@ public class WorldController : MonoBehaviour
             if (index != 0 && index != _key)
             {
                 CreatePlayer(index);
+            }
+            if (index == _key)
+            {
+                CreatePlayer(_key);
+                this.gameObject.GetComponent<PlayerMovement>().player = this.gameObject.GetComponent<WorldController>().worldDolls[_key].lumberjack.gameObject;
+                GameObject.FindGameObjectWithTag("MainCamera").GetComponent<CameraMovement>().target = this.gameObject.GetComponent<WorldController>().worldDolls[_key].lumberjack.transform;
             }
         }
     }

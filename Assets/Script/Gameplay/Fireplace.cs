@@ -43,6 +43,7 @@ public class Fireplace : MonoBehaviour
 
     public void OnTriggerEnter(Collider other)
     {
+        Debug.Log("Triggering!");
         //get the action from the lumberjack and put it into it
         if (GC.GetComponent<UDPClient>() != null)
         {

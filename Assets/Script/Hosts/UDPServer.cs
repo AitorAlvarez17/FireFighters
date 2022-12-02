@@ -56,6 +56,8 @@ public class UDPServer : MonoBehaviour
         serverDirty = false;
         playersOnline = UDPClientList.Count;
 
+        
+
         // Get IP and port
         serverIP = ServerController.MyServerInstance.IPServer;
         serverPort = ServerController.MyServerInstance.serverPort;
@@ -97,7 +99,9 @@ public class UDPServer : MonoBehaviour
 
             if (thisPlayerSetup == true)
             {
-                this.gameObject.GetComponent<PlayerMovement>().player.GetComponent<Lumberjack>().Init(sendMessage.id);
+                this.gameObject.GetComponent<WorldController>().CreatePlayer(1);
+                this.gameObject.GetComponent<PlayerMovement>().player = this.gameObject.GetComponent<WorldController>().worldDolls[1].lumberjack.gameObject;
+                GameObject.FindGameObjectWithTag("MainCamera").GetComponent<CameraMovement>().target = this.gameObject.GetComponent<WorldController>().worldDolls[1].lumberjack.transform;
                 thisPlayerSetup = false;
             }
             if (receivedMessage != null && receivedMessage.message != null && receivedMessage.message != "")
@@ -339,7 +343,7 @@ public class UDPServer : MonoBehaviour
             //ping to everybody;
             sendMessage.SetFireAction(action, amount);
             EchoData(sendMessage);
-            Debug.Log("Interacting with fireplace");
+            Debug.Log("Interacting with fireplace: [ACTION " + action + "], [AMOUNT: " + amount + "]");
         }
         catch (Exception ex)
         {
