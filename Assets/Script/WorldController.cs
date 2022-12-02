@@ -82,6 +82,9 @@ public class WorldController : MonoBehaviour
     {
         foreach (int index in worldMatrix)
         {
+            if (worldDolls.ContainsKey(index))
+                return;
+            
             if (index != 0 && index != _key)
             {
                 CreatePlayer(index);
@@ -89,8 +92,8 @@ public class WorldController : MonoBehaviour
             if (index == _key)
             {
                 CreatePlayer(_key);
-                this.gameObject.GetComponent<PlayerMovement>().player = this.gameObject.GetComponent<WorldController>().worldDolls[_key].lumberjack.gameObject;
-                GameObject.FindGameObjectWithTag("MainCamera").GetComponent<CameraMovement>().target = this.gameObject.GetComponent<WorldController>().worldDolls[_key].lumberjack.transform;
+                this.gameObject.GetComponent<PlayerMovement>().player = worldDolls[_key].lumberjack.gameObject;
+                GameObject.FindGameObjectWithTag("MainCamera").GetComponent<CameraMovement>().target = worldDolls[_key].lumberjack.transform;
             }
         }
     }
