@@ -1,12 +1,15 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using TMPro;
 
 public class Fireplace : MonoBehaviour
 {
     public GameObject GC;
     public int internalID;
     public string fireName;
+
+    public TextMeshPro lifeText;
 
     public float life;
     public float maxLife = 100;
@@ -22,6 +25,7 @@ public class Fireplace : MonoBehaviour
         internalID = _key;
         fireName = _name;
         life = 100f;
+        lifeText.text = "Life: " + life;
     }
 
     // Start is called before the first frame update
@@ -42,10 +46,12 @@ public class Fireplace : MonoBehaviour
         {
             case 1:
                 life += _amount;
+                lifeText.text = "Life: " + _amount;
                 FirePlaceActions(life / maxLife);
                 break;
             case 2:
                 life -= _amount;
+                lifeText.text = "Life: " + _amount;
                 FirePlaceActions(life / maxLife);
                 break;
             default:
@@ -63,14 +69,14 @@ public class Fireplace : MonoBehaviour
         //get the action from the lumberjack and put it into it
         if (GC.GetComponent<UDPClient>() != null)
         {
-            GC.GetComponent<UDPClient>().PingFireAction(other.transform.GetComponent<Lumberjack>().charge.Type, other.transform.GetComponent<Lumberjack>().charge.Amount);
+            GC.GetComponent<UDPClient>().PingFireAction(internalID, other.transform.GetComponent<Lumberjack>().charge.Type, other.transform.GetComponent<Lumberjack>().charge.Amount);
             other.transform.GetComponent<Lumberjack>().charge.ClearCharge();
             other.transform.GetComponent<Lumberjack>().PrintDebug();
 
         }
         else if (GC.GetComponent<UDPServer>() != null)
         {
-            GC.GetComponent<UDPServer>().PingFireAction(other.transform.GetComponent<Lumberjack>().charge.Type, other.transform.GetComponent<Lumberjack>().charge.Amount);
+            GC.GetComponent<UDPServer>().PingFireAction(internalID, other.transform.GetComponent<Lumberjack>().charge.Type, other.transform.GetComponent<Lumberjack>().charge.Amount);
             other.transform.GetComponent<Lumberjack>().charge.ClearCharge();
             other.transform.GetComponent<Lumberjack>().PrintDebug();
         }

@@ -233,11 +233,11 @@ public class UDPClient : MonoBehaviour
                 }
                 else
                 {
-                    Debug.Log("This is not MINE!");
+                    //Debug.Log("This is not MINE!");
                     isMoving = true;
                 }
 
-                Debug.Log("Fire [ACTION]: " + receiveMessage.fireAction + ", [AMOUNT] of" + receiveMessage.amount);
+                Debug.Log("Receiving Fireplace: [ID: " + receiveMessage.fireID + "], [ACTION " + receiveMessage.fireAction + "], [AMOUNT: " + receiveMessage.amount + "");
                 //Debug.Log("[CIENT] Receive data!: " + receiveMessage.message);
                 //Debug.Log("[CLIENT] Received Id!" + receiveMessage.id);
 
@@ -273,21 +273,21 @@ public class UDPClient : MonoBehaviour
         }
     }
 
-    public void PingFireAction(int action, int amount)
+    public void PingFireAction(int _id, int _action, int _amount)
     {
         try
         {
             byte[] dataTMP = new byte[1024];
             //ping to everybody;
-            sendMessage.SetFireAction(action, amount);
+            sendMessage.SetFireAction(_id, _action, _amount);
             dataTMP = serializer.SerializePackage(sendMessage);
             udpSocket.SendTo(dataTMP, dataTMP.Length, SocketFlags.None, serverEP);
 
             //this is dangerous! as receiveMessage on ServerWill keep the same until next update, be sure that receivedMessage doesn't stuck the the old values
-            sendMessage.SetFireAction(0, 0);
+            sendMessage.SetFireAction(_id, 0, 0);
 
             //sendMessage.SetFireAction(0, 0);
-            Debug.Log("Interacting with fireplace: [ACTION " + action + "], [AMOUNT: " + amount + "");
+            Debug.Log("Interacting with Fireplace: [ID: " + _id + "], [ACTION " + _action + "], [AMOUNT: " + _amount + "");
         }
         catch (Exception ex)
         {

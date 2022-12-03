@@ -266,20 +266,20 @@ public class UDPServer : MonoBehaviour
 
                 if (receivedMessage.id == thisPlayer.id)
                 {
-                    Debug.Log("Not Moving, this was MINE");
+                    //Debug.Log("Not Moving, this was MINE");
                     isMoving = false;
                 }
                 else
                 {
-                    Debug.Log("This is not MINE!");
+                    //Debug.Log("This is not MINE!");
                     isMoving = true;
                 }
 
                 ModifyReceivedMessage();
-                Debug.Log("[SERVER] Received message ID:" + receivedMessage.id);
+                //Debug.Log("[SERVER] Received message ID:" + receivedMessage.id);
                 EchoData(receivedMessage);
 
-                Debug.Log("Fire action: " + receivedMessage.fireAction + "With an amount of" + receivedMessage.amount);
+                Debug.Log("Server Receiving Fireplace: [ID: " + receivedMessage.fireID + "], [ACTION " + receivedMessage.fireAction + "], [AMOUNT: " + receivedMessage.amount + "");
 
                 serverDirty = true;
             }
@@ -348,13 +348,13 @@ public class UDPServer : MonoBehaviour
         }
     }
 
-    public void PingFireAction(int action, int amount)
+    public void PingFireAction(int id, int action, int amount)
     {
         try
         {
             byte[] dataTMP = new byte[1024];
             //ping to everybody;
-            sendMessage.SetFireAction(action, amount);
+            sendMessage.SetFireAction(id, action, amount);
             EchoData(sendMessage);
             Debug.Log("Interacting with fireplace: [ACTION " + action + "], [AMOUNT: " + amount + "]");
         }
