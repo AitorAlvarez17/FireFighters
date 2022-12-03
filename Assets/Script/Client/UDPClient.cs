@@ -6,12 +6,15 @@ using System.Net.Sockets;
 using System.Text;
 using System.Threading;
 using UnityEngine;
+using TMPro;
 
 public class UDPClient : MonoBehaviour
 {
     // Servers'IP and port
     private string serverIP;
     private int serverPort;
+
+    private TextMeshProUGUI matrixDebug;
 
     //Data matrix and number of bytes
     private int recv;
@@ -47,6 +50,7 @@ public class UDPClient : MonoBehaviour
     //instanciation both variables
     void Start()
     {
+        matrixDebug = ServerController.MyServerInstance.numberOfPlayers;
         serverIP = ServerController.MyServerInstance.IPServer;
         serverPort = ServerController.MyServerInstance.serverPort;
         playersOnline = 99;
@@ -308,6 +312,14 @@ public class UDPClient : MonoBehaviour
         gameMatrix = receiveMessage.worldMatrix;
         //this bc is the second pos but 1 in index
         thisPlayer.id = playersOnline;
+
+        matrixDebug.text = "";
+        matrixDebug.text += "Matrix [ID: " + gameMatrix[0].Item1 + "]" + "[LIFE: " + gameMatrix[0].Item2 + "]";
+        matrixDebug.text += "Matrix [ID: " + gameMatrix[1].Item1 + "]" + "[LIFE: " + gameMatrix[1].Item2 + "]";
+        matrixDebug.text += "Matrix [ID: " + gameMatrix[2].Item1 + "]" + "[LIFE: " + gameMatrix[2].Item2 + "]";
+        matrixDebug.text += "Matrix [ID: " + gameMatrix[3].Item1 + "]" + "[LIFE: " + gameMatrix[3].Item2 + "]";
+
+
         Debug.Log("Client was welcomed to world, ID:" + thisPlayer.id);
         this.gameObject.GetComponent<WorldController>().WelcomeClient(gameMatrix, thisPlayer.id);
     }

@@ -6,6 +6,7 @@ using System.Net.Sockets;
 using System.Text;
 using System.Threading;
 using UnityEngine;
+using TMPro;
 
 //Do a parent class that is MonoBehaviour and make this heritage from the parent in order to make it virtual for PlayerMovement
 public class UDPServer : MonoBehaviour
@@ -13,6 +14,8 @@ public class UDPServer : MonoBehaviour
     // Clients'IP and Port
     private string serverIP;
     private int serverPort;
+
+    private TextMeshProUGUI matrixDebug;
 
     // Data matrix and number of bytes
     private int recv;
@@ -56,7 +59,7 @@ public class UDPServer : MonoBehaviour
         serverDirty = false;
         playersOnline = UDPClientList.Count;
 
-        
+        matrixDebug = ServerController.MyServerInstance.numberOfPlayers;
 
         // Get IP and port
         serverIP = ServerController.MyServerInstance.IPServer;
@@ -372,11 +375,12 @@ public class UDPServer : MonoBehaviour
         // gameMatrix[id] is the DATA value // id + 1 is the VISUAL VALUE ... id's will be 1,2,3,4 not 0,1,2,3
         gameMatrix[id] = Tuple.Create(id+1, 100);
         playersOnline++;
-        //Debug.Log("Matrix pos 0" + gameMatrix[0]);
-        //Debug.Log("Matrix pos 1" + gameMatrix[1]);
-        //Debug.Log("Matrix pos 2" + gameMatrix[2]);
-        //Debug.Log("Matrix pos 3" + gameMatrix[3]);
-        
+        matrixDebug.text = "";
+        matrixDebug.text += "Matrix [ID: " + gameMatrix[0].Item1 + "]" + "[LIFE: " + gameMatrix[0].Item2 + "]";
+        matrixDebug.text += "Matrix [ID: " + gameMatrix[1].Item1 + "]" + "[LIFE: " + gameMatrix[1].Item2 + "]";
+        matrixDebug.text += "Matrix [ID: " + gameMatrix[2].Item1 + "]" + "[LIFE: " + gameMatrix[2].Item2 + "]";
+        matrixDebug.text += "Matrix [ID: " + gameMatrix[3].Item1 + "]" + "[LIFE: " + gameMatrix[3].Item2 + "]";
+
         // We tell the client his position is the X on the matrix
         Debug.Log("Players Online Updating and Setting:" + playersOnline);
     }
