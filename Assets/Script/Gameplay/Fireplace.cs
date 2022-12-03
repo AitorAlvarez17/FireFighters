@@ -9,6 +9,7 @@ public class Fireplace : MonoBehaviour
     public string fireName;
 
     public float life;
+    public float maxLife = 100;
 
     public Fireplace()
     {
@@ -35,31 +36,50 @@ public class Fireplace : MonoBehaviour
         
     }
 
-    public void Heal(int _amount)
+    public void HealBar(int _type, int _amount)
     {
-        life += _amount;
+        switch (_type)
+        {
+            case 1:
+                life += _amount;
+                FirePlaceActions(life / maxLife);
+                break;
+            case 2:
+                life -= _amount;
+                FirePlaceActions(life / maxLife);
+                break;
+            default:
+                break;
+        }
+        
         //Ping Life();
     }
 
     public void OnTriggerEnter(Collider other)
     {
-        if (other.transform.GetComponent<Lumberjack>().interacter == true)
-            Debug.Log("Is interacter");
+        if (other.transform.GetComponent<Lumberjack>().interacter != true)
+            return;
 
-        Debug.Log("Triggering!");
         //get the action from the lumberjack and put it into it
         if (GC.GetComponent<UDPClient>() != null)
         {
-            GC.GetComponent<UDPClient>().PingFireAction(0, 1);
+            GC.GetComponent<UDPClient>().PingFireAction(other.transform.GetComponent<Lumberjack>().charge.Type, other.transform.GetComponent<Lumberjack>().charge.Amount);
+            other.transform.GetComponent<Lumberjack>().charge.ClearCharge();
+            other.transform.GetComponent<Lumberjack>().PrintDebug();
 
         }
         else if (GC.GetComponent<UDPServer>() != null)
         {
-            GC.GetComponent<UDPServer>().PingFireAction(0, 1);
+            GC.GetComponent<UDPServer>().PingFireAction(other.transform.GetComponent<Lumberjack>().charge.Type, other.transform.GetComponent<Lumberjack>().charge.Amount);
+            other.transform.GetComponent<Lumberjack>().charge.ClearCharge();
+            other.transform.GetComponent<Lumberjack>().PrintDebug();
         }
         //PingFireAction(int action, int amount);
 
     }
 
+    public void FirePlaceActions(float lifeFraction)
+    {
 
+    }
 }

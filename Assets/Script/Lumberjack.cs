@@ -5,13 +5,51 @@ using TMPro;
 
 public class Charge
 {
-    public int amount;
-    public int type;
+    private int amount;
+
+    //0 for nothing, 1 for wood, 2 for water
+    private int type;
 
     public Charge(int _amount, int _type)
     {
         amount = _amount;
         type = _type;
+    }
+
+    public int Amount   
+    {
+        get { return amount; }   
+        set { amount = value; }  
+    }
+
+    public int Type
+    {
+        get { return type; }
+        set { type = value; }
+    }
+
+    public void SumWood(int _amount)
+    {
+        if (type != 1)
+            amount = 0;
+
+        type = 1;
+        amount += _amount;
+    }
+
+    public void SumWater(int _amount)
+    {
+        if (type != 2)
+            amount = 0;
+
+        type = 2;
+        amount += _amount;
+    }
+
+    public void ClearCharge()
+    {
+        type = 0;
+        amount = 0;
     }
 }
 public class Lumberjack : MonoBehaviour
@@ -20,6 +58,7 @@ public class Lumberjack : MonoBehaviour
     public int internalId;
     public Transform trans;
     public TextMeshPro textInfo;
+    public TextMeshPro resDebug;
     public string Username;
     public Material[] hats;
     public Material[] shirts;
@@ -27,6 +66,8 @@ public class Lumberjack : MonoBehaviour
 
     public bool interacter = false;
 
+    //0 for nothing, 1 for wood, 2 for water
+    public Charge charge = null;
     //visuals
     public GameObject avatar;
 
@@ -41,6 +82,7 @@ public class Lumberjack : MonoBehaviour
         SetId(_id);
         SetOutfit(_id);
         SetInteracter(interacter);
+        charge = new Charge(0, 0);
     }
 
     public void SetId(int _id)
@@ -60,6 +102,26 @@ public class Lumberjack : MonoBehaviour
         interacter = value;
     }
 
+    public void PrintDebug()
+    {
+        switch (charge.Type)
+        {
+            case 0:
+                resDebug.text = "Empty!";
+                resDebug.color = Color.grey;
+                break;
+            case 1:
+                resDebug.text = "Wood: " + charge.Amount;
+                resDebug.color = Color.red;
+                break;
+            case 2:
+                resDebug.text = "Water: " + charge.Amount;
+                resDebug.color = Color.blue;
+                break;
+            default:
+                break;
+        }
+    }
     public void SetOutfit(int id)
     {
         Material[] mats = avatar.GetComponent<Renderer>().materials;

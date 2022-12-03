@@ -61,6 +61,18 @@ public class UDPClient : MonoBehaviour
     private void Update()
     {
         PlayerActions();
+
+        if (Input.GetKeyDown(KeyCode.Alpha1))
+        {
+            this.gameObject.GetComponent<WorldController>().worldDolls[thisPlayer.id].lumberjack.charge.SumWood(5);
+            this.gameObject.GetComponent<WorldController>().worldDolls[thisPlayer.id].lumberjack.PrintDebug();
+        }
+
+        if (Input.GetKeyDown(KeyCode.Alpha2))
+        {
+            this.gameObject.GetComponent<WorldController>().worldDolls[thisPlayer.id].lumberjack.charge.SumWater(5);
+            this.gameObject.GetComponent<WorldController>().worldDolls[thisPlayer.id].lumberjack.PrintDebug();
+        }
     }
     public void CreateMessage(PlayerPackage _Message)
     {
@@ -225,7 +237,7 @@ public class UDPClient : MonoBehaviour
                     isMoving = true;
                 }
 
-                Debug.Log("Fire action: " + receiveMessage.fireAction + "With an amount of" + receiveMessage.amount);
+                Debug.Log("Fire [ACTION]: " + receiveMessage.fireAction + ", [AMOUNT] of" + receiveMessage.amount);
                 //Debug.Log("[CIENT] Receive data!: " + receiveMessage.message);
                 //Debug.Log("[CLIENT] Received Id!" + receiveMessage.id);
 
@@ -270,6 +282,9 @@ public class UDPClient : MonoBehaviour
             sendMessage.SetFireAction(action, amount);
             dataTMP = serializer.SerializePackage(sendMessage);
             udpSocket.SendTo(dataTMP, dataTMP.Length, SocketFlags.None, serverEP);
+
+            //this is dangerous! as receiveMessage on ServerWill keep the same until next update, be sure that receivedMessage doesn't stuck the the old values
+            sendMessage.SetFireAction(0, 0);
 
             //sendMessage.SetFireAction(0, 0);
             Debug.Log("Interacting with fireplace: [ACTION " + action + "], [AMOUNT: " + amount + "");

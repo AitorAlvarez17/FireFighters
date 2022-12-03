@@ -68,6 +68,18 @@ public class UDPServer : MonoBehaviour
     private void Update()
     {
         ServerActions();
+
+        if (Input.GetKeyDown(KeyCode.Alpha1))
+        {
+            this.gameObject.GetComponent<WorldController>().worldDolls[thisPlayer.id].lumberjack.charge.SumWood(5);
+            this.gameObject.GetComponent<WorldController>().worldDolls[thisPlayer.id].lumberjack.PrintDebug();
+        }
+
+        if (Input.GetKeyDown(KeyCode.Alpha2))
+        {
+            this.gameObject.GetComponent<WorldController>().worldDolls[thisPlayer.id].lumberjack.charge.SumWater(5);
+            this.gameObject.GetComponent<WorldController>().worldDolls[thisPlayer.id].lumberjack.PrintDebug();
+        }
     }
 
     public void SetUsernameAndConnect(string username)
