@@ -96,6 +96,7 @@ public class UDPClient : MonoBehaviour
             {
                 receiveMessage.SetUsername("Player" + thisPlayer.id);
                 WelcomeWorld();
+                DebugMatrix();
                 Debug.Log("Creating Server repre");
                 justConnected = false;
             }
@@ -313,13 +314,6 @@ public class UDPClient : MonoBehaviour
         //this bc is the second pos but 1 in index
         thisPlayer.id = playersOnline;
 
-        matrixDebug.text = "";
-        matrixDebug.text += "Matrix [ID: " + gameMatrix[0].Item1 + "]" + "[LIFE: " + gameMatrix[0].Item2 + "]";
-        matrixDebug.text += "Matrix [ID: " + gameMatrix[1].Item1 + "]" + "[LIFE: " + gameMatrix[1].Item2 + "]";
-        matrixDebug.text += "Matrix [ID: " + gameMatrix[2].Item1 + "]" + "[LIFE: " + gameMatrix[2].Item2 + "]";
-        matrixDebug.text += "Matrix [ID: " + gameMatrix[3].Item1 + "]" + "[LIFE: " + gameMatrix[3].Item2 + "]";
-
-
         Debug.Log("Client was welcomed to world, ID:" + thisPlayer.id);
         this.gameObject.GetComponent<WorldController>().WelcomeClient(gameMatrix, thisPlayer.id);
     }
@@ -327,5 +321,14 @@ public class UDPClient : MonoBehaviour
     public void UpdateWorld(int _key, float[] _positions)
     {
         this.gameObject.GetComponent<WorldController>().MovePlayer(_key, _positions);
+    }
+
+    public void DebugMatrix()
+    {
+        matrixDebug.text = "";
+        matrixDebug.text += "Matrix [ID: " + gameMatrix[0].Item1 + "]" + "[LIFE: " + gameMatrix[0].Item2 + "]";
+        matrixDebug.text += "Matrix [ID: " + gameMatrix[1].Item1 + "]" + "[LIFE: " + gameMatrix[1].Item2 + "]";
+        matrixDebug.text += "Matrix [ID: " + gameMatrix[2].Item1 + "]" + "[LIFE: " + gameMatrix[2].Item2 + "]";
+        matrixDebug.text += "Matrix [ID: " + gameMatrix[3].Item1 + "]" + "[LIFE: " + gameMatrix[3].Item2 + "]";
     }
 }

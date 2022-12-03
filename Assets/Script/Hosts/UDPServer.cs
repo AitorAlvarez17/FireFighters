@@ -118,6 +118,8 @@ public class UDPServer : MonoBehaviour
                 this.gameObject.GetComponent<PlayerMovement>().player = this.gameObject.GetComponent<WorldController>().worldDolls[1].lumberjack.gameObject;
                 GameObject.FindGameObjectWithTag("MainCamera").GetComponent<CameraMovement>().target = this.gameObject.GetComponent<WorldController>().worldDolls[1].lumberjack.transform;
                 thisPlayerSetup = false;
+
+                DebugMatrix();
             }
             if (receivedMessage != null && receivedMessage.message != null && receivedMessage.message != "")
             {
@@ -128,6 +130,7 @@ public class UDPServer : MonoBehaviour
             if (newConection == true)
             {
                 this.gameObject.GetComponent<WorldController>().CreatePlayer(playersOnline);
+                DebugMatrix();
                 newConection = false;
             }
             this.gameObject.GetComponent<ServerController>().numberOfPlayers.text = "Number of Players: " + PlayerManager.playersOnline;
@@ -375,11 +378,7 @@ public class UDPServer : MonoBehaviour
         // gameMatrix[id] is the DATA value // id + 1 is the VISUAL VALUE ... id's will be 1,2,3,4 not 0,1,2,3
         gameMatrix[id] = Tuple.Create(id+1, 100);
         playersOnline++;
-        matrixDebug.text = "";
-        matrixDebug.text += "Matrix [ID: " + gameMatrix[0].Item1 + "]" + "[LIFE: " + gameMatrix[0].Item2 + "]";
-        matrixDebug.text += "Matrix [ID: " + gameMatrix[1].Item1 + "]" + "[LIFE: " + gameMatrix[1].Item2 + "]";
-        matrixDebug.text += "Matrix [ID: " + gameMatrix[2].Item1 + "]" + "[LIFE: " + gameMatrix[2].Item2 + "]";
-        matrixDebug.text += "Matrix [ID: " + gameMatrix[3].Item1 + "]" + "[LIFE: " + gameMatrix[3].Item2 + "]";
+        
 
         // We tell the client his position is the X on the matrix
         Debug.Log("Players Online Updating and Setting:" + playersOnline);
@@ -389,5 +388,14 @@ public class UDPServer : MonoBehaviour
     {
         receivedMessage.SetWorldMatrix(gameMatrix);
         receivedMessage.SetPlayersOnline(playersOnline);
+    }
+
+    public void DebugMatrix()
+    {
+        matrixDebug.text = "";
+        matrixDebug.text += "Matrix [ID: " + gameMatrix[0].Item1 + "]" + "[LIFE: " + gameMatrix[0].Item2 + "]";
+        matrixDebug.text += "Matrix [ID: " + gameMatrix[1].Item1 + "]" + "[LIFE: " + gameMatrix[1].Item2 + "]";
+        matrixDebug.text += "Matrix [ID: " + gameMatrix[2].Item1 + "]" + "[LIFE: " + gameMatrix[2].Item2 + "]";
+        matrixDebug.text += "Matrix [ID: " + gameMatrix[3].Item1 + "]" + "[LIFE: " + gameMatrix[3].Item2 + "]";
     }
 }
