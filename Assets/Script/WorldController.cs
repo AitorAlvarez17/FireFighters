@@ -99,18 +99,18 @@ public class WorldController : MonoBehaviour
         worldDolls[_key].firePlace.HealBar(type, amount);
     }
 
-    public void WelcomeClient(int[] worldMatrix, int _key)
+    public void WelcomeClient(Tuple<int, int>[] worldMatrix, int _key)
     {
-        foreach (int index in worldMatrix)
+        foreach (var index in worldMatrix)
         {
-            if (worldDolls.ContainsKey(index))
+            if (worldDolls.ContainsKey(index.Item1))
                 return;
             
-            if (index != 0 && index != _key)
+            if (index.Item1 != 0 && index.Item1 != _key)
             {
-                CreatePlayer(index);
+                CreatePlayer(index.Item1);
             }
-            if (index == _key)
+            if (index.Item1 == _key)
             {
                 CreatePlayer(_key, true);
                 this.gameObject.GetComponent<PlayerMovement>().player = worldDolls[_key].lumberjack.gameObject;

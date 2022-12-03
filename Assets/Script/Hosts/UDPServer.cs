@@ -43,8 +43,8 @@ public class UDPServer : MonoBehaviour
 
     public List<EndPoint> UDPClientList = new List<EndPoint>();
 
-    // This is the brain of the game
-    public int[] gameMatrix = new int[4] { 0, 0, 0, 0 };
+    // This is the brain of the game - the first int stands for the ID of the Sawmill (Lumberjack + Fireplace) and the seconds stands for the health of it
+    public Tuple<int, int>[] gameMatrix = new Tuple<int, int>[4] { Tuple.Create(0,100), Tuple.Create(0, 100), Tuple.Create(0, 100), Tuple.Create(0, 100) };
     public int playersOnline = 0;
     public bool thisPlayerSetup = false;
 
@@ -370,7 +370,7 @@ public class UDPServer : MonoBehaviour
     public void UpdateGameMatrix(int id)
     {
         // gameMatrix[id] is the DATA value // id + 1 is the VISUAL VALUE ... id's will be 1,2,3,4 not 0,1,2,3
-        gameMatrix[id] = id + 1;
+        gameMatrix[id] = Tuple.Create(id+1, 100);
         playersOnline++;
         //Debug.Log("Matrix pos 0" + gameMatrix[0]);
         //Debug.Log("Matrix pos 1" + gameMatrix[1]);

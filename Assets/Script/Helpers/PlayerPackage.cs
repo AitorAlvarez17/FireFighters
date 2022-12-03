@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -12,7 +13,7 @@ public class PlayerPackage
     public int id = -1;
 
     //int of the 4 players
-    public int[] worldMatrix = new int[4];
+    public Tuple<int, int>[] worldMatrix = new Tuple<int, int>[4];
 
     //this will work as an index
     public int playersOnline = 0;
@@ -33,7 +34,7 @@ public class PlayerPackage
     }   
 
     //position constructor
-    public PlayerPackage(string _message, string _username,float[] position, int _id, int[] _worldMatrix, int _playersOnline, int _fireAction, int _amount, int _fireId)
+    public PlayerPackage(string _message, string _username,float[] position, int _id, Tuple<int, int>[] _worldMatrix, int _playersOnline, int _fireAction, int _amount, int _fireId)
     {
         message = _message;
         username = _username;
@@ -85,7 +86,7 @@ public class PlayerPackage
         worldMatrix.SetValue(value, pos);
     }
 
-    public void SetWorldMatrix(int[] _worldMatrix)
+    public void SetWorldMatrix(Tuple<int, int>[] _worldMatrix)
     {
         worldMatrix = _worldMatrix;
     }
@@ -93,18 +94,5 @@ public class PlayerPackage
     public void SetPlayersOnline(int _value)
     {
         playersOnline = _value;
-    }
-}
-
-public class World
-{
-    //players ID -- with this we do fireplaces also
-    public int[] worldMatrix = new int[4];
-
-
-
-    public World()
-    {
-
     }
 }

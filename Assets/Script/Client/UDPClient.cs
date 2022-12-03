@@ -36,7 +36,7 @@ public class UDPClient : MonoBehaviour
     public PlayerPackage sendMessage = new PlayerPackage(null, "");
 
     //This is the brain of the game
-    public int[] gameMatrix = new int[4] { 0, 0, 0, 0 };
+    public Tuple<int, int>[] gameMatrix = new Tuple<int, int>[4] { Tuple.Create(0, 100), Tuple.Create(0, 100), Tuple.Create(0, 100), Tuple.Create(0, 100) };
     public int playersOnline = 99;
 
     byte[] testBytes = new byte[1024];

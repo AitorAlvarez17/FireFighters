@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -35,9 +36,12 @@ public static class serializer
             writer.Write(coordinate);
         }
         writer.Write(_message.id);
-        foreach (int worldPlayer in _message.worldMatrix)
+        foreach (var worldPlayer in _message.worldMatrix)
         {
-            writer.Write(worldPlayer);
+            //id's
+            writer.Write(worldPlayer.Item1);
+            //life
+            writer.Write(worldPlayer.Item2);
         }
         writer.Write(_message.playersOnline);
         //FIRE STUFF
@@ -70,11 +74,11 @@ public static class serializer
             //Debug.Log("Position :" + item);
         //}
         int id = reader.ReadInt32();
-        int[] worldMatrix = new int[4];
-        worldMatrix[0] = reader.ReadInt32();
-        worldMatrix[1] = reader.ReadInt32();
-        worldMatrix[2] = reader.ReadInt32();
-        worldMatrix[2] = reader.ReadInt32();
+        Tuple<int,int>[] worldMatrix = new Tuple<int,int>[4];
+        worldMatrix[0] = Tuple.Create(reader.ReadInt32(), reader.ReadInt32());
+        worldMatrix[1] = Tuple.Create(reader.ReadInt32(), reader.ReadInt32());
+        worldMatrix[2] = Tuple.Create(reader.ReadInt32(), reader.ReadInt32());
+        worldMatrix[3] = Tuple.Create(reader.ReadInt32(), reader.ReadInt32());
 
         int playersOnline = reader.ReadInt32();
 
