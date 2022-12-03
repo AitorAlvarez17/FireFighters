@@ -25,7 +25,7 @@ public class Fireplace : MonoBehaviour
         internalID = _key;
         fireName = _name;
         life = 100f;
-        lifeText.text = "Life: " + life;
+        lifeText.text = "LIFE: " + life;
     }
 
     // Start is called before the first frame update
@@ -66,15 +66,20 @@ public class Fireplace : MonoBehaviour
         if (other.transform.GetComponent<Lumberjack>().interacter != true)
             return;
 
+        if (GC == null)
+        {
+            GC = GameObject.FindGameObjectWithTag("GameController");
+        }
+
         //get the action from the lumberjack and put it into it
-        if (GC.GetComponent<UDPClient>() != null)
+        if (GC.transform.GetComponent<UDPClient>() != null)
         {
             GC.GetComponent<UDPClient>().PingFireAction(internalID, other.transform.GetComponent<Lumberjack>().charge.Type, other.transform.GetComponent<Lumberjack>().charge.Amount);
             other.transform.GetComponent<Lumberjack>().charge.ClearCharge();
             other.transform.GetComponent<Lumberjack>().PrintDebug();
 
         }
-        else if (GC.GetComponent<UDPServer>() != null)
+        else if (GC.transform.GetComponent<UDPServer>() != null)
         {
             GC.GetComponent<UDPServer>().PingFireAction(internalID, other.transform.GetComponent<Lumberjack>().charge.Type, other.transform.GetComponent<Lumberjack>().charge.Amount);
             other.transform.GetComponent<Lumberjack>().charge.ClearCharge();
