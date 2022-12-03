@@ -62,17 +62,21 @@ public class UDPClient : MonoBehaviour
     {
         PlayerActions();
 
-        if (Input.GetKeyDown(KeyCode.Alpha1))
+        if (thisPlayer != null)
         {
-            this.gameObject.GetComponent<WorldController>().worldDolls[thisPlayer.id].lumberjack.charge.SumWood(5);
-            this.gameObject.GetComponent<WorldController>().worldDolls[thisPlayer.id].lumberjack.PrintDebug();
-        }
+            if (Input.GetKeyDown(KeyCode.Alpha1))
+            {
+                this.gameObject.GetComponent<WorldController>().worldDolls[thisPlayer.id].lumberjack.charge.SumWood(5);
+                this.gameObject.GetComponent<WorldController>().worldDolls[thisPlayer.id].lumberjack.PrintDebug();
+            }
 
-        if (Input.GetKeyDown(KeyCode.Alpha2))
-        {
-            this.gameObject.GetComponent<WorldController>().worldDolls[thisPlayer.id].lumberjack.charge.SumWater(5);
-            this.gameObject.GetComponent<WorldController>().worldDolls[thisPlayer.id].lumberjack.PrintDebug();
+            if (Input.GetKeyDown(KeyCode.Alpha2))
+            {
+                this.gameObject.GetComponent<WorldController>().worldDolls[thisPlayer.id].lumberjack.charge.SumWater(5);
+                this.gameObject.GetComponent<WorldController>().worldDolls[thisPlayer.id].lumberjack.PrintDebug();
+            }
         }
+        
     }
     public void CreateMessage(PlayerPackage _Message)
     {
@@ -229,15 +233,17 @@ public class UDPClient : MonoBehaviour
                 if (receiveMessage.id == thisPlayer.id)
                 {
                     //Debug.Log("Not Moving, this was MINE");
+                    Debug.Log("PingPong Received Fireplace: [ID: " + receiveMessage.fireID + "], [ACTION " + receiveMessage.fireAction + "], [AMOUNT: " + receiveMessage.amount + "");
+
                     isMoving = false;
                 }
                 else
                 {
+                    Debug.Log("Server Received Fireplace: [ID: " + receiveMessage.fireID + "], [ACTION " + receiveMessage.fireAction + "], [AMOUNT: " + receiveMessage.amount + "");
                     //Debug.Log("This is not MINE!");
                     isMoving = true;
                 }
 
-                Debug.Log("Receiving Fireplace: [ID: " + receiveMessage.fireID + "], [ACTION " + receiveMessage.fireAction + "], [AMOUNT: " + receiveMessage.amount + "");
                 //Debug.Log("[CIENT] Receive data!: " + receiveMessage.message);
                 //Debug.Log("[CLIENT] Received Id!" + receiveMessage.id);
 
