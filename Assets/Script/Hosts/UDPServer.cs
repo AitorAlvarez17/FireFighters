@@ -348,15 +348,18 @@ public class UDPServer : MonoBehaviour
         }
     }
 
-    public void PingFireAction(int id, int action, int amount)
+    public void PingFireAction(int _id, int _action, int _amount)
     {
         try
         {
             byte[] dataTMP = new byte[1024];
             //ping to everybody;
-            sendMessage.SetFireAction(id, action, amount);
+            sendMessage.SetFireAction(_id, _action, _amount);
             EchoData(sendMessage);
-            Debug.Log("Interacting with fireplace: [ACTION " + action + "], [AMOUNT: " + amount + "]");
+
+            //this is dangerous! as receiveMessage on ServerWill keep the same until next update, be sure that receivedMessage doesn't stuck the the old values
+            sendMessage.SetFireAction(_id, 0, 0);
+            Debug.Log("Interacting with fireplace: [ACTION " + _action + "], [AMOUNT: " + _amount + "]");
         }
         catch (Exception ex)
         {
