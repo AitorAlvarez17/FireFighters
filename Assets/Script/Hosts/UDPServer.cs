@@ -59,7 +59,7 @@ public class UDPServer : MonoBehaviour
         serverDirty = false;
         playersOnline = UDPClientList.Count;
 
-        matrixDebug = ServerController.MyServerInstance.numberOfPlayers;
+        matrixDebug = this.gameObject.GetComponent<ServerController>().numberOfPlayers;
 
         // Get IP and port
         serverIP = ServerController.MyServerInstance.IPServer;
@@ -133,7 +133,6 @@ public class UDPServer : MonoBehaviour
                 DebugMatrix();
                 newConection = false;
             }
-            this.gameObject.GetComponent<ServerController>().numberOfPlayers.text = "Number of Players: " + PlayerManager.playersOnline;
             if (receivedMessage.positions[0] != 0f || receivedMessage.positions[2] != 0f && isMoving == true)
             {
                 //Debug.Log("Server Player ID:" + thisPlayer.id);
@@ -392,10 +391,12 @@ public class UDPServer : MonoBehaviour
 
     public void DebugMatrix()
     {
-        matrixDebug.text = "";
-        matrixDebug.text += "Matrix [ID: " + gameMatrix[0].Item1 + "]" + "[LIFE: " + gameMatrix[0].Item2 + "]";
-        matrixDebug.text += "Matrix [ID: " + gameMatrix[1].Item1 + "]" + "[LIFE: " + gameMatrix[1].Item2 + "]";
-        matrixDebug.text += "Matrix [ID: " + gameMatrix[2].Item1 + "]" + "[LIFE: " + gameMatrix[2].Item2 + "]";
-        matrixDebug.text += "Matrix [ID: " + gameMatrix[3].Item1 + "]" + "[LIFE: " + gameMatrix[3].Item2 + "]";
+        Debug.Log("Debuging the Matrix");
+
+        matrixDebug.text = "GAME MATRIX: \n";
+        matrixDebug.text += "Matrix [ID: " + gameMatrix[0].Item1 + "]" + "[LIFE: " + gameMatrix[0].Item2 + "]\n";
+        matrixDebug.text += "Matrix [ID: " + gameMatrix[1].Item1 + "]" + "[LIFE: " + gameMatrix[1].Item2 + "]\n";
+        matrixDebug.text += "Matrix [ID: " + gameMatrix[2].Item1 + "]" + "[LIFE: " + gameMatrix[2].Item2 + "]\n";
+        matrixDebug.text += "Matrix [ID: " + gameMatrix[3].Item1 + "]" + "[LIFE: " + gameMatrix[3].Item2 + "]\n";
     }
 }
