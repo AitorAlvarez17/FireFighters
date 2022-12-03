@@ -65,6 +65,27 @@ public class WorldController : MonoBehaviour
 
     }
 
+    public void CreatePlayer(int key, bool interacter = false)
+    {
+
+        //Lumberjack
+        Debug.Log("New Lumberjack! KEY:" + key);
+        GameObject playerPref = Instantiate(playerGO, spawnPoints[pos].position, Quaternion.identity);
+        playerPref.GetComponent<Lumberjack>().Init(key, interacter);
+        playerPref.transform.localScale = new Vector3(1.88f, 1.88f, 1.88f);
+
+        //playerGO.GetComponent<Lumberjack>().Init(key);
+
+        //Create fireplace
+        GameObject firePref = Instantiate(fireGO, firePoints[key - 1].position, Quaternion.identity);
+        firePref.GetComponent<Fireplace>().Init(key, "Fire" + key.ToString());
+
+
+        pos++;
+        worldDolls.Add(key, new PlayerSawmill(playerPref.GetComponent<Lumberjack>(), firePref.GetComponent<Fireplace>()));
+
+    }
+
     public void MovePlayer(int _key, float[] _positions)
     {
         if (worldDolls.ContainsKey(_key))
@@ -91,7 +112,7 @@ public class WorldController : MonoBehaviour
             }
             if (index == _key)
             {
-                CreatePlayer(_key);
+                CreatePlayer(_key, true);
                 this.gameObject.GetComponent<PlayerMovement>().player = worldDolls[_key].lumberjack.gameObject;
                 GameObject.FindGameObjectWithTag("MainCamera").GetComponent<CameraMovement>().target = worldDolls[_key].lumberjack.transform;
             }

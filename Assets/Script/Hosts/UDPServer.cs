@@ -99,7 +99,7 @@ public class UDPServer : MonoBehaviour
 
             if (thisPlayerSetup == true)
             {
-                this.gameObject.GetComponent<WorldController>().CreatePlayer(1);
+                this.gameObject.GetComponent<WorldController>().CreatePlayer(1, true);
                 this.gameObject.GetComponent<PlayerMovement>().player = this.gameObject.GetComponent<WorldController>().worldDolls[1].lumberjack.gameObject;
                 GameObject.FindGameObjectWithTag("MainCamera").GetComponent<CameraMovement>().target = this.gameObject.GetComponent<WorldController>().worldDolls[1].lumberjack.transform;
                 thisPlayerSetup = false;
@@ -250,6 +250,8 @@ public class UDPServer : MonoBehaviour
                     newConection = true;
                 }
 
+                receivedMessage = serializer.DeserializePackage(dataTMP);
+
                 if (receivedMessage.id == thisPlayer.id)
                 {
                     Debug.Log("Not Moving, this was MINE");
@@ -261,7 +263,6 @@ public class UDPServer : MonoBehaviour
                     isMoving = true;
                 }
 
-                receivedMessage = serializer.DeserializePackage(dataTMP);
                 ModifyReceivedMessage();
                 Debug.Log("[SERVER] Received message ID:" + receivedMessage.id);
                 EchoData(receivedMessage);

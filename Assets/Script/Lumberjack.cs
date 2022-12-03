@@ -3,6 +3,17 @@ using System.Collections.Generic;
 using UnityEngine;
 using TMPro;
 
+public class Charge
+{
+    public int amount;
+    public int type;
+
+    public Charge(int _amount, int _type)
+    {
+        amount = _amount;
+        type = _type;
+    }
+}
 public class Lumberjack : MonoBehaviour
 {
     // Start is called before the first frame update
@@ -14,6 +25,8 @@ public class Lumberjack : MonoBehaviour
     public Material[] shirts;
     public Material[] hair;
 
+    public bool interacter = false;
+
     //visuals
     public GameObject avatar;
 
@@ -22,12 +35,14 @@ public class Lumberjack : MonoBehaviour
 
     }
 
-    public void Init(int _id)
+    public void Init(int _id, bool interacter = false)
     {
         SetUsername("Player" + _id);
         SetId(_id);
         SetOutfit(_id);
+        SetInteracter(interacter);
     }
+
     public void SetId(int _id)
     {
         internalId = _id;
@@ -37,6 +52,12 @@ public class Lumberjack : MonoBehaviour
     {
         Username = username;
         textInfo.text += "Name: " + username + "\n"; 
+    }
+
+    public void SetInteracter(bool value)
+    {
+        Debug.Log("Interacter set to: " + value);
+        interacter = value;
     }
 
     public void SetOutfit(int id)
