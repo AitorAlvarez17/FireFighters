@@ -143,12 +143,13 @@ public class UDPServer : MonoBehaviour
             }
             if (fireChanging == true)
             {
-                Debug.Log("Setting life from [FIRE CHANGING]" + "of received message [ID 1: "+ gameMatrix[0].Item1 + "]" + "[ID 2: "+ gameMatrix[1].Item1 + "]");
+                Debug.Log("Setting life from [FIRE CHANGING]" + "of received message [ID 1: "+ gameMatrix[0].Item1 + "]" + "[VALUE 1: "+ gameMatrix[0].Item2 + "]");
                 this.gameObject.GetComponent<WorldController>().UpdateFires(gameMatrix);
                 fireChanging = false;
             }
             if (debugMatrix == true)
             {
+                Debug.Log("Debuging matrix on update");
                 DebugMatrix();
                 debugMatrix = false;
             }
@@ -380,6 +381,7 @@ public class UDPServer : MonoBehaviour
             byte[] dataTMP = new byte[1024];
             //ping to everybody;
             sendMessage.SetFireAction(_id, _action, _amount, _life);
+            UpdateFireMatrix(sendMessage.fireID, sendMessage.fireAction, sendMessage.amount, sendMessage.fireLife);
             EchoData(sendMessage);
 
             //this is dangerous! as receiveMessage on ServerWill keep the same until next update, be sure that receivedMessage doesn't stuck the the old values
@@ -406,7 +408,6 @@ public class UDPServer : MonoBehaviour
 
     public void UpdateFireMatrix(int _fireID, int _type, int amount, int life)
     {
-        Debug.Log("Simulating and Updating Life MATRIX" + "[FIRE ID:] " + _fireID);
         //nice place for ANTICHEATING comprovations - SECURING the message
         int _newLife = life;
         switch (_type)
@@ -425,8 +426,14 @@ public class UDPServer : MonoBehaviour
             default:
                 break;
         }
+
+        Debug.Log("Simulating and Updating Life MATRIX" + "[FIRE ID:] " + _fireID);
+        Debug.Log("Simulating and Updating Life MATRIX" + "[LIFE:] " + _newLife);
+
+        Debug.Log("ID of matrix element changing: " + (_fireID - 1));
         gameMatrix[_fireID - 1] = Tuple.Create(_fireID, _newLife);
         debugMatrix = true;
+        serverDirty = true;
     }
 
     public void ModifyReceivedMessage()

@@ -849,7 +849,6 @@ GameObject:
   - component: {fileID: 2057073010015567614}
   - component: {fileID: 4497655841904016353}
   - component: {fileID: 495356771}
-  - component: {fileID: 1149405940280335785}
   m_Layer: 0
   m_Name: FirePlace
   m_TagString: Untagged
@@ -901,7 +900,6 @@ MonoBehaviour:
   internalID: 1
   fireName: 
   lifeText: {fileID: 2769870272011948282}
-  life: 0
   maxLife: 100
 --- !u!65 &4497655841904016353
 BoxCollider:
@@ -932,24 +930,6 @@ Rigidbody:
   m_Interpolate: 0
   m_Constraints: 14
   m_CollisionDetection: 0
---- !u!114 &1149405940280335785
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 6985857934185731609}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 672de7816b451436f832ab2302db2c92, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  GC: {fileID: 0}
-  internalID: 1
-  fireName: 
-  lifeText: {fileID: 0}
-  life: 0
-  maxLife: 100
 --- !u!1 &7278487134692881328
 GameObject:
   m_ObjectHideFlags: 0

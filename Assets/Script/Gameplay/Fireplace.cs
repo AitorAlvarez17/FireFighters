@@ -11,7 +11,7 @@ public class Fireplace : MonoBehaviour
 
     public TextMeshPro lifeText;
 
-    public int life;
+    private int life = 300;
     public float maxLife = 100;
 
     public Fireplace()
@@ -49,12 +49,16 @@ public class Fireplace : MonoBehaviour
                 Debug.Log("No charge");
                 break;
             case 1:
+                Debug.Log("Fire life antes de cambio" + life);
                 life += _amount;
+                Debug.Log("Fire life despues de cambio" + life);
                 lifeText.text = "LIFE: " + life;
                 FirePlaceActions(life / maxLife);
                 break;
             case 2:
+                Debug.Log("Fire life antes de cambio" + life);
                 life -= _amount;
+                Debug.Log("Fire life despues de cambio" + life);
                 lifeText.text = "LIFE: " + life;
                 FirePlaceActions(life / maxLife);
                 break;
@@ -95,9 +99,12 @@ public class Fireplace : MonoBehaviour
             other.transform.GetComponent<Lumberjack>().PrintDebug();
 
         }
-        else if (GC.transform.GetComponent<UDPServer>() != null)
+        if (GC.transform.GetComponent<UDPServer>() != null)
         {
             HealBar(other.transform.GetComponent<Lumberjack>().charge.Type, other.transform.GetComponent<Lumberjack>().charge.Amount);
+
+            Debug.Log("FirePlace life: " + life);
+
             GC.GetComponent<UDPServer>().PingFireAction(internalID, other.transform.GetComponent<Lumberjack>().charge.Type, other.transform.GetComponent<Lumberjack>().charge.Amount, life);
             other.transform.GetComponent<Lumberjack>().charge.ClearCharge();
             other.transform.GetComponent<Lumberjack>().PrintDebug();
