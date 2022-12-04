@@ -294,7 +294,7 @@ public class UDPServer : MonoBehaviour
                 {
                     fireChanging = true;
                     //here we change the matrix with the new life
-                    UpdateFireMatrix(receivedMessage.fireID, receivedMessage.fireAction, receivedMessage.amount);
+                    UpdateFireMatrix(receivedMessage.fireID, receivedMessage.fireAction, receivedMessage.amount, receivedMessage.fireLife);
                     //and here we change the receivedMessage for pingPong comeback
                     ModifyReceivedMessage();
                 }
@@ -381,7 +381,6 @@ public class UDPServer : MonoBehaviour
             EchoData(sendMessage);
 
             //this is dangerous! as receiveMessage on ServerWill keep the same until next update, be sure that receivedMessage doesn't stuck the the old values
-            sendMessage.SetFireAction(_id, 0, 0, -1);
             Debug.Log("Interacting with fireplace: [ACTION " + _action + "], [AMOUNT: " + _amount + "]");
         }
         catch (Exception ex)
@@ -403,11 +402,11 @@ public class UDPServer : MonoBehaviour
         Debug.Log("Players Online Updating and Setting:" + playersOnline);
     }
 
-    public void UpdateFireMatrix(int _fireID, int _type, int amount)
+    public void UpdateFireMatrix(int _fireID, int _type, int amount, int life)
     {
-        Debug.Log("Simulating and Updating Life MATRIX");
+        Debug.Log("Simulating and Updating Life MATRIX" + "[FIRE ID:] " + _fireID);
         //nice place for ANTICHEATING comprovations - SECURING the message
-        int _newLife = this.gameObject.GetComponent<WorldController>().worldDolls[_fireID].firePlace.life;
+        int _newLife = life;
         switch (_type)
         {
             case 1:
@@ -420,7 +419,7 @@ public class UDPServer : MonoBehaviour
                 break;
         }
 
-        gameMatrix[_fireID] = Tuple.Create(_fireID, _newLife);
+        gameMatrix[_fireID - 1] = Tuple.Create(_fireID, _newLife);
         debugMatrix = true;
     }
 
