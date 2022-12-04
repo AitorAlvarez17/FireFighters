@@ -106,7 +106,6 @@ public class UDPServer : MonoBehaviour
         UpdateGameMatrix(playersOnline);
         sendMessage.SetWorldMatrix(gameMatrix);
         sendMessage.SetPlayersOnline(playersOnline);
-        DebugMatrix();
         serverDirty = true;
         thisPlayerSetup = true;
     }
