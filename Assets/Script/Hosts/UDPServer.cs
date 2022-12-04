@@ -52,6 +52,7 @@ public class UDPServer : MonoBehaviour
     public bool thisPlayerSetup = false;
 
     public bool isMoving = false;
+    public bool fireChanging = true;
 
     // Instanciation both variables and starts server
     void Start()
@@ -104,6 +105,7 @@ public class UDPServer : MonoBehaviour
         UpdateGameMatrix(playersOnline);
         sendMessage.SetWorldMatrix(gameMatrix);
         sendMessage.SetPlayersOnline(playersOnline);
+        DebugMatrix();
         serverDirty = true;
         thisPlayerSetup = true;
     }
@@ -138,6 +140,11 @@ public class UDPServer : MonoBehaviour
                 //Debug.Log("Server Player ID:" + thisPlayer.id);
                 //Debug.Log("Message ID:" + receivedMessage.id);
                 UpdateWorld(receivedMessage.id, receivedMessage.positions);
+            }
+            if (fireChanging == true)
+            {
+                this.gameObject.GetComponent<WorldController>().worldDolls[receivedMessage.fireID].firePlace.HealBar(receivedMessage.fireAction, receivedMessage.amount);
+                fireChanging = false;
             }
             serverDirty = false;
             //Debug.Log("Setting Text and Server Dirtyness");
@@ -214,20 +221,17 @@ public class UDPServer : MonoBehaviour
         {
             byte[] dataTMP = new byte[1024];
             recv = udpSocket.ReceiveFrom(dataTMP, ref clientEP);
+            receivedMessage = serializer.DeserializePackage(dataTMP);
 
             if (!UDPClientList.Contains(clientEP) && clientEP.ToString() != "")
             {
                 UDPClientList.Add(clientEP);
                 UpdateGameMatrix(UDPClientList.Count);
+                ModifyReceivedMessage();
 
                 newConection = true;
 
             }
-
-            // Welcome Message!
-            receivedMessage = serializer.DeserializePackage(dataTMP);
-            ModifyReceivedMessage();
-
             // Comunicate to the client what his new id is
             serverDirty = true;
             isMoving = false;
@@ -259,15 +263,16 @@ public class UDPServer : MonoBehaviour
                 byte[] dataTMP = new byte[1024];
                 // Carefull with this, there is a bug because we fullfill the byte[] buffer
                 recv = udpSocket.ReceiveFrom(dataTMP, ref clientEP);
+                receivedMessage = serializer.DeserializePackage(dataTMP);
 
                 if (!UDPClientList.Contains(clientEP) && clientEP.ToString() != "")
                 {
                     Debug.Log("Adding a new remote conection point! :" + clientEP.ToString());
                     UDPClientList.Add(clientEP);
+                    UpdateGameMatrix(UDPClientList.Count);
+                    ModifyReceivedMessage();
                     newConection = true;
                 }
-
-                receivedMessage = serializer.DeserializePackage(dataTMP);
 
                 if (receivedMessage.id == thisPlayer.id)
                 {
@@ -280,7 +285,14 @@ public class UDPServer : MonoBehaviour
                     isMoving = true;
                 }
 
-                ModifyReceivedMessage();
+                if (receivedMessage.amount > 0)
+                {
+                    fireChanging = true;
+                    //here we change the matrix with the new life
+                    UpdateFireMatrix(receivedMessage.fireID, receivedMessage.fireAction, receivedMessage.amount);
+                    //and here we change the receivedMessage for pingPong comeback
+                    ModifyReceivedMessage();
+                }
                 //Debug.Log("[SERVER] Received message ID:" + receivedMessage.id);
                 EchoData(receivedMessage);
 
@@ -335,6 +347,7 @@ public class UDPServer : MonoBehaviour
         this.gameObject.GetComponent<WorldController>().MovePlayer(_key, _positions);
     }
 
+    #region Pings
     public void PingMovement(float[] packageMovement)
     {
         byte[] dataTMP = new byte[1024];
@@ -353,17 +366,17 @@ public class UDPServer : MonoBehaviour
         }
     }
 
-    public void PingFireAction(int _id, int _action, int _amount)
+    public void PingFireAction(int _id, int _action, int _amount, int _life)
     {
         try
         {
             byte[] dataTMP = new byte[1024];
             //ping to everybody;
-            sendMessage.SetFireAction(_id, _action, _amount);
+            sendMessage.SetFireAction(_id, _action, _amount, _life);
             EchoData(sendMessage);
 
             //this is dangerous! as receiveMessage on ServerWill keep the same until next update, be sure that receivedMessage doesn't stuck the the old values
-            sendMessage.SetFireAction(_id, 0, 0);
+            sendMessage.SetFireAction(_id, 0, 0, -1);
             Debug.Log("Interacting with fireplace: [ACTION " + _action + "], [AMOUNT: " + _amount + "]");
         }
         catch (Exception ex)
@@ -371,7 +384,9 @@ public class UDPServer : MonoBehaviour
             Debug.Log("[CLIENT] Failed to send message. Error: " + ex.ToString());
         }
     }
+    #endregion
 
+    #region UpdateMatrix
     public void UpdateGameMatrix(int id)
     {
         // gameMatrix[id] is the DATA value // id + 1 is the VISUAL VALUE ... id's will be 1,2,3,4 not 0,1,2,3
@@ -381,6 +396,27 @@ public class UDPServer : MonoBehaviour
 
         // We tell the client his position is the X on the matrix
         Debug.Log("Players Online Updating and Setting:" + playersOnline);
+    }
+
+    public void UpdateFireMatrix(int _fireID, int _type, int amount)
+    {
+        Debug.Log("Simulating and Updating Life MATRIX");
+        //nice place for ANTICHEATING comprovations - SECURING the message
+        int _newLife = this.gameObject.GetComponent<WorldController>().worldDolls[_fireID].firePlace.life;
+        switch (_type)
+        {
+            case 1:
+                _newLife += amount;
+                break;
+            case 2:
+                _newLife -= amount;
+                break;
+            default:
+                break;
+        }
+
+        gameMatrix[_fireID] = Tuple.Create(_fireID, _newLife);
+        DebugMatrix();
     }
 
     public void ModifyReceivedMessage()
@@ -399,4 +435,6 @@ public class UDPServer : MonoBehaviour
         matrixDebug.text += "Matrix [ID: " + gameMatrix[2].Item1 + "]" + "[LIFE: " + gameMatrix[2].Item2 + "]\n";
         matrixDebug.text += "Matrix [ID: " + gameMatrix[3].Item1 + "]" + "[LIFE: " + gameMatrix[3].Item2 + "]\n";
     }
+
+    #endregion
 }

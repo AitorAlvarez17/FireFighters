@@ -46,6 +46,7 @@ public class UDPClient : MonoBehaviour
     string testString = "";
 
     public bool isMoving = false;
+    public bool fireChanged = false;
 
     //instanciation both variables
     void Start()
@@ -110,7 +111,12 @@ public class UDPClient : MonoBehaviour
             {
                 //Debug.Log("This player ID (check):" + thisPlayer.id);
                 //Debug.Log("Received message ID: " + receiveMessage.id);
-                UpdateWorld(receiveMessage.id, receiveMessage.positions);
+                UpdateWorld(1, receiveMessage.id, receiveMessage.positions);
+            }
+            if (fireChanged == true)
+            {
+                UpdateWorld(2, receiveMessage.id, receiveMessage.positions, receiveMessage.worldMatrix, receiveMessage.fireLife);
+                fireChanged = false;
             }
 
             //Debug.Log("Setting Text and dirtyness");
@@ -238,14 +244,25 @@ public class UDPClient : MonoBehaviour
                 if (receiveMessage.id == thisPlayer.id)
                 {
                     //Debug.Log("Not Moving, this was MINE");
-                    Debug.Log("PingPong Received Fireplace: [ID: " + receiveMessage.fireID + "], [ACTION " + receiveMessage.fireAction + "], [AMOUNT: " + receiveMessage.amount + "");
+                    if (receiveMessage.amount > 0)
+                    {
+                        Debug.Log("PingPong Received Fireplace: [ID: " + receiveMessage.fireID + "], [ACTION " + receiveMessage.fireAction + "], [AMOUNT: " + receiveMessage.amount + "");
+                        //here confirm prediction!
+                        fireChanged = true;
+                    }
 
                     isMoving = false;
                 }
                 else
                 {
-                    Debug.Log("Server Received Fireplace: [ID: " + receiveMessage.fireID + "], [ACTION " + receiveMessage.fireAction + "], [AMOUNT: " + receiveMessage.amount + "");
                     //Debug.Log("This is not MINE!");
+                    if (receiveMessage.amount > 0)
+                    {
+                        Debug.Log("Server Received Fireplace: [ID: " + receiveMessage.fireID + "], [ACTION " + receiveMessage.fireAction + "], [AMOUNT: " + receiveMessage.amount + "");
+                        //here mimetize data!
+                        fireChanged = true;
+                    }
+
                     isMoving = true;
                 }
 
@@ -284,18 +301,18 @@ public class UDPClient : MonoBehaviour
         }
     }
 
-    public void PingFireAction(int _id, int _action, int _amount)
+    public void PingFireAction(int _id, int _action, int _amount, int _life)
     {
         try
         {
             byte[] dataTMP = new byte[1024];
             //ping to everybody;
-            sendMessage.SetFireAction(_id, _action, _amount);
+            sendMessage.SetFireAction(_id, _action, _amount, _life);
             dataTMP = serializer.SerializePackage(sendMessage);
             udpSocket.SendTo(dataTMP, dataTMP.Length, SocketFlags.None, serverEP);
 
             //this is dangerous! as receiveMessage on ServerWill keep the same until next update, be sure that receivedMessage doesn't stuck the the old values
-            sendMessage.SetFireAction(_id, 0, 0);
+            sendMessage.SetFireAction(_id, 0, 0, -1);
 
             //sendMessage.SetFireAction(0, 0);
             Debug.Log("Interacting with Fireplace: [ID: " + _id + "], [ACTION " + _action + "], [AMOUNT: " + _amount + "");
@@ -318,11 +335,29 @@ public class UDPClient : MonoBehaviour
         this.gameObject.GetComponent<WorldController>().WelcomeClient(gameMatrix, thisPlayer.id);
     }
 
-    public void UpdateWorld(int _key, float[] _positions)
+    public void UpdateWorld(int action, int _key, float[] _positions = null, Tuple<int, int>[] newMatrix = null, int _life = 0)
     {
-        this.gameObject.GetComponent<WorldController>().MovePlayer(_key, _positions);
+        switch (action)
+        {
+            case 1:
+                this.gameObject.GetComponent<WorldController>().MovePlayer(_key, _positions);
+                break;
+            case 2:
+                //here i copy the life directly bc it has been checked by server and you need no longer comprovation, also
+                //if we want to override a client prediciton is nice to just equal the life to the new one.
+                UpdateGameMatrix(_key, newMatrix);
+                this.gameObject.GetComponent<WorldController>().SetFireLife(_key, _life);
+                break;
+            default:
+                break;
+        }
     }
 
+    public void UpdateGameMatrix(int _key, Tuple<int, int>[] newMatrix)
+    {
+        gameMatrix[_key] = newMatrix[_key];
+        DebugMatrix();
+    }
     public void DebugMatrix()
     {
         matrixDebug.text = "GAME MATRIX: \n";

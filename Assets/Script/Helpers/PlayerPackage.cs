@@ -21,6 +21,7 @@ public class PlayerPackage
     public int fireAction = 0;
     public int amount = 0;
     public int fireID = 0;
+    public int fireLife = 0;
 
     public int[] fireLifeMatrix = new int[4];
     //Message constructor
@@ -34,7 +35,7 @@ public class PlayerPackage
     }   
 
     //position constructor
-    public PlayerPackage(string _message, string _username,float[] position, int _id, Tuple<int, int>[] _worldMatrix, int _playersOnline, int _fireAction, int _amount, int _fireId)
+    public PlayerPackage(string _message, string _username,float[] position, int _id, Tuple<int, int>[] _worldMatrix, int _playersOnline, int _fireAction, int _amount, int _fireId, int _fireLife)
     {
         message = _message;
         username = _username;
@@ -50,6 +51,7 @@ public class PlayerPackage
         fireAction = _fireAction;
         amount = _amount;
         fireID = _fireId;
+        fireLife = _fireLife;
     }
 
     public void SetMessage(string _message)
@@ -74,11 +76,12 @@ public class PlayerPackage
         id = _id;
     }
 
-    public void SetFireAction(int _id, int _action, int _amount)
+    public void SetFireAction(int _id, int _action, int _amount, int _life)
     {
         fireAction = _action;
         amount = _amount;
         fireID = _id;
+        fireLife = _life;
     }
 
     public void SetWorldMatrixPos(int pos, int value)

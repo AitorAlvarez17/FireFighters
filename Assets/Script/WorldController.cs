@@ -99,6 +99,11 @@ public class WorldController : MonoBehaviour
         worldDolls[_key].firePlace.HealBar(type, amount);
     }
 
+    public void SetFireLife(int _key, int life)
+    {
+        worldDolls[_key].firePlace.SetLife(_key, life);
+    }
+
     public void WelcomeClient(Tuple<int, int>[] worldMatrix, int _key)
     {
         foreach (var index in worldMatrix)
