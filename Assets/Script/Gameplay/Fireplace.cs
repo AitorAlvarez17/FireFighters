@@ -67,7 +67,7 @@ public class Fireplace : MonoBehaviour
 
     public void SetLife(int _life)
     {
-        Debug.Log("SET  in Fireplace" + "[LIFE: ]" + _life);
+        Debug.Log("Life set in Fireplace [ID: "+ internalID + "] with" + "[LIFE: ]" + _life);
         life = _life;
         lifeText.text = "LIFE: " + life;
         FirePlaceActions(life / maxLife);

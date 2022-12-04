@@ -116,7 +116,7 @@ public class UDPClient : MonoBehaviour
             }
             if (fireChanged == true)
             {
-                UpdateWorld(2, receiveMessage.id, receiveMessage.positions, receiveMessage.worldMatrix, receiveMessage.fireLife);
+                this.gameObject.GetComponent<WorldController>().UpdateFires(gameMatrix);
                 fireChanged = false;
             }
             if (debugMatrix == true)
@@ -254,6 +254,7 @@ public class UDPClient : MonoBehaviour
                     {
                         Debug.Log("PingPong Received Fireplace: [ID: " + receiveMessage.fireID + "], [ACTION " + receiveMessage.fireAction + "], [AMOUNT: " + receiveMessage.amount + "");
                         //here confirm prediction!
+                        gameMatrix = receiveMessage.worldMatrix;
                         fireChanged = true;
                     }
 
@@ -266,6 +267,7 @@ public class UDPClient : MonoBehaviour
                     {
                         Debug.Log("Server Received Fireplace: [ID: " + receiveMessage.fireID + "], [ACTION " + receiveMessage.fireAction + "], [AMOUNT: " + receiveMessage.amount + "");
                         //here mimetize data!
+                        gameMatrix = receiveMessage.worldMatrix;
                         fireChanged = true;
                     }
 

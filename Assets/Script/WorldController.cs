@@ -99,6 +99,15 @@ public class WorldController : MonoBehaviour
         worldDolls[_key].firePlace.SetLife(life);
     }
 
+    public void UpdateFires(Tuple<int, int>[] gameMatrix)
+    {
+        foreach (var item in gameMatrix)
+        {
+            Debug.Log("Updating FIRE " + item.Item1 + "");
+            worldDolls[item.Item1].firePlace.SetLife(item.Item2);
+        }
+    }
+
     public void WelcomeClient(Tuple<int, int>[] worldMatrix, int _key)
     {
         foreach (var index in worldMatrix)
