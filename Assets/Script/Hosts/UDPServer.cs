@@ -294,13 +294,11 @@ public class UDPServer : MonoBehaviour
 
                 if (receivedMessage.amount > 0)
                 {
-                    Debug.Log("Received message amount was OVER 0");
                     fireChanging = true;
                     //here we change the matrix with the new life
                     UpdateFireMatrix(receivedMessage.fireID, receivedMessage.fireAction, receivedMessage.amount, receivedMessage.fireLife);
                     //and here we change the receivedMessage for pingPong comeback
                     ModifyReceivedMessage();
-                    Debug.Log("Server Receiving Fireplace: [ID: " + receivedMessage.fireID + "], [ACTION " + receivedMessage.fireAction + "], [AMOUNT: " + receivedMessage.amount + "");
                 }
                 //Debug.Log("[SERVER] Received message ID:" + receivedMessage.id);
                 EchoData(receivedMessage);
@@ -385,7 +383,7 @@ public class UDPServer : MonoBehaviour
             EchoData(sendMessage);
 
             //this is dangerous! as receiveMessage on ServerWill keep the same until next update, be sure that receivedMessage doesn't stuck the the old values
-            Debug.Log("Interacting with fireplace: [ACTION " + _action + "], [AMOUNT: " + _amount + "]");
+            //Debug.Log("Interacting with fireplace: [ACTION " + _action + "], [AMOUNT: " + _amount + "]");
         }
         catch (Exception ex)
         {
@@ -427,10 +425,6 @@ public class UDPServer : MonoBehaviour
                 break;
         }
 
-        Debug.Log("Simulating and Updating Life MATRIX" + "[FIRE ID:] " + _fireID);
-        Debug.Log("Simulating and Updating Life MATRIX" + "[LIFE:] " + _newLife);
-
-        Debug.Log("ID of matrix element changing: " + (_fireID - 1));
         gameMatrix[_fireID - 1] = Tuple.Create(_fireID, _newLife);
         debugMatrix = true;
         serverDirty = true;

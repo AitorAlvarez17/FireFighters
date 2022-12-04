@@ -354,7 +354,6 @@ public class UDPClient : MonoBehaviour
             case 2:
                 //here i copy the life directly bc it has been checked by server and you need no longer comprovation, also
                 //if we want to override a client prediciton is nice to just equal the life to the new one.
-                Debug.Log("Setting life from [UPDATE WORLD]");
                 UpdateGameMatrix(_key, newMatrix);
                 this.gameObject.GetComponent<WorldController>().SetFireLife(_key, _life);
                 break;
@@ -366,7 +365,6 @@ public class UDPClient : MonoBehaviour
     public void UpdateGameMatrix(int _key, Tuple<int, int>[] newMatrix)
     {
         gameMatrix[_key] = newMatrix[_key];
-        Debug.Log("Updating game matrix [ELEMENT: " + _key + "]" + "with a amount of: " + gameMatrix[_key].Item2);
         debugMatrix = true;
     }
     public void DebugMatrix()

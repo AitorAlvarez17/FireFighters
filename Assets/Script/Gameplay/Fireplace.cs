@@ -42,23 +42,18 @@ public class Fireplace : MonoBehaviour
 
     public void HealBar(int _type, int _amount)
     {
-        Debug.Log("HealBar in Fireplace" + "[AMOUNT: ]" + _amount);
         switch (_type)
         {
             case 0:
                 Debug.Log("No charge");
                 break;
             case 1:
-                Debug.Log("Fire life antes de cambio" + life);
                 life += _amount;
-                Debug.Log("Fire life despues de cambio" + life);
                 lifeText.text = "LIFE: " + life;
                 FirePlaceActions(life / maxLife);
                 break;
             case 2:
-                Debug.Log("Fire life antes de cambio" + life);
                 life -= _amount;
-                Debug.Log("Fire life despues de cambio" + life);
                 lifeText.text = "LIFE: " + life;
                 FirePlaceActions(life / maxLife);
                 break;
@@ -90,7 +85,6 @@ public class Fireplace : MonoBehaviour
         //get the action from the lumberjack and put it into it
         if (GC.transform.GetComponent<UDPClient>() != null)
         {
-            Debug.Log("Colliding with Lumberjack n: " + other.transform.GetComponent<Lumberjack>().internalId);
             //IMPORTANT! - this is prediction
             HealBar(other.transform.GetComponent<Lumberjack>().charge.Type, other.transform.GetComponent<Lumberjack>().charge.Amount);
             
@@ -102,8 +96,6 @@ public class Fireplace : MonoBehaviour
         if (GC.transform.GetComponent<UDPServer>() != null)
         {
             HealBar(other.transform.GetComponent<Lumberjack>().charge.Type, other.transform.GetComponent<Lumberjack>().charge.Amount);
-
-            Debug.Log("FirePlace life: " + life);
 
             GC.GetComponent<UDPServer>().PingFireAction(internalID, other.transform.GetComponent<Lumberjack>().charge.Type, other.transform.GetComponent<Lumberjack>().charge.Amount, life);
             other.transform.GetComponent<Lumberjack>().charge.ClearCharge();
