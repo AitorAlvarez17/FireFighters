@@ -45,6 +45,9 @@ public class Fireplace : MonoBehaviour
         Debug.Log("HealBar in Fireplace" + "[AMOUNT: ]" + _amount);
         switch (_type)
         {
+            case 0:
+                Debug.Log("No charge");
+                break;
             case 1:
                 life += _amount;
                 lifeText.text = "LIFE: " + life;
