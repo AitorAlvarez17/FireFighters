@@ -143,7 +143,7 @@ public class UDPServer : MonoBehaviour
             }
             if (fireChanging == true)
             {
-                this.gameObject.GetComponent<WorldController>().worldDolls[receivedMessage.fireID].firePlace.HealBar(receivedMessage.fireAction, receivedMessage.amount);
+                this.gameObject.GetComponent<WorldController>().worldDolls[receivedMessage.fireID].firePlace.SetLife(receivedMessage.fireID, receivedMessage.fireLife);
                 fireChanging = false;
             }
             if (debugMatrix == true)
@@ -292,16 +292,17 @@ public class UDPServer : MonoBehaviour
 
                 if (receivedMessage.amount > 0)
                 {
+                    Debug.Log("Received message amount was OVER 0");
                     fireChanging = true;
                     //here we change the matrix with the new life
                     UpdateFireMatrix(receivedMessage.fireID, receivedMessage.fireAction, receivedMessage.amount, receivedMessage.fireLife);
                     //and here we change the receivedMessage for pingPong comeback
                     ModifyReceivedMessage();
+                    Debug.Log("Server Receiving Fireplace: [ID: " + receivedMessage.fireID + "], [ACTION " + receivedMessage.fireAction + "], [AMOUNT: " + receivedMessage.amount + "");
                 }
                 //Debug.Log("[SERVER] Received message ID:" + receivedMessage.id);
                 EchoData(receivedMessage);
 
-                Debug.Log("Server Receiving Fireplace: [ID: " + receivedMessage.fireID + "], [ACTION " + receivedMessage.fireAction + "], [AMOUNT: " + receivedMessage.amount + "");
 
                 serverDirty = true;
             }
@@ -409,6 +410,9 @@ public class UDPServer : MonoBehaviour
         int _newLife = life;
         switch (_type)
         {
+            case 0:
+                Debug.Log("No charge");
+                break;
             case 1:
                 _newLife += amount;
                 break;

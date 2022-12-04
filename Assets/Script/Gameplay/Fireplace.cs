@@ -42,6 +42,7 @@ public class Fireplace : MonoBehaviour
 
     public void HealBar(int _type, int _amount)
     {
+        Debug.Log("HealBar in Fireplace" + "[AMOUNT: ]" + _amount);
         switch (_type)
         {
             case 1:
@@ -63,6 +64,7 @@ public class Fireplace : MonoBehaviour
 
     public void SetLife(int _key, int _life)
     {
+        Debug.Log("SET  in Fireplace" + "[LIFE: ]" + _life);
         life = _life;
         lifeText.text = "LIFE: " + life;
         FirePlaceActions(life / maxLife);
