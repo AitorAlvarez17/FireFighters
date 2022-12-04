@@ -94,14 +94,9 @@ public class WorldController : MonoBehaviour
             Debug.Log("Key" + _key + "was not supported!");
     }
 
-    public void UpdateFire(int _key, int type, int amount)
-    {
-        worldDolls[_key].firePlace.HealBar(type, amount);
-    }
-
     public void SetFireLife(int _key, int life)
     {
-        worldDolls[_key].firePlace.SetLife(_key, life);
+        worldDolls[_key].firePlace.SetLife(life);
     }
 
     public void WelcomeClient(Tuple<int, int>[] worldMatrix, int _key)

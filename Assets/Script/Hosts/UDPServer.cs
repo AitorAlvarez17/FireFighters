@@ -143,7 +143,8 @@ public class UDPServer : MonoBehaviour
             }
             if (fireChanging == true)
             {
-                this.gameObject.GetComponent<WorldController>().worldDolls[receivedMessage.fireID].firePlace.SetLife(receivedMessage.fireID, receivedMessage.fireLife);
+                Debug.Log("Setting life from [FIRE CHANGING]" + "of received message [ID: "+ receivedMessage.fireID + "]");
+                this.gameObject.GetComponent<WorldController>().worldDolls[receivedMessage.fireID].firePlace.SetLife(gameMatrix[receivedMessage.fireID].Item2);
                 fireChanging = false;
             }
             if (debugMatrix == true)
@@ -407,7 +408,7 @@ public class UDPServer : MonoBehaviour
     {
         Debug.Log("Simulating and Updating Life MATRIX" + "[FIRE ID:] " + _fireID);
         //nice place for ANTICHEATING comprovations - SECURING the message
-        int _newLife = life;
+        int _newLife = life - amount;
         switch (_type)
         {
             case 0:

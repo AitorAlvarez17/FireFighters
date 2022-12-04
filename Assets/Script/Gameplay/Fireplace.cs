@@ -65,7 +65,7 @@ public class Fireplace : MonoBehaviour
         //Ping Life();
     }
 
-    public void SetLife(int _key, int _life)
+    public void SetLife(int _life)
     {
         Debug.Log("SET  in Fireplace" + "[LIFE: ]" + _life);
         life = _life;
@@ -86,6 +86,7 @@ public class Fireplace : MonoBehaviour
         //get the action from the lumberjack and put it into it
         if (GC.transform.GetComponent<UDPClient>() != null)
         {
+            Debug.Log("Colliding with Lumberjack n: " + other.transform.GetComponent<Lumberjack>().internalId);
             //IMPORTANT! - this is prediction
             HealBar(other.transform.GetComponent<Lumberjack>().charge.Type, other.transform.GetComponent<Lumberjack>().charge.Amount);
             
