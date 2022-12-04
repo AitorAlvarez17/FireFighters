@@ -103,8 +103,15 @@ public class WorldController : MonoBehaviour
     {
         foreach (var item in gameMatrix)
         {
-            Debug.Log("Updating FIRE " + item.Item1 + "");
-            worldDolls[item.Item1].firePlace.SetLife(item.Item2);
+            if (item.Item1 != 0)
+            {
+                Debug.Log("Updating FIRE " + item.Item1 + "");
+                worldDolls[item.Item1].firePlace.SetLife(item.Item2);
+            }
+            else
+            {
+                Debug.Log("Item was 0");
+            }
         }
     }
 

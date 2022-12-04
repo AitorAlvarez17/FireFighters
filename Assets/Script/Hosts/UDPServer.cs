@@ -143,7 +143,7 @@ public class UDPServer : MonoBehaviour
             }
             if (fireChanging == true)
             {
-                Debug.Log("Setting life from [FIRE CHANGING]" + "of received message [ID: "+ receivedMessage.fireID + "]");
+                Debug.Log("Setting life from [FIRE CHANGING]" + "of received message [ID 1: "+ gameMatrix[0].Item1 + "]" + "[ID 2: "+ gameMatrix[1].Item1 + "]");
                 this.gameObject.GetComponent<WorldController>().UpdateFires(gameMatrix);
                 fireChanging = false;
             }
