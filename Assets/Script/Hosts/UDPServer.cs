@@ -52,7 +52,8 @@ public class UDPServer : MonoBehaviour
     public bool thisPlayerSetup = false;
 
     public bool isMoving = false;
-    public bool fireChanging = true;
+    public bool fireChanging = false;
+    public bool debugMatrix = false;
 
     // Instanciation both variables and starts server
     void Start()
@@ -145,6 +146,11 @@ public class UDPServer : MonoBehaviour
             {
                 this.gameObject.GetComponent<WorldController>().worldDolls[receivedMessage.fireID].firePlace.HealBar(receivedMessage.fireAction, receivedMessage.amount);
                 fireChanging = false;
+            }
+            if (debugMatrix == true)
+            {
+                DebugMatrix();
+                debugMatrix = false;
             }
             serverDirty = false;
             //Debug.Log("Setting Text and Server Dirtyness");
@@ -416,7 +422,7 @@ public class UDPServer : MonoBehaviour
         }
 
         gameMatrix[_fireID] = Tuple.Create(_fireID, _newLife);
-        DebugMatrix();
+        debugMatrix = true;
     }
 
     public void ModifyReceivedMessage()

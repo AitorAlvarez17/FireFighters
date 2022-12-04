@@ -47,6 +47,7 @@ public class UDPClient : MonoBehaviour
 
     public bool isMoving = false;
     public bool fireChanged = false;
+    public bool debugMatrix = false;
 
     //instanciation both variables
     void Start()
@@ -117,6 +118,11 @@ public class UDPClient : MonoBehaviour
             {
                 UpdateWorld(2, receiveMessage.id, receiveMessage.positions, receiveMessage.worldMatrix, receiveMessage.fireLife);
                 fireChanged = false;
+            }
+            if (debugMatrix == true)
+            {
+                DebugMatrix();
+                debugMatrix = false;
             }
 
             //Debug.Log("Setting Text and dirtyness");
@@ -356,7 +362,7 @@ public class UDPClient : MonoBehaviour
     public void UpdateGameMatrix(int _key, Tuple<int, int>[] newMatrix)
     {
         gameMatrix[_key] = newMatrix[_key];
-        DebugMatrix();
+        debugMatrix = true;
     }
     public void DebugMatrix()
     {
