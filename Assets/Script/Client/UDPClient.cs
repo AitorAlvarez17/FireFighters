@@ -255,6 +255,7 @@ public class UDPClient : MonoBehaviour
                         Debug.Log("PingPong Received Fireplace: [ID: " + receiveMessage.fireID + "], [ACTION " + receiveMessage.fireAction + "], [AMOUNT: " + receiveMessage.amount + "");
                         //here confirm prediction!
                         gameMatrix = receiveMessage.worldMatrix;
+                        debugMatrix = true;
                         fireChanged = true;
                     }
 
@@ -268,6 +269,7 @@ public class UDPClient : MonoBehaviour
                         Debug.Log("Server Received Fireplace: [ID: " + receiveMessage.fireID + "], [ACTION " + receiveMessage.fireAction + "], [AMOUNT: " + receiveMessage.amount + "");
                         //here mimetize data!
                         gameMatrix = receiveMessage.worldMatrix;
+                        debugMatrix = true;
                         fireChanged = true;
                     }
 
@@ -369,6 +371,7 @@ public class UDPClient : MonoBehaviour
     }
     public void DebugMatrix()
     {
+        Debug.Log("Debugging Matrix!");
         matrixDebug.text = "GAME MATRIX: \n";
         matrixDebug.text += "Matrix [ID: " + gameMatrix[0].Item1 + "]" + "[LIFE: " + gameMatrix[0].Item2 + "] \n";
         matrixDebug.text += "Matrix [ID: " + gameMatrix[1].Item1 + "]" + "[LIFE: " + gameMatrix[1].Item2 + "] \n";

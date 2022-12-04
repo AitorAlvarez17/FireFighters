@@ -408,22 +408,23 @@ public class UDPServer : MonoBehaviour
     {
         Debug.Log("Simulating and Updating Life MATRIX" + "[FIRE ID:] " + _fireID);
         //nice place for ANTICHEATING comprovations - SECURING the message
-        int _newLife = life - amount;
+        int _newLife = life;
         switch (_type)
         {
             case 0:
                 Debug.Log("No charge");
                 break;
             case 1:
+                _newLife = life - amount;
                 _newLife += amount;
                 break;
             case 2:
+                _newLife = life + amount;
                 _newLife -= amount;
                 break;
             default:
                 break;
         }
-
         gameMatrix[_fireID - 1] = Tuple.Create(_fireID, _newLife);
         debugMatrix = true;
     }
