@@ -124,7 +124,7 @@ public class PlayerMovement : MonoBehaviour
                 return;
 
             if (serverType == 0)
-                this.gameObject.GetComponent<UDPClient>().PingMovement(this.gameObject.GetComponent<UDPServer>().thisPlayer.positions);
+                this.gameObject.GetComponent<UDPClient>().PingMovement(this.gameObject.GetComponent<UDPClient>().thisPlayer.positions);
             if (serverType == 1)
                 this.gameObject.GetComponent<UDPServer>().PingMovement(this.gameObject.GetComponent<UDPServer>().thisPlayer.positions);
         }
