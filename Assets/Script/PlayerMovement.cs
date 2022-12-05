@@ -6,6 +6,7 @@ public class PlayerMovement : MonoBehaviour
 {
     public GameObject player;
     public float speed;
+    public bool isMoving = false;
 
     //Client = 0
     //ServeR = 1
@@ -25,6 +26,8 @@ public class PlayerMovement : MonoBehaviour
                 serverType = 3;
                 break;
         }
+
+        isMoving = false;
     }
     // Update is called once per frame
     void FixedUpdate()
@@ -42,78 +45,88 @@ public class PlayerMovement : MonoBehaviour
 
         if (serverType != 3)
         {
-            if (Input.GetKey(KeyCode.W))
+            if (Input.GetKey(KeyCode.W) == false && Input.GetKey(KeyCode.A) == false && Input.GetKey(KeyCode.S) == false && Input.GetKey(KeyCode.D) == false)
+            {
+                isMoving = false;
+            }
+
+            if (Input.GetKey(KeyCode.W) == true)
             {
                 //Debug.Log("KEY CODE on an infinte loop");
                 //Z+
                 player.transform.position += new Vector3(0, 0, 5 * Time.deltaTime * speed);
+                isMoving = true;
 
                 if (serverType == 0)
                 {
                     this.gameObject.GetComponent<UDPClient>().thisPlayer.positions[2] = player.transform.position.z;
-                    this.gameObject.GetComponent<UDPClient>().PingMovement(this.gameObject.GetComponent<UDPClient>().thisPlayer.positions);
                     WalkingAnimation();
                 }
                 if (serverType == 1)
                 {
                     this.gameObject.GetComponent<UDPServer>().thisPlayer.positions[2] = player.transform.position.z;
-                    this.gameObject.GetComponent<UDPServer>().PingMovement(this.gameObject.GetComponent<UDPServer>().thisPlayer.positions);
                     WalkingAnimation();
                 }
             }
-            if (Input.GetKey(KeyCode.S))
+            if (Input.GetKey(KeyCode.S) == true)
             {
                 //Z-
                 player.transform.position += new Vector3(0, 0, -5 * Time.deltaTime * speed);
+                isMoving = true;
 
                 if (serverType == 0)
                 {
                     this.gameObject.GetComponent<UDPClient>().thisPlayer.positions[2] = player.transform.position.z;
-                    this.gameObject.GetComponent<UDPClient>().PingMovement(this.gameObject.GetComponent<UDPClient>().thisPlayer.positions);
                     WalkingAnimation();
                 }
                 if (serverType == 1)
                 {
                     this.gameObject.GetComponent<UDPServer>().thisPlayer.positions[2] = player.transform.position.z;
-                    this.gameObject.GetComponent<UDPServer>().PingMovement(this.gameObject.GetComponent<UDPServer>().thisPlayer.positions);
                     WalkingAnimation();
                 }
             }
-            if (Input.GetKey(KeyCode.A))
+            if (Input.GetKey(KeyCode.A) == true)
             {
                 //X-
                 player.transform.position += new Vector3(-5 * Time.deltaTime * speed, 0, 0);
-                if (serverType == 0)
-                {
-                    this.gameObject.GetComponent<UDPClient>().thisPlayer.positions[0] = player.transform.position.x;
-                    this.gameObject.GetComponent<UDPClient>().PingMovement(this.gameObject.GetComponent<UDPClient>().thisPlayer.positions);
-                    WalkingAnimation();
-                }
-                if (serverType == 1)
-                {
-                    this.gameObject.GetComponent<UDPServer>().thisPlayer.positions[0] = player.transform.position.x;
-                    this.gameObject.GetComponent<UDPServer>().PingMovement(this.gameObject.GetComponent<UDPServer>().thisPlayer.positions);
-                    WalkingAnimation();
-                }
-            }
-            if (Input.GetKey(KeyCode.D))
-            {
-                //X+
-                player.transform.position += new Vector3(5 * Time.deltaTime * speed, 0, 0);
+                isMoving = true;
 
                 if (serverType == 0)
                 {
                     this.gameObject.GetComponent<UDPClient>().thisPlayer.positions[0] = player.transform.position.x;
-                    this.gameObject.GetComponent<UDPClient>().PingMovement(this.gameObject.GetComponent<UDPClient>().thisPlayer.positions);
                     WalkingAnimation();
                 }
                 if (serverType == 1)
                 {
                     this.gameObject.GetComponent<UDPServer>().thisPlayer.positions[0] = player.transform.position.x;
-                    this.gameObject.GetComponent<UDPServer>().PingMovement(this.gameObject.GetComponent<UDPServer>().thisPlayer.positions);
                     WalkingAnimation();
                 }
             }
+            if (Input.GetKey(KeyCode.D) == true)
+            {
+                //X+
+                player.transform.position += new Vector3(5 * Time.deltaTime * speed, 0, 0);
+                isMoving = true;
+
+                if (serverType == 0)
+                {
+                    this.gameObject.GetComponent<UDPClient>().thisPlayer.positions[0] = player.transform.position.x;
+                    WalkingAnimation();
+                }
+                if (serverType == 1)
+                {
+                    this.gameObject.GetComponent<UDPServer>().thisPlayer.positions[0] = player.transform.position.x;
+                    WalkingAnimation();
+                }
+            }
+
+            if (isMoving == false)
+                return;
+
+            if (serverType == 0)
+                this.gameObject.GetComponent<UDPClient>().PingMovement(this.gameObject.GetComponent<UDPServer>().thisPlayer.positions);
+            if (serverType == 1)
+                this.gameObject.GetComponent<UDPServer>().PingMovement(this.gameObject.GetComponent<UDPServer>().thisPlayer.positions);
         }
     }
 
