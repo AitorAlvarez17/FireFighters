@@ -70,7 +70,10 @@ public class ServerController : MonoBehaviour
                 serverParent.AddComponent<TCPServer>();
 
             else if (socketType == SocketTypeProtocol.UDP)
+            {
                 serverParent.AddComponent<UDPServer>();
+                serverParent.AddComponent<UDPClient>();
+            }
         }
 
         if(serverType == ServerType.Client)

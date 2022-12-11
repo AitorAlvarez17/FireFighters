@@ -7,6 +7,7 @@ using System.Text;
 using System.Threading;
 using UnityEngine;
 using TMPro;
+using Unity.VisualScripting;
 
 //Do a parent class that is MonoBehaviour and make this heritage from the parent in order to make it virtual for PlayerMovement
 public class UDPServer : MonoBehaviour
@@ -51,6 +52,8 @@ public class UDPServer : MonoBehaviour
     public int playersOnline = 0;
     public bool thisPlayerSetup = false;
 
+
+    //Client
     public bool isMoving = false;
     public bool fireChanging = false;
     public bool debugMatrix = false;
@@ -67,6 +70,7 @@ public class UDPServer : MonoBehaviour
         serverIP = ServerController.MyServerInstance.IPServer;
         serverPort = ServerController.MyServerInstance.serverPort;
 
+        this.AddComponent<UDPClient>();
         StartServer();
     }
 
@@ -74,17 +78,17 @@ public class UDPServer : MonoBehaviour
     {
         ServerActions();
 
-        if (Input.GetKeyDown(KeyCode.Alpha1))
-        {
-            this.gameObject.GetComponent<WorldController>().worldDolls[thisPlayer.id].lumberjack.charge.SumWood(5);
-            this.gameObject.GetComponent<WorldController>().worldDolls[thisPlayer.id].lumberjack.PrintDebug();
-        }
+        //if (Input.GetKeyDown(KeyCode.Alpha1))
+        //{
+        //    this.gameObject.GetComponent<WorldController>().worldDolls[thisPlayer.id].lumberjack.charge.SumWood(5);
+        //    this.gameObject.GetComponent<WorldController>().worldDolls[thisPlayer.id].lumberjack.PrintDebug();
+        //}
 
-        if (Input.GetKeyDown(KeyCode.Alpha2))
-        {
-            this.gameObject.GetComponent<WorldController>().worldDolls[thisPlayer.id].lumberjack.charge.SumWater(5);
-            this.gameObject.GetComponent<WorldController>().worldDolls[thisPlayer.id].lumberjack.PrintDebug();
-        }
+        //if (Input.GetKeyDown(KeyCode.Alpha2))
+        //{
+        //    this.gameObject.GetComponent<WorldController>().worldDolls[thisPlayer.id].lumberjack.charge.SumWater(5);
+        //    this.gameObject.GetComponent<WorldController>().worldDolls[thisPlayer.id].lumberjack.PrintDebug();
+        //}
     }
 
     public void SetUsernameAndConnect(string username)
@@ -109,11 +113,13 @@ public class UDPServer : MonoBehaviour
         serverDirty = true;
         thisPlayerSetup = true;
     }
+
     private void ServerActions()
     {
         if (serverDirty == false)
             return;
-
+            
+            // well positioned  function
             if (thisPlayerSetup == true)
             {
                 this.gameObject.GetComponent<WorldController>().CreatePlayer(1, true);
@@ -123,36 +129,53 @@ public class UDPServer : MonoBehaviour
 
                 DebugMatrix();
             }
-            if (receivedMessage != null && receivedMessage.message != null && receivedMessage.message != "")
-            {
-                //Debug.Log("Message checked and creating:" + receivedMessage.message + " From: " + receivedMessage.username);
-                CreateMessage(receivedMessage);
-                receivedMessage.SetMessage(null);
-            }
+
+            //Repeated funcion in client
+
+            //if (receivedMessage != null && receivedMessage.message != null && receivedMessage.message != "")
+            //{
+            //    //Debug.Log("Message checked and creating:" + receivedMessage.message + " From: " + receivedMessage.username);
+            //    CreateMessage(receivedMessage);
+            //    receivedMessage.SetMessage(null);
+            //}
+
+
+            //Well positioned function
             if (newConection == true)
             {
                 this.gameObject.GetComponent<WorldController>().CreatePlayer(playersOnline);
                 DebugMatrix();
                 newConection = false;
             }
-            if (receivedMessage.positions[0] != 0f || receivedMessage.positions[2] != 0f && isMoving == true)
-            {
-                //Debug.Log("Server Player ID:" + thisPlayer.id);
-                //Debug.Log("Message ID:" + receivedMessage.id);
-                UpdateWorld(receivedMessage.id, receivedMessage.positions);
-            }
-            if (fireChanging == true)
-            {
-                Debug.Log("Setting life from [FIRE CHANGING]" + "of received message [ID 1: "+ gameMatrix[0].Item1 + "]" + "[VALUE 1: "+ gameMatrix[0].Item2 + "]");
-                this.gameObject.GetComponent<WorldController>().UpdateFires(gameMatrix);
-                fireChanging = false;
-            }
-            if (debugMatrix == true)
-            {
-                Debug.Log("Debuging matrix on update");
-                DebugMatrix();
-                debugMatrix = false;
-            }
+
+            //repeated function in client
+
+            //if (receivedMessage.positions[0] != 0f || receivedMessage.positions[2] != 0f && isMoving == true)
+            //{
+            //    //Debug.Log("Server Player ID:" + thisPlayer.id);
+            //    //Debug.Log("Message ID:" + receivedMessage.id);
+            //    UpdateWorld(receivedMessage.id, receivedMessage.positions);
+            //}
+
+            ////Repeated function in client
+            ///
+            //if (fireChanging == true)
+            //{
+            //    Debug.Log("Setting life from [FIRE CHANGING]" + "of received message [ID 1: "+ gameMatrix[0].Item1 + "]" + "[VALUE 1: "+ gameMatrix[0].Item2 + "]");
+            //    this.gameObject.GetComponent<WorldController>().UpdateFires(gameMatrix);
+            //    fireChanging = false;
+            //}
+
+            ////Repeated function in client
+            ///
+            //if (debugMatrix == true)
+            //{
+            //    Debug.Log("Debuging matrix on update");
+            //    DebugMatrix();
+            //    debugMatrix = false;
+            //}
+
+
             serverDirty = false;
             //Debug.Log("Setting Text and Server Dirtyness");
         
