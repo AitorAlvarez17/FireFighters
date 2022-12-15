@@ -143,7 +143,7 @@ public class UDPServer : MonoBehaviour
             {
                 //Debug.Log("Server Player ID:" + thisPlayer.id);
                 //Debug.Log("Message ID:" + receivedMessage.id);
-                UpdateWorld(receivedMessage.id, receivedMessage.positions);
+                UpdateWorld(receivedMessage.id, receivedMessage.positions, receivedMessage.movementDirection);
             }
             if (fireChanging == true)
             {
@@ -352,9 +352,9 @@ public class UDPServer : MonoBehaviour
         }
     }
 
-    public void UpdateWorld(int _key, float[] _positions)
+    public void UpdateWorld(int _key, float[] _positions, float[] _directions)
     {
-        this.gameObject.GetComponent<WorldController>().MovePlayer(_key, _positions);
+        this.gameObject.GetComponent<WorldController>().MovePlayer(_key, _positions, _directions);
     }
 
     #region Pings
