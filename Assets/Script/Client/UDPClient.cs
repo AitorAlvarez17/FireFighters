@@ -127,7 +127,7 @@ public class UDPClient : MonoBehaviour
             {
                 //Debug.Log("This player ID (check):" + thisPlayer.id);
                 //Debug.Log("Received message ID: " + receiveMessage.id);
-                UpdateWorld(1, receiveMessage.id, receiveMessage.positions);
+                UpdateWorld(1, receiveMessage.id, receiveMessage.positions, receiveMessage.movementDirection);
             }
             if (fireChanged == true)
             {
@@ -370,12 +370,12 @@ public class UDPClient : MonoBehaviour
         this.gameObject.GetComponent<WorldController>().WelcomeClient(gameMatrix, thisPlayer.id);
     }
 
-    public void UpdateWorld(int action, int _key, float[] _positions = null, Tuple<int, int>[] newMatrix = null, int _life = -1)
+    public void UpdateWorld(int action, int _key, float[] _positions = null, float[] _directions = null, Tuple<int, int>[] newMatrix = null, int _life = -1)
     {
         switch (action)
         {
             case 1:
-                this.gameObject.GetComponent<WorldController>().MovePlayer(_key, _positions);
+                this.gameObject.GetComponent<WorldController>().MovePlayer(_key, _positions, _directions);
                 break;
             case 2:
                 //here i copy the life directly bc it has been checked by server and you need no longer comprovation, also

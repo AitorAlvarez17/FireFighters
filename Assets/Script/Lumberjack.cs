@@ -160,13 +160,14 @@ public class Lumberjack : MonoBehaviour
         deltaTime = Time.deltaTime;
     }
 
-    public void Move(float[] _positions)
+    public void Move(float[] _positions, Vector3 _directions)
     {
 
         //Vector3 newPosition = new Vector3(_positions[0], _positions[1], _positions[2]);
         Vector3 transBuffer = trans.transform.position;
 
 
+        SmoothRotation(_directions);
         //Debug.Log("Moving Doll" + internalId + "to:" + _positions[0] + _positions[2]);
 
         //IP HAS TO BE SO SIMILAR TO PP
@@ -219,5 +220,11 @@ public class Lumberjack : MonoBehaviour
     public void MovementCorrection()
     {
         //correct the movement 
+    }
+
+    public void SmoothRotation(Vector3 directions)
+    {
+        Quaternion rotation = Quaternion.LookRotation(directions, Vector3.up);
+        player.transform.rotation = Quaternion.RotateTowards(player.transform.rotation, rotation, rotationSpeed * Time.deltaTime);
     }
 }
