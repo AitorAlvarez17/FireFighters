@@ -162,8 +162,10 @@ public class Lumberjack : MonoBehaviour
 
     public void Move(float[] _positions)
     {
+
         //Vector3 newPosition = new Vector3(_positions[0], _positions[1], _positions[2]);
         Vector3 transBuffer = trans.transform.position;
+
 
         //Debug.Log("Moving Doll" + internalId + "to:" + _positions[0] + _positions[2]);
 

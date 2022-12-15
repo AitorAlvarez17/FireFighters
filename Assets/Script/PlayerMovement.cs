@@ -43,79 +43,40 @@ public class PlayerMovement : MonoBehaviour
                 return;
         }
 
+        
+
         if (serverType != 3)
         {
-            if (Input.GetKey(KeyCode.W) == false && Input.GetKey(KeyCode.A) == false && Input.GetKey(KeyCode.S) == false && Input.GetKey(KeyCode.D) == false)
+            if (!Input.GetButton("Horizontal") && !Input.GetButton("Vertical"))
+                return;
+
+            float horizontalInput = Input.GetAxis("Horizontal");
+            float verticalInput = Input.GetAxis("Vertical");
+
+            Vector3 movementDirection = new Vector3(horizontalInput, 0, verticalInput);
+            movementDirection.Normalize();
+
+            if (movementDirection == Vector3.zero)
             {
                 isMoving = false;
             }
-
-            if (Input.GetKey(KeyCode.W) == true)
+            else
             {
-                //Debug.Log("KEY CODE on an infinte loop");
-                //Z+
-                player.transform.position += new Vector3(0, 0, 5 * Time.deltaTime * speed);
-                isMoving = true;
-
-                if (serverType == 0)
-                {
-                    this.gameObject.GetComponent<UDPClient>().thisPlayer.positions[2] = player.transform.position.z;
-                    WalkingAnimation();
-                }
-                if (serverType == 1)
-                {
-                    this.gameObject.GetComponent<UDPServer>().thisPlayer.positions[2] = player.transform.position.z;
-                    WalkingAnimation();
-                }
-            }
-            if (Input.GetKey(KeyCode.S) == true)
-            {
-                //Z-
-                player.transform.position += new Vector3(0, 0, -5 * Time.deltaTime * speed);
-                isMoving = true;
-
-                if (serverType == 0)
-                {
-                    this.gameObject.GetComponent<UDPClient>().thisPlayer.positions[2] = player.transform.position.z;
-                    WalkingAnimation();
-                }
-                if (serverType == 1)
-                {
-                    this.gameObject.GetComponent<UDPServer>().thisPlayer.positions[2] = player.transform.position.z;
-                    WalkingAnimation();
-                }
-            }
-            if (Input.GetKey(KeyCode.A) == true)
-            {
-                //X-
-                player.transform.position += new Vector3(-5 * Time.deltaTime * speed, 0, 0);
+                player.transform.Translate(movementDirection * speed * Time.deltaTime, Space.World);
                 isMoving = true;
 
                 if (serverType == 0)
                 {
                     this.gameObject.GetComponent<UDPClient>().thisPlayer.positions[0] = player.transform.position.x;
+                    this.gameObject.GetComponent<UDPClient>().thisPlayer.positions[1] = player.transform.position.y;
+                    this.gameObject.GetComponent<UDPClient>().thisPlayer.positions[2] = player.transform.position.z;
                     WalkingAnimation();
                 }
                 if (serverType == 1)
                 {
                     this.gameObject.GetComponent<UDPServer>().thisPlayer.positions[0] = player.transform.position.x;
-                    WalkingAnimation();
-                }
-            }
-            if (Input.GetKey(KeyCode.D) == true)
-            {
-                //X+
-                player.transform.position += new Vector3(5 * Time.deltaTime * speed, 0, 0);
-                isMoving = true;
-
-                if (serverType == 0)
-                {
-                    this.gameObject.GetComponent<UDPClient>().thisPlayer.positions[0] = player.transform.position.x;
-                    WalkingAnimation();
-                }
-                if (serverType == 1)
-                {
-                    this.gameObject.GetComponent<UDPServer>().thisPlayer.positions[0] = player.transform.position.x;
+                    this.gameObject.GetComponent<UDPServer>().thisPlayer.positions[1] = player.transform.position.y;
+                    this.gameObject.GetComponent<UDPServer>().thisPlayer.positions[2] = player.transform.position.z;
                     WalkingAnimation();
                 }
             }
@@ -127,6 +88,8 @@ public class PlayerMovement : MonoBehaviour
                 this.gameObject.GetComponent<UDPClient>().PingMovement(this.gameObject.GetComponent<UDPClient>().thisPlayer.positions);
             if (serverType == 1)
                 this.gameObject.GetComponent<UDPServer>().PingMovement(this.gameObject.GetComponent<UDPServer>().thisPlayer.positions);
+
+            movementDirection = Vector3.zero;
         }
     }
 
