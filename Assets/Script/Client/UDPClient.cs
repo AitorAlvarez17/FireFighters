@@ -12,6 +12,8 @@ public class UDPClient : MonoBehaviour
 {
     public float timeStamp;
     public float RTT;
+
+    public bool newRtt = false;
     // Servers'IP and port
     private string serverIP;
     private int serverPort;
@@ -69,10 +71,15 @@ public class UDPClient : MonoBehaviour
     private void Update()
     {
         timeStamp = Time.realtimeSinceStartup;
-        timeStamp = timeStamp * 1000f;
-        Debug.Log(timeStamp + "ms");
+        //Debug.Log(timeStamp + "ms");
 
         PlayerActions();
+
+        if (newRtt == true)
+        {
+            //Debug.Log("New RTT" + RTT + "Ms");
+            newRtt = false;
+        }
 
         if (thisPlayer != null)
         {
@@ -90,12 +97,14 @@ public class UDPClient : MonoBehaviour
         }
         
     }
+
     public void CreateMessage(PlayerPackage _Message)
     {
         GameObject newMessage = new GameObject();
         newMessage = Instantiate(this.gameObject.GetComponent<ServerController>().messgePrefab, Vector3.zero, Quaternion.identity, this.gameObject.GetComponent<ServerController>().chatBillboard.transform);
         newMessage.GetComponent<MessageHolder>().SetMessage(_Message.message, _Message.username);
     }
+
     private void PlayerActions()
     {
         if (thisPlayer != null && thisPlayer.dirty == true)
@@ -256,8 +265,9 @@ public class UDPClient : MonoBehaviour
                 //time in ms
                 //RTT calculates the time that a packed lasts to go from client to server and comeback
                 //we use RTT / 2 to calculate the avg time of traveling of client - server
-                RTT = (Time.realtimeSinceStartup - receiveMessage.timeStamp / 2) * 1000;
-                Debug.Log("RTT / 2 is" + RTT);
+                RTT = timeStamp - receiveMessage.timeStamp;
+                RTT = RTT * 1000;
+                newRtt = true;
 
                 if (receiveMessage.id == thisPlayer.id)
                 {

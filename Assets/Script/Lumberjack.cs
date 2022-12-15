@@ -65,6 +65,7 @@ public class Lumberjack : MonoBehaviour
     public Material[] hair;
 
     public bool interacter = false;
+    public float deltaTime = 0f;
 
     //0 for nothing, 1 for wood, 2 for water
     public Charge charge = null;
@@ -156,12 +157,14 @@ public class Lumberjack : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        
+        deltaTime = Time.deltaTime;
     }
 
     public void Move(float[] _positions)
     {
-        Vector3 newPosition = new Vector3(_positions[0], _positions[1], _positions[2]);
+        //Vector3 newPosition = new Vector3(_positions[0], _positions[1], _positions[2]);
+        Vector3 transBuffer = trans.transform.position;
+
         //Debug.Log("Moving Doll" + internalId + "to:" + _positions[0] + _positions[2]);
 
         //IP HAS TO BE SO SIMILAR TO PP
@@ -169,8 +172,39 @@ public class Lumberjack : MonoBehaviour
 
         trans.position = new Vector3(_positions[0], trans.position.y, _positions[2]);
 
+        Vector3 velocity = (trans.position - transBuffer) / deltaTime;
+        velocity.Normalize();
+
+        //ZZ NEGATIVO BACK
+        //  Z POSITIVO PALANTE
+        //X NEGATIVO LEFT
+        //X POSITIVO DERECHA
+
+        if (velocity != Vector3.zero)
+        {
+            if (velocity.z < 0f)
+            {
+                Debug.Log("Facing Backwards");
+            }
+            if (velocity.z > 0f)
+            {
+                Debug.Log("Facing Froward");
+            }
+            if (velocity.x > 0f)
+            {
+                Debug.Log("Facing Right");
+            }
+            if (velocity.x < 0f)
+            {
+                Debug.Log("Facing lEFT");
+            }
+
+            Debug.Log("Velocity:" + velocity);
+
+        }
+
         //if(prediction.isWrong)
-            //CorrectMovement();
+        //CorrectMovement();
 
         //MovementPrediction();
     }
