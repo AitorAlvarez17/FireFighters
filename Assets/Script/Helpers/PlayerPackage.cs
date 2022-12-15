@@ -24,6 +24,8 @@ public class PlayerPackage
     public int fireLife = 0;
 
     public int[] fireLifeMatrix = new int[4];
+
+    public float timeStamp = 0f;
     //Message constructor
     public PlayerPackage(string _message, string _username)
     {
@@ -32,10 +34,11 @@ public class PlayerPackage
         positions[0] = 0f;
         positions[1] = 0f;
         positions[2] = 0f;
+        //timeStamp needed
     }   
 
     //position constructor
-    public PlayerPackage(string _message, string _username,float[] position, int _id, Tuple<int, int>[] _worldMatrix, int _playersOnline, int _fireAction, int _amount, int _fireId, int _fireLife)
+    public PlayerPackage(string _message, string _username,float[] position, int _id, Tuple<int, int>[] _worldMatrix, int _playersOnline, int _fireAction, int _amount, int _fireId, int _fireLife, float _timeStamp)
     {
         message = _message;
         username = _username;
@@ -52,6 +55,7 @@ public class PlayerPackage
         amount = _amount;
         fireID = _fireId;
         fireLife = _fireLife;
+        timeStamp = _timeStamp;
     }
 
     public void SetMessage(string _message)
@@ -97,5 +101,10 @@ public class PlayerPackage
     public void SetPlayersOnline(int _value)
     {
         playersOnline = _value;
+    }
+
+    public void SetTimeStamp(float _timeStamp)
+    {
+        timeStamp = _timeStamp;
     }
 }

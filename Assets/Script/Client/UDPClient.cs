@@ -10,6 +10,8 @@ using TMPro;
 
 public class UDPClient : MonoBehaviour
 {
+    public float timeStamp;
+    public float RTT;
     // Servers'IP and port
     private string serverIP;
     private int serverPort;
@@ -66,6 +68,10 @@ public class UDPClient : MonoBehaviour
 
     private void Update()
     {
+        timeStamp = Time.realtimeSinceStartup;
+        timeStamp = timeStamp * 1000f;
+        Debug.Log(timeStamp + "ms");
+
         PlayerActions();
 
         if (thisPlayer != null)
@@ -247,8 +253,15 @@ public class UDPClient : MonoBehaviour
                 receiveMessage = serializer.DeserializePackage(dataTMP);
                 thisPlayer.dirty = true;
 
+                //time in ms
+                //RTT calculates the time that a packed lasts to go from client to server and comeback
+                //we use RTT / 2 to calculate the avg time of traveling of client - server
+                RTT = (Time.realtimeSinceStartup - receiveMessage.timeStamp / 2) * 1000;
+                Debug.Log("RTT / 2 is" + RTT);
+
                 if (receiveMessage.id == thisPlayer.id)
                 {
+                    //CHECK PP WITH TIMESTAMP
                     //Debug.Log("Not Moving, this was MINE");
                     if (receiveMessage.amount > 0)
                     {
@@ -297,6 +310,7 @@ public class UDPClient : MonoBehaviour
             sendMessage.SetPositions(packageMovement);
             sendMessage.SetUsername(thisPlayer.username);
             sendMessage.SetId(thisPlayer.id);
+            sendMessage.SetTimeStamp(timeStamp);
             //Debug.Log("Pinging Mov from Client ID: " + sendMessage.id);
 
             //Debug.Log("[CLIENT] Sending to server: " + serverIPEP.ToString() + " Message: " + packageMovement[0] + "From:" + message.username);
@@ -318,6 +332,7 @@ public class UDPClient : MonoBehaviour
             byte[] dataTMP = new byte[1024];
             //ping to everybody;
             sendMessage.SetFireAction(_id, _action, _amount, _life);
+            sendMessage.SetTimeStamp(timeStamp);
             dataTMP = serializer.SerializePackage(sendMessage);
             udpSocket.SendTo(dataTMP, dataTMP.Length, SocketFlags.None, serverEP);
 

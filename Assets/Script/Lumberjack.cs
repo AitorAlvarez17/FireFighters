@@ -161,7 +161,27 @@ public class Lumberjack : MonoBehaviour
 
     public void Move(float[] _positions)
     {
+        Vector3 newPosition = new Vector3(_positions[0], _positions[1], _positions[2]);
         //Debug.Log("Moving Doll" + internalId + "to:" + _positions[0] + _positions[2]);
+
+        //IP HAS TO BE SO SIMILAR TO PP
+        //trans.position = Vector3.Lerp(trans.position, newPosition, /*IP*/);
+
         trans.position = new Vector3(_positions[0], trans.position.y, _positions[2]);
+
+        //if(prediction.isWrong)
+            //CorrectMovement();
+
+        //MovementPrediction();
+    }
+
+    public void MovementPrediction()
+    {
+        //take quaternion direction and go through it
+    }
+
+    public void MovementCorrection()
+    {
+        //correct the movement 
     }
 }

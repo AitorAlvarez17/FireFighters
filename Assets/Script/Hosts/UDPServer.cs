@@ -11,6 +11,7 @@ using TMPro;
 //Do a parent class that is MonoBehaviour and make this heritage from the parent in order to make it virtual for PlayerMovement
 public class UDPServer : MonoBehaviour
 {
+    public float timeStamp;
     // Clients'IP and Port
     private string serverIP;
     private int serverPort;
@@ -72,6 +73,10 @@ public class UDPServer : MonoBehaviour
 
     private void Update()
     {
+        timeStamp = Time.realtimeSinceStartup;
+        timeStamp = timeStamp * 1000f;
+        Debug.Log(timeStamp + "ms");
+
         ServerActions();
 
         if (Input.GetKeyDown(KeyCode.Alpha1))
