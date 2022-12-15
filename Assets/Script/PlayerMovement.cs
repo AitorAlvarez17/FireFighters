@@ -2,10 +2,12 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
+
 public class PlayerMovement : MonoBehaviour
 {
     public GameObject player;
     public float speed;
+    public float rotationSpeed;
     public bool isMoving = false;
 
     //Client = 0
@@ -62,6 +64,7 @@ public class PlayerMovement : MonoBehaviour
             }
             else
             {
+                SmoothRotation(movementDirection);
                 player.transform.Translate(movementDirection * speed * Time.deltaTime, Space.World);
                 isMoving = true;
 
@@ -84,10 +87,17 @@ public class PlayerMovement : MonoBehaviour
             if (isMoving == false)
                 return;
 
+            Debug.Log("Movement Direction:" + movementDirection);
+            float[] movementDirectionSerializable = new float[3];
+
+            movementDirectionSerializable[0] = movementDirection.x;
+            movementDirectionSerializable[1] = movementDirection.y;
+            movementDirectionSerializable[2] = movementDirection.z;
+
             if (serverType == 0)
-                this.gameObject.GetComponent<UDPClient>().PingMovement(this.gameObject.GetComponent<UDPClient>().thisPlayer.positions);
+                this.gameObject.GetComponent<UDPClient>().PingMovement(this.gameObject.GetComponent<UDPClient>().thisPlayer.positions, movementDirectionSerializable);
             if (serverType == 1)
-                this.gameObject.GetComponent<UDPServer>().PingMovement(this.gameObject.GetComponent<UDPServer>().thisPlayer.positions);
+                this.gameObject.GetComponent<UDPServer>().PingMovement(this.gameObject.GetComponent<UDPServer>().thisPlayer.positions, movementDirectionSerializable);
 
             movementDirection = Vector3.zero;
         }
@@ -96,6 +106,12 @@ public class PlayerMovement : MonoBehaviour
     public void WalkingAnimation()
     {
 
+    }
+
+    public void SmoothRotation(Vector3 directions)
+    {
+        Quaternion rotation = Quaternion.LookRotation(directions, Vector3.up);
+        player.transform.rotation = Quaternion.RotateTowards(player.transform.rotation, rotation, rotationSpeed * Time.deltaTime);
     }
 }
 

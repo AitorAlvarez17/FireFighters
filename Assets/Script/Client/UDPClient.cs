@@ -311,13 +311,14 @@ public class UDPClient : MonoBehaviour
     }
 
 
-    public void PingMovement(float[] packageMovement)
+    public void PingMovement(float[] packageMovement, float[]movementDirection)
     {
         try
         {
             byte[] dataTMP = new byte[1024];
             sendMessage.SetMessage("");
             sendMessage.SetPositions(packageMovement);
+            sendMessage.SetDirection(movementDirection);
             sendMessage.SetUsername(thisPlayer.username);
             sendMessage.SetId(thisPlayer.id);
             sendMessage.SetTimeStamp(timeStamp);

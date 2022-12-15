@@ -358,13 +358,14 @@ public class UDPServer : MonoBehaviour
     }
 
     #region Pings
-    public void PingMovement(float[] packageMovement)
+    public void PingMovement(float[] packageMovement, float[] movimentDirection)
     {
         byte[] dataTMP = new byte[1024];
         try
         {
             sendMessage.SetMessage("");
             sendMessage.SetPositions(packageMovement);
+            sendMessage.SetDirection(movimentDirection);
             sendMessage.SetUsername(thisPlayer.username);
             sendMessage.SetId(thisPlayer.id);
             //Debug.Log("Sending from Ping Server: ID: " + sendMessage.id);

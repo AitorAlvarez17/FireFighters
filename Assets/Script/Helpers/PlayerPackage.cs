@@ -9,6 +9,7 @@ public class PlayerPackage
     public string username;
 
     public float[] positions = new float[3];
+    public float[] movementDirection = new float[3];
 
     public int id = -1;
 
@@ -38,13 +39,18 @@ public class PlayerPackage
     }   
 
     //position constructor
-    public PlayerPackage(string _message, string _username,float[] position, int _id, Tuple<int, int>[] _worldMatrix, int _playersOnline, int _fireAction, int _amount, int _fireId, int _fireLife, float _timeStamp)
+    public PlayerPackage(string _message, string _username,float[] position, float[] _movementDirection, int _id, Tuple<int, int>[] _worldMatrix, int _playersOnline, int _fireAction, int _amount, int _fireId, int _fireLife, float _timeStamp)
     {
         message = _message;
         username = _username;
         positions[0] = position[0];
         positions[1] = position[1];
         positions[2] = position[2];
+
+        movementDirection[0] = _movementDirection[0];
+        movementDirection[1] = _movementDirection[1];
+        movementDirection[2] = _movementDirection[2];
+
         id = _id;
         worldMatrix[0] = _worldMatrix[0];
         worldMatrix[1] = _worldMatrix[1];
@@ -106,5 +112,12 @@ public class PlayerPackage
     public void SetTimeStamp(float _timeStamp)
     {
         timeStamp = _timeStamp;
+    }
+
+    public void SetDirection(float[] _dir)
+    {
+        movementDirection[0] = _dir[0];
+        movementDirection[1] = _dir[1];
+        movementDirection[2] = _dir[2];
     }
 }
