@@ -225,6 +225,6 @@ public class Lumberjack : MonoBehaviour
     public void SmoothRotation(Vector3 directions)
     {
         Quaternion rotation = Quaternion.LookRotation(directions, Vector3.up);
-        player.transform.rotation = Quaternion.RotateTowards(player.transform.rotation, rotation, rotationSpeed * Time.deltaTime);
+        trans.rotation = Quaternion.RotateTowards(trans.rotation, rotation, 1000 * Time.deltaTime);
     }
 }
