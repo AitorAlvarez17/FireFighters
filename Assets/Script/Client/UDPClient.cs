@@ -10,6 +10,10 @@ using TMPro;
 
 public class UDPClient : MonoBehaviour
 {
+    public float timeStamp;
+    public float RTT;
+
+    public bool newRtt = false;
     // Servers'IP and port
     private string serverIP;
     private int serverPort;
@@ -67,7 +71,16 @@ public class UDPClient : MonoBehaviour
 
     private void Update()
     {
+        timeStamp = Time.realtimeSinceStartup;
+        //Debug.Log(timeStamp + "ms");
+
         PlayerActions();
+
+        if (newRtt == true)
+        {
+            //Debug.Log("New RTT" + RTT + "Ms");
+            newRtt = false;
+        }
 
         if (thisPlayer != null)
         {
@@ -85,12 +98,14 @@ public class UDPClient : MonoBehaviour
         }
         
     }
+
     public void CreateMessage(PlayerPackage _Message)
     {
         GameObject newMessage = new GameObject();
         newMessage = Instantiate(this.gameObject.GetComponent<ServerController>().messgePrefab, Vector3.zero, Quaternion.identity, this.gameObject.GetComponent<ServerController>().chatBillboard.transform);
         newMessage.GetComponent<MessageHolder>().SetMessage(_Message.message, _Message.username);
     }
+
     private void PlayerActions()
     {
         if (thisPlayer != null && thisPlayer.dirty == true)
@@ -120,7 +135,7 @@ public class UDPClient : MonoBehaviour
                 Debug.Log("Moving");
                 //Debug.Log("This player ID (check):" + thisPlayer.id);
                 //Debug.Log("Received message ID: " + receiveMessage.id);
-                UpdateWorld(1, receiveMessage.id, receiveMessage.positions);
+                UpdateWorld(1, receiveMessage.id, receiveMessage.positions, receiveMessage.movementDirection);
             }
             if (fireChanged == true)
             {
@@ -264,9 +279,16 @@ public class UDPClient : MonoBehaviour
                     Debug.Log("Players Online in the receive message: " + receiveMessage.playersOnline);
                     Debug.Log("Players Online in the last message " + playersOnline);
                 }
+                //time in ms
+                //RTT calculates the time that a packed lasts to go from client to server and comeback
+                //we use RTT / 2 to calculate the avg time of traveling of client - server
+                RTT = timeStamp - receiveMessage.timeStamp;
+                RTT = RTT * 1000;
+                newRtt = true;
 
                 if (receiveMessage.id == thisPlayer.id)
                 {
+                    //CHECK PP WITH TIMESTAMP
                     //Debug.Log("Not Moving, this was MINE");
                     if (receiveMessage.amount > 0)
                     {
@@ -306,16 +328,19 @@ public class UDPClient : MonoBehaviour
     }
 
 
-    public void PingMovement(float[] packageMovement)
+    public void PingMovement(float[] packageMovement, float[]movementDirection)
     {
         try
         {
             byte[] dataTMP = new byte[1024];
             sendMessage.SetMessage("");
             sendMessage.SetPositions(packageMovement);
+            sendMessage.SetDirection(movementDirection);
             sendMessage.SetUsername(thisPlayer.username);
             sendMessage.SetId(thisPlayer.id);
-            Debug.Log("Pinging Mov from Client ID: " + sendMessage.id);
+
+            sendMessage.SetTimeStamp(timeStamp);
+            //Debug.Log("Pinging Mov from Client ID: " + sendMessage.id);
 
             //Debug.Log("[CLIENT] Sending to server: " + serverIPEP.ToString() + " Message: " + packageMovement[0] + "From:" + message.username);
             dataTMP = serializer.SerializePackage(sendMessage);
@@ -336,6 +361,7 @@ public class UDPClient : MonoBehaviour
             byte[] dataTMP = new byte[1024];
             //ping to everybody;
             sendMessage.SetFireAction(_id, _action, _amount, _life);
+            sendMessage.SetTimeStamp(timeStamp);
             dataTMP = serializer.SerializePackage(sendMessage);
             udpSocket.SendTo(dataTMP, dataTMP.Length, SocketFlags.None, serverEP);
 
@@ -363,12 +389,12 @@ public class UDPClient : MonoBehaviour
     }
 
 
-    public void UpdateWorld(int action, int _key, float[] _positions = null, Tuple<int, int>[] newMatrix = null, int _life = -1)
+    public void UpdateWorld(int action, int _key, float[] _positions = null, float[] _directions = null, Tuple<int, int>[] newMatrix = null, int _life = -1)
     {
         switch (action)
         {
             case 1:
-                this.gameObject.GetComponent<WorldController>().MovePlayer(_key, _positions);
+                this.gameObject.GetComponent<WorldController>().MovePlayer(_key, _positions, _directions);
                 break;
             case 2:
                 //here i copy the life directly bc it has been checked by server and you need no longer comprovation, also

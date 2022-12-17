@@ -35,6 +35,10 @@ public static class serializer
         {
             writer.Write(coordinate);
         }
+        foreach (float direction in _message.movementDirection)
+        {
+            writer.Write(direction);
+        }
         writer.Write(_message.id);
         foreach (var worldPlayer in _message.worldMatrix)
         {
@@ -49,6 +53,7 @@ public static class serializer
         writer.Write(_message.amount);
         writer.Write(_message.fireID);
         writer.Write(_message.fireLife);
+        writer.Write(_message.timeStamp);
         bytes = stream.ToArray();
         return bytes;
     }
@@ -70,9 +75,14 @@ public static class serializer
         positions[1] = reader.ReadSingle();
         positions[2] = reader.ReadSingle();
 
+        float[] direction = new float[3];
+        direction[0] = reader.ReadSingle();
+        direction[1] = reader.ReadSingle();
+        direction[2] = reader.ReadSingle();
+
         //foreach (var item in positions)
         //{
-            //Debug.Log("Position :" + item);
+        //Debug.Log("Position :" + item);
         //}
         int id = reader.ReadInt32();
         Tuple<int,int>[] worldMatrix = new Tuple<int,int>[4];
@@ -88,12 +98,14 @@ public static class serializer
         int fireID = reader.ReadInt32();
         int fireLife = reader.ReadInt32();
 
+        float timeStamp = reader.ReadSingle();
+
         //foreach (var item in positions)
         //{
             //Debug.Log("Position :" + item);
         //}
 
-        PlayerPackage newMessage = new PlayerPackage(message, username,positions,id, worldMatrix, playersOnline, fireaction, amount, fireID, fireLife);
+        PlayerPackage newMessage = new PlayerPackage(message, username,positions,direction,id, worldMatrix, playersOnline, fireaction, amount, fireID, fireLife, timeStamp);
 
         bytes = null;
 

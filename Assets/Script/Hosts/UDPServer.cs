@@ -12,6 +12,7 @@ using Unity.VisualScripting;
 //Do a parent class that is MonoBehaviour and make this heritage from the parent in order to make it virtual for PlayerMovement
 public class UDPServer : MonoBehaviour
 {
+    public float timeStamp;
     // Clients'IP and Port
     private string serverIP;
     private int serverPort;
@@ -75,6 +76,9 @@ public class UDPServer : MonoBehaviour
 
     private void Update()
     {
+        timeStamp = Time.realtimeSinceStartup;
+        Debug.Log(timeStamp + "ms");
+
         ServerActions();
 
         //if (Input.GetKeyDown(KeyCode.Alpha1))
@@ -118,68 +122,19 @@ public class UDPServer : MonoBehaviour
         if (serverDirty == false)
             return;
             
-            // well positioned  function
-            //if (thisPlayerSetup == true)
-            //{
-            //    this.gameObject.GetComponent<WorldController>().CreatePlayer(1, true);
-            //    this.gameObject.GetComponent<PlayerMovement>().player = this.gameObject.GetComponent<WorldController>().worldDolls[1].lumberjack.gameObject;
-            //    GameObject.FindGameObjectWithTag("MainCamera").GetComponent<CameraMovement>().target = this.gameObject.GetComponent<WorldController>().worldDolls[1].lumberjack.transform;
-            //    thisPlayerSetup = false;
-
-            //    DebugMatrix();
-            //}
-
-            //Repeated funcion in client
-
-            //if (receivedMessage != null && receivedMessage.message != null && receivedMessage.message != "")
-            //{
-            //    //Debug.Log("Message checked and creating:" + receivedMessage.message + " From: " + receivedMessage.username);
-            //    CreateMessage(receivedMessage);
-            //    receivedMessage.SetMessage(null);
-            //}
-
-
             //Well positioned function
             if (initServer == true)
             {
+
                   this.gameObject.GetComponent<UDPClient>().ConnectToServer(serverIP, "Pending");
-            //    EchoData(rece); /*<- Here echo the players online to all clients and in Client create the players*/
-            //    //this.gameObject.GetComponent<WorldController>().CreatePlayer(playersOnline);
-            //    //DebugMatrix();
+                  //EchoData(rece); /*<- Here echo the players online to all clients and in Client create the players*/
+                  ////this.gameObject.GetComponent<WorldController>().CreatePlayer(playersOnline);
+                  ////DebugMatrix();
                   initServer = false;
+                //Debug.Log("Message checked and creating:" + receivedMessage.message + " From: " + receivedMessage.username);
             }
-
-            //repeated function in client
-
-            //if (receivedMessage.positions[0] != 0f || receivedMessage.positions[2] != 0f && isMoving == true)
-            //{
-            //    //Debug.Log("Server Player ID:" + thisPlayer.id);
-            //    //Debug.Log("Message ID:" + receivedMessage.id);
-            //    UpdateWorld(receivedMessage.id, receivedMessage.positions);
-            //}
-
-            ////Repeated function in client
-            ///
-            //if (fireChanging == true)
-            //{
-            //    Debug.Log("Setting life from [FIRE CHANGING]" + "of received message [ID 1: "+ gameMatrix[0].Item1 + "]" + "[VALUE 1: "+ gameMatrix[0].Item2 + "]");
-            //    this.gameObject.GetComponent<WorldController>().UpdateFires(gameMatrix);
-            //    fireChanging = false;
-            //}
-
-            ////Repeated function in client
-            ///
-            //if (debugMatrix == true)
-            //{
-            //    Debug.Log("Debuging matrix on update");
-            //    DebugMatrix();
-            //    debugMatrix = false;
-            //}
-
-
+           
             serverDirty = false;
-            //Debug.Log("Setting Text and Server Dirtyness");
-        
     }
 
     public void CreateMessage(PlayerPackage _Message)
@@ -359,6 +314,7 @@ public class UDPServer : MonoBehaviour
         }
     }
 
+
     //public void UpdateWorld(int _key, float[] _positions)
     //{
     //    this.gameObject.GetComponent<WorldController>().MovePlayer(_key, _positions);
@@ -382,6 +338,8 @@ public class UDPServer : MonoBehaviour
     //        Debug.Log("[CLIENT] Failed to send message. Error: " + e.ToString());
     //    }
     //}
+
+    
 
     //public void PingFireAction(int _id, int _action, int _amount, int _life)
     //{
