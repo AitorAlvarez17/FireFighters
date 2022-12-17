@@ -39,7 +39,7 @@ public class PlayerMovement : MonoBehaviour
         }
         else
         {
-            if (this.gameObject.GetComponent<UDPServer>().thisPlayer == null)
+            if (this.gameObject.GetComponent<UDPClient>().thisPlayer == null)
                 return;
         }
 
@@ -64,7 +64,7 @@ public class PlayerMovement : MonoBehaviour
                 }
                 if (serverType == 1)
                 {
-                    this.gameObject.GetComponent<UDPServer>().thisPlayer.positions[2] = player.transform.position.z;
+                    this.gameObject.GetComponent<UDPClient>().thisPlayer.positions[2] = player.transform.position.z;
                     WalkingAnimation();
                 }
             }
@@ -81,7 +81,7 @@ public class PlayerMovement : MonoBehaviour
                 }
                 if (serverType == 1)
                 {
-                    this.gameObject.GetComponent<UDPServer>().thisPlayer.positions[2] = player.transform.position.z;
+                    this.gameObject.GetComponent<UDPClient>().thisPlayer.positions[2] = player.transform.position.z;
                     WalkingAnimation();
                 }
             }
@@ -98,7 +98,7 @@ public class PlayerMovement : MonoBehaviour
                 }
                 if (serverType == 1)
                 {
-                    this.gameObject.GetComponent<UDPServer>().thisPlayer.positions[0] = player.transform.position.x;
+                    this.gameObject.GetComponent<UDPClient>().thisPlayer.positions[0] = player.transform.position.x;
                     WalkingAnimation();
                 }
             }
@@ -115,7 +115,7 @@ public class PlayerMovement : MonoBehaviour
                 }
                 if (serverType == 1)
                 {
-                    this.gameObject.GetComponent<UDPServer>().thisPlayer.positions[0] = player.transform.position.x;
+                    this.gameObject.GetComponent<UDPClient>().thisPlayer.positions[0] = player.transform.position.x;
                     WalkingAnimation();
                 }
             }
@@ -125,8 +125,6 @@ public class PlayerMovement : MonoBehaviour
 
             if (serverType == 0)
                 this.gameObject.GetComponent<UDPClient>().PingMovement(this.gameObject.GetComponent<UDPClient>().thisPlayer.positions);
-            if (serverType == 1)
-                this.gameObject.GetComponent<UDPServer>().PingMovement(this.gameObject.GetComponent<UDPServer>().thisPlayer.positions);
         }
     }
 

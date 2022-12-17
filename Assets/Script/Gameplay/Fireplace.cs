@@ -95,11 +95,11 @@ public class Fireplace : MonoBehaviour
         }
         if (GC.transform.GetComponent<UDPServer>() != null)
         {
-            HealBar(other.transform.GetComponent<Lumberjack>().charge.Type, other.transform.GetComponent<Lumberjack>().charge.Amount);
+            //HealBar(other.transform.GetComponent<Lumberjack>().charge.Type, other.transform.GetComponent<Lumberjack>().charge.Amount);
 
-            GC.GetComponent<UDPServer>().PingFireAction(internalID, other.transform.GetComponent<Lumberjack>().charge.Type, other.transform.GetComponent<Lumberjack>().charge.Amount, life);
-            other.transform.GetComponent<Lumberjack>().charge.ClearCharge();
-            other.transform.GetComponent<Lumberjack>().PrintDebug();
+            //GC.GetComponent<UDPServer>().PingFireAction(internalID, other.transform.GetComponent<Lumberjack>().charge.Type, other.transform.GetComponent<Lumberjack>().charge.Amount, life);
+            //other.transform.GetComponent<Lumberjack>().charge.ClearCharge();
+            //other.transform.GetComponent<Lumberjack>().PrintDebug();
         }
         //PingFireAction(int action, int amount);
 

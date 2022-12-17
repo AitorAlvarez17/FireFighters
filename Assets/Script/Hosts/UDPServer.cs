@@ -70,7 +70,6 @@ public class UDPServer : MonoBehaviour
         serverIP = ServerController.MyServerInstance.IPServer;
         serverPort = ServerController.MyServerInstance.serverPort;
 
-        this.AddComponent<UDPClient>();
         StartServer();
     }
 
@@ -107,7 +106,7 @@ public class UDPServer : MonoBehaviour
         sendMessage.SetUsername(thisPlayer.username);
         sendMessage.SetId(thisPlayer.id);
         sendMessage.SetPositions(thisPlayer.positions);
-        UpdateGameMatrix(playersOnline);
+        //UpdateGameMatrix(playersOnline);
         sendMessage.SetWorldMatrix(gameMatrix);
         sendMessage.SetPlayersOnline(playersOnline);
         serverDirty = true;
@@ -120,15 +119,15 @@ public class UDPServer : MonoBehaviour
             return;
             
             // well positioned  function
-            if (thisPlayerSetup == true)
-            {
-                this.gameObject.GetComponent<WorldController>().CreatePlayer(1, true);
-                this.gameObject.GetComponent<PlayerMovement>().player = this.gameObject.GetComponent<WorldController>().worldDolls[1].lumberjack.gameObject;
-                GameObject.FindGameObjectWithTag("MainCamera").GetComponent<CameraMovement>().target = this.gameObject.GetComponent<WorldController>().worldDolls[1].lumberjack.transform;
-                thisPlayerSetup = false;
+            //if (thisPlayerSetup == true)
+            //{
+            //    this.gameObject.GetComponent<WorldController>().CreatePlayer(1, true);
+            //    this.gameObject.GetComponent<PlayerMovement>().player = this.gameObject.GetComponent<WorldController>().worldDolls[1].lumberjack.gameObject;
+            //    GameObject.FindGameObjectWithTag("MainCamera").GetComponent<CameraMovement>().target = this.gameObject.GetComponent<WorldController>().worldDolls[1].lumberjack.transform;
+            //    thisPlayerSetup = false;
 
-                DebugMatrix();
-            }
+            //    DebugMatrix();
+            //}
 
             //Repeated funcion in client
 
@@ -141,11 +140,13 @@ public class UDPServer : MonoBehaviour
 
 
             //Well positioned function
-            if (newConection == true)
+            if (initServer == true)
             {
-                this.gameObject.GetComponent<WorldController>().CreatePlayer(playersOnline);
-                DebugMatrix();
-                newConection = false;
+                  this.gameObject.GetComponent<UDPClient>().ConnectToServer(serverIP, "Pending");
+            //    EchoData(rece); /*<- Here echo the players online to all clients and in Client create the players*/
+            //    //this.gameObject.GetComponent<WorldController>().CreatePlayer(playersOnline);
+            //    //DebugMatrix();
+                  initServer = false;
             }
 
             //repeated function in client
@@ -255,12 +256,10 @@ public class UDPServer : MonoBehaviour
 
             if (!UDPClientList.Contains(clientEP) && clientEP.ToString() != "")
             {
+                Debug.Log("New client added to the list");
                 UDPClientList.Add(clientEP);
                 UpdateGameMatrix(UDPClientList.Count);
                 ModifyReceivedMessage();
-
-                newConection = true;
-
             }
             // Comunicate to the client what his new id is
             serverDirty = true;
@@ -301,18 +300,6 @@ public class UDPServer : MonoBehaviour
                     UDPClientList.Add(clientEP);
                     UpdateGameMatrix(UDPClientList.Count);
                     ModifyReceivedMessage();
-                    newConection = true;
-                }
-
-                if (receivedMessage.id == thisPlayer.id)
-                {
-                    //Debug.Log("Not Moving, this was MINE");
-                    isMoving = false;
-                }
-                else
-                {
-                    //Debug.Log("This is not MINE!");
-                    isMoving = true;
                 }
 
                 if (receivedMessage.amount > 0)
@@ -323,7 +310,8 @@ public class UDPServer : MonoBehaviour
                     //and here we change the receivedMessage for pingPong comeback
                     ModifyReceivedMessage();
                 }
-                //Debug.Log("[SERVER] Received message ID:" + receivedMessage.id);
+                Debug.Log("[SERVER] Received message ID:" + receivedMessage.id);
+
                 EchoData(receivedMessage);
 
 
@@ -371,55 +359,55 @@ public class UDPServer : MonoBehaviour
         }
     }
 
-    public void UpdateWorld(int _key, float[] _positions)
-    {
-        this.gameObject.GetComponent<WorldController>().MovePlayer(_key, _positions);
-    }
+    //public void UpdateWorld(int _key, float[] _positions)
+    //{
+    //    this.gameObject.GetComponent<WorldController>().MovePlayer(_key, _positions);
+    //}
 
     #region Pings
-    public void PingMovement(float[] packageMovement)
-    {
-        byte[] dataTMP = new byte[1024];
-        try
-        {
-            sendMessage.SetMessage("");
-            sendMessage.SetPositions(packageMovement);
-            sendMessage.SetUsername(thisPlayer.username);
-            sendMessage.SetId(thisPlayer.id);
-            //Debug.Log("Sending from Ping Server: ID: " + sendMessage.id);
-            EchoData(sendMessage);
-        }
-        catch (Exception e)
-        {
-            Debug.Log("[CLIENT] Failed to send message. Error: " + e.ToString());
-        }
-    }
+    //public void PingMovement(float[] packageMovement)
+    //{
+    //    byte[] dataTMP = new byte[1024];
+    //    try
+    //    {
+    //        sendMessage.SetMessage("");
+    //        sendMessage.SetPositions(packageMovement);
+    //        sendMessage.SetUsername(thisPlayer.username);
+    //        sendMessage.SetId(thisPlayer.id);
+    //        //Debug.Log("Sending from Ping Server: ID: " + sendMessage.id);
+    //        EchoData(sendMessage);
+    //    }
+    //    catch (Exception e)
+    //    {
+    //        Debug.Log("[CLIENT] Failed to send message. Error: " + e.ToString());
+    //    }
+    //}
 
-    public void PingFireAction(int _id, int _action, int _amount, int _life)
-    {
-        try
-        {
-            byte[] dataTMP = new byte[1024];
-            //ping to everybody;
-            sendMessage.SetFireAction(_id, _action, _amount, _life);
-            UpdateFireMatrix(sendMessage.fireID, sendMessage.fireAction, sendMessage.amount, sendMessage.fireLife);
-            EchoData(sendMessage);
+    //public void PingFireAction(int _id, int _action, int _amount, int _life)
+    //{
+    //    try
+    //    {
+    //        byte[] dataTMP = new byte[1024];
+    //        //ping to everybody;
+    //        sendMessage.SetFireAction(_id, _action, _amount, _life);
+    //        UpdateFireMatrix(sendMessage.fireID, sendMessage.fireAction, sendMessage.amount, sendMessage.fireLife);
+    //        EchoData(sendMessage);
 
-            //this is dangerous! as receiveMessage on ServerWill keep the same until next update, be sure that receivedMessage doesn't stuck the the old values
-            //Debug.Log("Interacting with fireplace: [ACTION " + _action + "], [AMOUNT: " + _amount + "]");
-        }
-        catch (Exception ex)
-        {
-            Debug.Log("[CLIENT] Failed to send message. Error: " + ex.ToString());
-        }
-    }
+    //        //this is dangerous! as receiveMessage on ServerWill keep the same until next update, be sure that receivedMessage doesn't stuck the the old values
+    //        //Debug.Log("Interacting with fireplace: [ACTION " + _action + "], [AMOUNT: " + _amount + "]");
+    //    }
+    //    catch (Exception ex)
+    //    {
+    //        Debug.Log("[CLIENT] Failed to send message. Error: " + ex.ToString());
+    //    }
+    //}
     #endregion
 
     #region UpdateMatrix
     public void UpdateGameMatrix(int id)
     {
         // gameMatrix[id] is the DATA value // id + 1 is the VISUAL VALUE ... id's will be 1,2,3,4 not 0,1,2,3
-        gameMatrix[id] = Tuple.Create(id+1, 100);
+        gameMatrix[id - 1] = Tuple.Create(id, 100);
         playersOnline++;
         
 

@@ -249,6 +249,10 @@ public class UDPClient : MonoBehaviour
 
                 if (receiveMessage.id == thisPlayer.id)
                 {
+                    if (receiveMessage.playersOnline != playersOnline)
+                    {
+                        Debug.Log("Game matrix changed!");
+                    }
                     //Debug.Log("Not Moving, this was MINE");
                     if (receiveMessage.amount > 0)
                     {
@@ -364,7 +368,8 @@ public class UDPClient : MonoBehaviour
 
     public void UpdateGameMatrix(int _key, Tuple<int, int>[] newMatrix)
     {
-        gameMatrix[_key] = newMatrix[_key];
+        //here there is a little controversy as gameMatrix element id-1 is copying newMatrix element id so there is a 1 "step" difference
+        gameMatrix[_key - 1] = newMatrix[_key];
         debugMatrix = true;
     }
     public void DebugMatrix()

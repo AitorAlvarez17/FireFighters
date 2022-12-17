@@ -103,6 +103,8 @@ public class WorldController : MonoBehaviour
     {
         foreach (var item in gameMatrix)
         {
+            Debug.Log("Updating fire" + item.Item1);
+
             if (item.Item1 != 0)
             {
                 Debug.Log("Updating FIRE " + item.Item1 + "");
@@ -117,6 +119,7 @@ public class WorldController : MonoBehaviour
 
     public void WelcomeClient(Tuple<int, int>[] worldMatrix, int _key)
     {
+        Debug.Log("Welcoming client with key" + _key);
         foreach (var index in worldMatrix)
         {
             if (worldDolls.ContainsKey(index.Item1))
