@@ -14,20 +14,9 @@ public class PlayerMovement : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        switch (this.gameObject.GetComponent<ServerController>().GetServerType)
-        {
-            case ServerController.ServerType.Server:
-                serverType = 1;
-                break;
-            case ServerController.ServerType.Client:
-                serverType = 0;
-                break;
-            default:
-                serverType = 3;
-                break;
-        }
 
-        isMoving = false;
+         serverType = 0;
+
     }
     // Update is called once per frame
     void FixedUpdate()
@@ -123,8 +112,7 @@ public class PlayerMovement : MonoBehaviour
             if (isMoving == false)
                 return;
 
-            if (serverType == 0)
-                this.gameObject.GetComponent<UDPClient>().PingMovement(this.gameObject.GetComponent<UDPClient>().thisPlayer.positions);
+            this.gameObject.GetComponent<UDPClient>().PingMovement(this.gameObject.GetComponent<UDPClient>().thisPlayer.positions);
         }
     }
 
