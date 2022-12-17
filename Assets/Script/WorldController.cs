@@ -119,14 +119,24 @@ public class WorldController : MonoBehaviour
 
     public void WelcomeClient(Tuple<int, int>[] worldMatrix, int _key)
     {
-        Debug.Log("Welcoming client with key" + _key);
+        Debug.Log("Element 1 in matrix:" + worldMatrix[0].Item1);
+        Debug.Log("Element 2 in matrix:" + worldMatrix[1].Item1);
+        Debug.Log("Element 3 in matrix:" + worldMatrix[2].Item1);
+        Debug.Log("Element 4 in matrix:" + worldMatrix[3].Item1);
+
         foreach (var index in worldMatrix)
         {
+            Debug.Log("Representing client with key" + index.Item1);
+
             if (worldDolls.ContainsKey(index.Item1))
+            {
+                Debug.Log("Doll with" + index.Item1 + "already exists");
                 return;
-            
+            }
+
             if (index.Item1 != 0 && index.Item1 != _key)
             {
+                Debug.Log("Creating doll with key" + index.Item1);
                 CreatePlayer(index.Item1);
             }
             if (index.Item1 == _key)

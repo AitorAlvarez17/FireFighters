@@ -48,6 +48,7 @@ public class UDPClient : MonoBehaviour
     public bool isMoving = false;
     public bool fireChanged = false;
     public bool debugMatrix = false;
+    public bool newConection = true;
 
     //instanciation both variables
     void Start()
@@ -94,6 +95,12 @@ public class UDPClient : MonoBehaviour
     {
         if (thisPlayer != null && thisPlayer.dirty == true)
         {
+            if (newConection == true && justConnected == false)
+            {
+                this.gameObject.GetComponent<WorldController>().WelcomeClient(gameMatrix, thisPlayer.id);
+                
+                newConection = false;
+            }
             if (justConnected == true)
             {
                 receiveMessage.SetUsername("Player" + thisPlayer.id);
@@ -110,6 +117,7 @@ public class UDPClient : MonoBehaviour
             }
             if (receiveMessage.positions[0] != 0f || receiveMessage.positions[2] != 0f && isMoving == true)
             {
+                Debug.Log("Moving");
                 //Debug.Log("This player ID (check):" + thisPlayer.id);
                 //Debug.Log("Received message ID: " + receiveMessage.id);
                 UpdateWorld(1, receiveMessage.id, receiveMessage.positions);
@@ -247,12 +255,18 @@ public class UDPClient : MonoBehaviour
                 receiveMessage = serializer.DeserializePackage(dataTMP);
                 thisPlayer.dirty = true;
 
+                if (receiveMessage.playersOnline != playersOnline)
+                {
+                    playersOnline = receiveMessage.playersOnline;
+                    gameMatrix = receiveMessage.worldMatrix;
+                    debugMatrix = true;
+                    newConection = true;
+                    Debug.Log("Players Online in the receive message: " + receiveMessage.playersOnline);
+                    Debug.Log("Players Online in the last message " + playersOnline);
+                }
+
                 if (receiveMessage.id == thisPlayer.id)
                 {
-                    if (receiveMessage.playersOnline != playersOnline)
-                    {
-                        Debug.Log("Game matrix changed!");
-                    }
                     //Debug.Log("Not Moving, this was MINE");
                     if (receiveMessage.amount > 0)
                     {
@@ -347,6 +361,7 @@ public class UDPClient : MonoBehaviour
         Debug.Log("Client was welcomed to world, ID:" + thisPlayer.id);
         this.gameObject.GetComponent<WorldController>().WelcomeClient(gameMatrix, thisPlayer.id);
     }
+
 
     public void UpdateWorld(int action, int _key, float[] _positions = null, Tuple<int, int>[] newMatrix = null, int _life = -1)
     {
