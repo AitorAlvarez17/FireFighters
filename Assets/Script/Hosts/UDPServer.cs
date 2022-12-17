@@ -77,7 +77,7 @@ public class UDPServer : MonoBehaviour
     private void Update()
     {
         timeStamp = Time.realtimeSinceStartup;
-        Debug.Log(timeStamp + "ms");
+        //Debug.Log(timeStamp + "ms");
 
         ServerActions();
 
