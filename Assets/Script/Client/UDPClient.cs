@@ -301,7 +301,7 @@ public class UDPClient : MonoBehaviour
                     //time in ms
                     //RTT calculates the time that a packed lasts to go from client to server and comeback
                     //we use RTT / 2 to calculate the avg time of traveling of client - server
-                    RTT = timeStamp - receiveMessage.timeStamp;
+                RTT = timeStamp - receiveMessage.timeStamp;
                 RTT = RTT * 1000;
                 newRtt = true;
 
@@ -409,6 +409,7 @@ public class UDPClient : MonoBehaviour
             Debug.Log("Pinging the disconect");
             byte[] dataTMP = new byte[1024];
             //ping to everybody;
+            sendMessage.SetId(thisPlayer.id);
             sendMessage.SetState(false);
             dataTMP = serializer.SerializePackage(sendMessage);
             udpSocket.SendTo(dataTMP, dataTMP.Length, SocketFlags.None, serverEP);
