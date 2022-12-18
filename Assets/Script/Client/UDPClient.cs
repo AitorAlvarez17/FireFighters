@@ -289,20 +289,18 @@ public class UDPClient : MonoBehaviour
                     playersOnline = receiveMessage.playersOnline;
                     gameMatrix = receiveMessage.worldMatrix;
                     debugMatrix = true;
-                    if (receiveMessage.state == false)
-                    {
-                        newDisconection = true;
-                    }
-                    else
-                    {
-                        newConection = true;
-                    }
+                    newConection = true;
                     Debug.Log("Players Online in the receive message: " + receiveMessage.playersOnline);
                     Debug.Log("Players Online in the last message " + playersOnline);
                 }
-                //time in ms
-                //RTT calculates the time that a packed lasts to go from client to server and comeback
-                //we use RTT / 2 to calculate the avg time of traveling of client - server
+                if (receiveMessage.state == false)
+                {
+                    Debug.Log("Disconecting!");
+                }
+                
+                    //time in ms
+                    //RTT calculates the time that a packed lasts to go from client to server and comeback
+                    //we use RTT / 2 to calculate the avg time of traveling of client - server
                 RTT = timeStamp - receiveMessage.timeStamp;
                 RTT = RTT * 1000;
                 newRtt = true;
