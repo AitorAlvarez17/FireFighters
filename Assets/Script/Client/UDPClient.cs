@@ -161,7 +161,7 @@ public class UDPClient : MonoBehaviour
             {
                 Debug.Log("Disconnecting!");
                 //delete lumberjack from dolls
-                this.gameObject.GetComponent<WorldController>().DeletePlayer(receiveMessage.id);
+                this.gameObject.GetComponent<WorldController>().DeletePlayer(thisPlayer.id);
                 receiveMessage.SetState(true);
                 newDisconection = false;
             }
@@ -329,6 +329,7 @@ public class UDPClient : MonoBehaviour
                 {
                     if (receiveMessage.state == false)
                     {
+                        Debug.Log("Detected disconected state by Client");
                         newDisconection = true;
                     }
                     //Debug.Log("This is not MINE!");
