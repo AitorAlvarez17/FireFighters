@@ -18,6 +18,7 @@ public class UDPServer : MonoBehaviour
     private int serverPort;
 
     private TextMeshProUGUI matrixDebug;
+    private TextMeshProUGUI IpText;
 
     // Data matrix and number of bytes
     private int recv;
@@ -66,6 +67,7 @@ public class UDPServer : MonoBehaviour
         playersOnline = UDPClientList.Count;
 
         matrixDebug = this.gameObject.GetComponent<ServerController>().numberOfPlayers;
+        IpText = this.gameObject.GetComponent<ServerController>().IpText;
 
         // Get IP and port
         serverIP = ServerController.MyServerInstance.IPServer;
@@ -122,10 +124,11 @@ public class UDPServer : MonoBehaviour
         if (serverDirty == false)
             return;
             
+
             //Well positioned function
             if (initServer == true)
             {
-
+                  IpText.text = "IP:" + serverIP;
                   this.gameObject.GetComponent<UDPClient>().ConnectToServer(serverIP, "Pending");
                   //EchoData(rece); /*<- Here echo the players online to all clients and in Client create the players*/
                   ////this.gameObject.GetComponent<WorldController>().CreatePlayer(playersOnline);
@@ -269,10 +272,8 @@ public class UDPServer : MonoBehaviour
 
                 EchoData(receivedMessage);
 
-
                 serverDirty = true;
 
-                //Thread.Sleep(100); //<- X will be the PP (time between sent packets)
             }
         }
         catch (Exception e)

@@ -19,6 +19,7 @@ public class ServerController : MonoBehaviour
     public TextMeshProUGUI numberOfPlayers;
 
     public TextMeshProUGUI clientName;
+    public TextMeshProUGUI IpText;
 
     public static ServerController MyServerInstance
     {

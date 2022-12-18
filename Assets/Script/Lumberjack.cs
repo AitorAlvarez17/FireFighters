@@ -227,4 +227,13 @@ public class Lumberjack : MonoBehaviour
         Quaternion rotation = Quaternion.LookRotation(directions, Vector3.up);
         trans.rotation = Quaternion.RotateTowards(trans.rotation, rotation, 1000 * Time.deltaTime);
     }
+
+    public void OnTriggerEnter(Collider other)
+    {
+        if (other.tag != "Water")
+            return;
+
+        charge.SumWater(5);
+        PrintDebug();
+    }
 }
