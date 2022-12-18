@@ -268,6 +268,11 @@ public class UDPServer : MonoBehaviour
                     //and here we change the receivedMessage for pingPong comeback
                     ModifyReceivedMessage();
                 }
+
+                if (receivedMessage.state == false)
+                {
+                    Debug.Log("Client disconected");
+                }
                 Debug.Log("[SERVER] Received message ID:" + receivedMessage.id);
 
                 EchoData(receivedMessage);
