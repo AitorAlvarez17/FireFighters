@@ -126,7 +126,6 @@ public class UDPClient : MonoBehaviour
             }
             if (justConnected == true)
             {
-                receiveMessage.SetState(true);
                 receiveMessage.SetUsername("Player" + thisPlayer.id);
                 WelcomeWorld();
                 DebugMatrix();
@@ -165,7 +164,7 @@ public class UDPClient : MonoBehaviour
     //closing both the socket and the thread on exit and all coroutines
     private void OnDisable()
     {
-        PingDisconect();
+
         Debug.Log("Test JSON Serialization:" + testString);
         Debug.Log("CLIENT Closing TCP socket & thread...");
 
@@ -382,24 +381,6 @@ public class UDPClient : MonoBehaviour
 
             //sendMessage.SetFireAction(0, 0);
             Debug.Log("Interacting with Fireplace: [ID: " + _id + "], [ACTION " + _action + "], [AMOUNT: " + _amount + "");
-        }
-        catch (Exception ex)
-        {
-            Debug.Log("[CLIENT] Failed to send message. Error: " + ex.ToString());
-        }
-    }
-
-    public void PingDisconect()
-    {
-        try
-        {
-            byte[] dataTMP = new byte[1024];
-            //ping to everybody;
-            sendMessage.SetState(false);
-            dataTMP = serializer.SerializePackage(sendMessage);
-            udpSocket.SendTo(dataTMP, dataTMP.Length, SocketFlags.None, serverEP);
-
-            //this is dangerous! as receiveMessage on ServerWill keep the same until next update, be sure that receivedMessage doesn't stuck the the old values
         }
         catch (Exception ex)
         {
