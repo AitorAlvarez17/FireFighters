@@ -171,7 +171,7 @@ public class UDPClient : MonoBehaviour
     //closing both the socket and the thread on exit and all coroutines
     private void OnDisable()
     {
-        //PingDisconect();
+        PingDisconect();
         Debug.Log("Test JSON Serialization:" + testString);
         Debug.Log("CLIENT Closing TCP socket & thread...");
 
@@ -406,6 +406,7 @@ public class UDPClient : MonoBehaviour
     {
         try
         {
+            Debug.Log("Pinging the disconect");
             byte[] dataTMP = new byte[1024];
             //ping to everybody;
             sendMessage.SetState(false);
