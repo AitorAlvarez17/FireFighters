@@ -163,6 +163,7 @@ public class UDPClient : MonoBehaviour
                 //delete lumberjack from dolls
                 this.gameObject.GetComponent<WorldController>().DeletePlayer(receiveMessage.id);
                 receiveMessage.SetState(true);
+                newDisconection = false;
             }
 
             //Debug.Log("Setting Text and dirtyness");
