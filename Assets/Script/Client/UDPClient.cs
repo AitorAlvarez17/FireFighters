@@ -298,9 +298,9 @@ public class UDPClient : MonoBehaviour
                     Debug.Log("Disconecting!");
                 }
                 
-                    //time in ms
-                    //RTT calculates the time that a packed lasts to go from client to server and comeback
-                    //we use RTT / 2 to calculate the avg time of traveling of client - server
+                //time in ms
+                //RTT calculates the time that a packed lasts to go from client to server and comeback
+                //we use RTT / 2 to calculate the avg time of traveling of client - server
                 RTT = timeStamp - receiveMessage.timeStamp;
                 RTT = RTT * 1000;
                 newRtt = true;
