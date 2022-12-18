@@ -159,8 +159,10 @@ public class UDPClient : MonoBehaviour
             }
             if (newDisconection == true)
             {
+                Debug.Log("Disconnecting!");
                 //delete lumberjack from dolls
                 this.gameObject.GetComponent<WorldController>().DeletePlayer(receiveMessage.id);
+                receiveMessage.SetState(true);
             }
 
             //Debug.Log("Setting Text and dirtyness");
@@ -293,10 +295,7 @@ public class UDPClient : MonoBehaviour
                     Debug.Log("Players Online in the receive message: " + receiveMessage.playersOnline);
                     Debug.Log("Players Online in the last message " + playersOnline);
                 }
-                if (receiveMessage.state == false)
-                {
-                    newDisconection = true;
-                }
+                
                 
                     //time in ms
                     //RTT calculates the time that a packed lasts to go from client to server and comeback
@@ -327,6 +326,10 @@ public class UDPClient : MonoBehaviour
                 }
                 else
                 {
+                    if (receiveMessage.state == false)
+                    {
+                        newDisconection = true;
+                    }
                     //Debug.Log("This is not MINE!");
                     if (receiveMessage.amount > 0)
                     {
