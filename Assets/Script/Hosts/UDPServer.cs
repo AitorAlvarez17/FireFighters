@@ -271,8 +271,9 @@ public class UDPServer : MonoBehaviour
 
                 if (receivedMessage.state == false)
                 {
-                    UDPClientList.Remove(clientEP);
+                    Debug.Log("Received a disconect state from" + receivedMessage.id);
                     UpdateGameMatrix(2, UDPClientList.Count);
+                    UDPClientList.Remove(clientEP);
                     ModifyReceivedMessage();
                     Debug.Log("Disconecting from server!");
                 }
