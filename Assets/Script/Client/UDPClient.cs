@@ -53,6 +53,7 @@ public class UDPClient : MonoBehaviour
     public bool fireChanged = false;
     public bool debugMatrix = false;
     public bool newConection = true;
+    public bool newDisconection = false;
     public bool startGame = false;
 
     //instanciation both variables
@@ -155,6 +156,11 @@ public class UDPClient : MonoBehaviour
             {
                 DebugMatrix();
                 debugMatrix = false;
+            }
+            if (newDisconection == true)
+            {
+                //delete lumberjack from dolls
+                this.gameObject.GetComponent<WorldController>().DeletePlayer(receiveMessage.id);
             }
 
             //Debug.Log("Setting Text and dirtyness");
@@ -283,7 +289,14 @@ public class UDPClient : MonoBehaviour
                     playersOnline = receiveMessage.playersOnline;
                     gameMatrix = receiveMessage.worldMatrix;
                     debugMatrix = true;
-                    newConection = true;
+                    if (receiveMessage.state == false)
+                    {
+                        newDisconection = true;
+                    }
+                    else
+                    {
+                        newConection = true;
+                    }
                     Debug.Log("Players Online in the receive message: " + receiveMessage.playersOnline);
                     Debug.Log("Players Online in the last message " + playersOnline);
                 }
@@ -329,6 +342,8 @@ public class UDPClient : MonoBehaviour
                     isMoving = true;
                 }
 
+
+                
                 //Debug.Log("[CIENT] Receive data!: " + receiveMessage.message);
                 //Debug.Log("[CLIENT] Received Id!" + receiveMessage.id);
 

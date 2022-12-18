@@ -88,6 +88,13 @@ public class WorldController : MonoBehaviour
 
     }
 
+    public void DeletePlayer(int key)
+    {
+        GameObject.Destroy(worldDolls[key].lumberjack.transform.gameObject);
+        GameObject.Destroy(worldDolls[key].firePlace.transform.gameObject);
+        worldDolls.Remove(key);
+    }
+
     public void MovePlayer(int _key, float[] _positions, float[] _directions)
     {
         if (worldDolls.ContainsKey(_key))
@@ -131,7 +138,6 @@ public class WorldController : MonoBehaviour
                 Debug.Log("Doll with" + index.Item1 + "already exists");
                 continue;
             }
-
             if (index.Item1 != 0 && index.Item1 != _key)
             {
                 Debug.Log("Creating doll with key" + index.Item1);

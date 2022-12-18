@@ -216,7 +216,7 @@ public class UDPServer : MonoBehaviour
             {
                 Debug.Log("New client added to the list");
                 UDPClientList.Add(clientEP);
-                UpdateGameMatrix(UDPClientList.Count);
+                UpdateGameMatrix(1, UDPClientList.Count);
                 ModifyReceivedMessage();
             }
             // Comunicate to the client what his new id is
@@ -256,7 +256,7 @@ public class UDPServer : MonoBehaviour
                 {
                     Debug.Log("Adding a new remote conection point! :" + clientEP.ToString());
                     UDPClientList.Add(clientEP);
-                    UpdateGameMatrix(UDPClientList.Count);
+                    UpdateGameMatrix(1, UDPClientList.Count);
                     ModifyReceivedMessage();
                 }
 
@@ -271,8 +271,11 @@ public class UDPServer : MonoBehaviour
 
                 if (receivedMessage.state == false)
                 {
-                    Debug.Log("Client disconected");
+                    UDPClientList.Remove(clientEP);
+                    UpdateGameMatrix(2, UDPClientList.Count);
+                    ModifyReceivedMessage();
                 }
+
                 Debug.Log("[SERVER] Received message ID:" + receivedMessage.id);
 
                 EchoData(receivedMessage);
@@ -349,11 +352,25 @@ public class UDPServer : MonoBehaviour
     #endregion
 
     #region UpdateMatrix
-    public void UpdateGameMatrix(int id)
+    public void UpdateGameMatrix(int action, int id)
     {
-        // gameMatrix[id] is the DATA value // id + 1 is the VISUAL VALUE ... id's will be 1,2,3,4 not 0,1,2,3
-        gameMatrix[id - 1] = Tuple.Create(id, 100);
-        playersOnline++;
+        //1 new player
+        //2 delete player
+        switch (action)
+        {
+            case 1:
+                // gameMatrix[id] is the DATA value // id + 1 is the VISUAL VALUE ... id's will be 1,2,3,4 not 0,1,2,3
+                gameMatrix[id - 1] = Tuple.Create(id, 100);
+                playersOnline++;
+                break;
+            case 2:
+                gameMatrix[id - 1] = Tuple.Create(0, 100);
+                playersOnline--;
+                break;
+            default:
+                break;
+        }
+       
         
 
         // We tell the client his position is the X on the matrix
