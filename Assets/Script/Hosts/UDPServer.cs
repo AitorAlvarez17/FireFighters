@@ -271,6 +271,8 @@ public class UDPServer : MonoBehaviour
 
 
                 serverDirty = true;
+
+                //Thread.Sleep(100); //<- X will be the PP (time between sent packets)
             }
         }
         catch (Exception e)

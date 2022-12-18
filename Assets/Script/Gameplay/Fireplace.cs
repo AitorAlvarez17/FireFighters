@@ -74,6 +74,9 @@ public class Fireplace : MonoBehaviour
 
     public void OnTriggerEnter(Collider other)
     {
+        if (other.transform.GetComponent<Lumberjack>() == null)
+            return;
+
         if (other.transform.GetComponent<Lumberjack>().interacter != true)
             return;
 

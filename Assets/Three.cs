@@ -41,11 +41,7 @@ public class Three : MonoBehaviour
         
     }
 
-    public void OnTriggerEnter()
-    {
-
-    }
-
+    
     public int Damage()
     {
         NotifyPhase(0);
