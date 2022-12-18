@@ -99,6 +99,11 @@ public class PlayerPackage
         fireLife = _life;
     }
 
+    public void ClearCharge()
+    {
+        amount = 0;
+    }
+
     public void SetWorldMatrixPos(int pos, int value)
     {
         worldMatrix.SetValue(value, pos);
