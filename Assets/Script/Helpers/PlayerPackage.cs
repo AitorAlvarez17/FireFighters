@@ -29,7 +29,7 @@ public class PlayerPackage
     public float timeStamp = 0f;
 
     public bool gameStarted = false;
-    public bool state = false;
+    public bool state = true;
     //Message constructor
     public PlayerPackage(string _message, string _username)
     {
