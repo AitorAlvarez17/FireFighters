@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Net;
 using System.Net.Sockets;
 using UnityEngine;
+using UnityEngine.UI;
 using TMPro;
 
 
@@ -20,6 +21,9 @@ public class ServerController : MonoBehaviour
 
     public TextMeshProUGUI clientName;
     public TextMeshProUGUI IpText;
+    public GameObject startInfo;
+
+    public bool gameStarted = false;
 
     public static ServerController MyServerInstance
     {
@@ -65,6 +69,8 @@ public class ServerController : MonoBehaviour
 
     void Start()
     {
+        gameStarted = false;
+
         if (serverType == ServerType.Server)
         {
             if (socketType == SocketTypeProtocol.TCP)
@@ -138,5 +144,17 @@ public class ServerController : MonoBehaviour
         GameObject newMessage = new GameObject();
         newMessage = Instantiate(messgePrefab, Vector3.zero, Quaternion.identity, chatBillboard.transform);
         newMessage.GetComponent<MessageHolder>().SetMessage(_Message.message, _Message.username);
+    }
+
+    public void StartGame()
+    {
+        serverParent.GetComponent<UDPServer>().PingGameStarted(true);
+        serverParent.GetComponent<UDPServer>().PingGameStarted(true);
+    }
+
+    public void HideInfo()
+    {
+        if (startInfo != null)
+            startInfo.SetActive(false);
     }
 }

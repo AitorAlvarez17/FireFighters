@@ -73,7 +73,9 @@ public class WorldController : MonoBehaviour
         GameObject playerPref = Instantiate(playerGO, spawnPoints[pos].position, Quaternion.identity);
         playerPref.GetComponent<Lumberjack>().Init(key, interacter);
         playerPref.transform.localScale = new Vector3(1.88f, 1.88f, 1.88f);
+        Vector3 spawnOrientation = new Vector3(0f, 90 * (worldDolls.Count + 1) + 45, 0f);
 
+        playerPref.transform.Rotate(spawnOrientation, Space.World);
         //playerGO.GetComponent<Lumberjack>().Init(key);
 
         //Create fireplace

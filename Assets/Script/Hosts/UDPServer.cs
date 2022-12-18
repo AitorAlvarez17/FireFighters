@@ -324,44 +324,23 @@ public class UDPServer : MonoBehaviour
     //}
 
     #region Pings
-    //public void PingMovement(float[] packageMovement)
-    //{
-    //    byte[] dataTMP = new byte[1024];
-    //    try
-    //    {
-    //        sendMessage.SetMessage("");
-    //        sendMessage.SetPositions(packageMovement);
-    //        sendMessage.SetUsername(thisPlayer.username);
-    //        sendMessage.SetId(thisPlayer.id);
-    //        //Debug.Log("Sending from Ping Server: ID: " + sendMessage.id);
-    //        EchoData(sendMessage);
-    //    }
-    //    catch (Exception e)
-    //    {
-    //        Debug.Log("[CLIENT] Failed to send message. Error: " + e.ToString());
-    //    }
-    //}
+    public void PingGameStarted(bool state)
+    {
+        byte[] dataTMP = new byte[1024];
+        try
+        {
+            Debug.Log("GAME STARTED!");
+            sendMessage.SetMessage("");
+            sendMessage.SetGameState(state);
+            //Debug.Log("Sending from Ping Server: ID: " + sendMessage.id);
+            EchoData(sendMessage);
+        }
+        catch (Exception e)
+        {
+            Debug.Log("[CLIENT] Failed to send message. Error: " + e.ToString());
+        }
+    }
 
-    
-
-    //public void PingFireAction(int _id, int _action, int _amount, int _life)
-    //{
-    //    try
-    //    {
-    //        byte[] dataTMP = new byte[1024];
-    //        //ping to everybody;
-    //        sendMessage.SetFireAction(_id, _action, _amount, _life);
-    //        UpdateFireMatrix(sendMessage.fireID, sendMessage.fireAction, sendMessage.amount, sendMessage.fireLife);
-    //        EchoData(sendMessage);
-
-    //        //this is dangerous! as receiveMessage on ServerWill keep the same until next update, be sure that receivedMessage doesn't stuck the the old values
-    //        //Debug.Log("Interacting with fireplace: [ACTION " + _action + "], [AMOUNT: " + _amount + "]");
-    //    }
-    //    catch (Exception ex)
-    //    {
-    //        Debug.Log("[CLIENT] Failed to send message. Error: " + ex.ToString());
-    //    }
-    //}
     #endregion
 
     #region UpdateMatrix

@@ -53,6 +53,7 @@ public class UDPClient : MonoBehaviour
     public bool fireChanged = false;
     public bool debugMatrix = false;
     public bool newConection = true;
+    public bool startGame = false;
 
     //instanciation both variables
     void Start()
@@ -110,6 +111,13 @@ public class UDPClient : MonoBehaviour
     {
         if (thisPlayer != null && thisPlayer.dirty == true)
         {
+            if (startGame == true && this.transform.GetComponent<ServerController>().gameStarted == false)
+            {
+                Debug.Log("Starting game!");
+                this.transform.GetComponent<ServerController>().gameStarted = true;
+                this.transform.GetComponent<ServerController>().HideInfo();
+                startGame = false;
+            }
             if (newConection == true && justConnected == false)
             {
                 this.gameObject.GetComponent<WorldController>().WelcomeClient(gameMatrix, thisPlayer.id);
@@ -226,7 +234,6 @@ public class UDPClient : MonoBehaviour
 
             isMoving = false;
 
-
             receiveThread = new Thread(Receive);
             receiveThread.Start();
         }
@@ -285,6 +292,11 @@ public class UDPClient : MonoBehaviour
                 RTT = timeStamp - receiveMessage.timeStamp;
                 RTT = RTT * 1000;
                 newRtt = true;
+
+                if (receiveMessage.gameStarted == true)
+                {
+                    startGame = true;
+                }
 
                 if (receiveMessage.id == thisPlayer.id)
                 {

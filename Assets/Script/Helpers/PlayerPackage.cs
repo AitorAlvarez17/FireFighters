@@ -27,6 +27,8 @@ public class PlayerPackage
     public int[] fireLifeMatrix = new int[4];
 
     public float timeStamp = 0f;
+
+    public bool gameStarted = false;
     //Message constructor
     public PlayerPackage(string _message, string _username)
     {
@@ -39,7 +41,7 @@ public class PlayerPackage
     }   
 
     //position constructor
-    public PlayerPackage(string _message, string _username,float[] position, float[] _movementDirection, int _id, Tuple<int, int>[] _worldMatrix, int _playersOnline, int _fireAction, int _amount, int _fireId, int _fireLife, float _timeStamp)
+    public PlayerPackage(string _message, string _username,float[] position, float[] _movementDirection, int _id, Tuple<int, int>[] _worldMatrix, int _playersOnline, int _fireAction, int _amount, int _fireId, int _fireLife, float _timeStamp, bool _gameStarted)
     {
         message = _message;
         username = _username;
@@ -62,6 +64,7 @@ public class PlayerPackage
         fireID = _fireId;
         fireLife = _fireLife;
         timeStamp = _timeStamp;
+        gameStarted = _gameStarted;
     }
 
     public void SetMessage(string _message)
@@ -119,5 +122,11 @@ public class PlayerPackage
         movementDirection[0] = _dir[0];
         movementDirection[1] = _dir[1];
         movementDirection[2] = _dir[2];
+    }
+
+    public void SetGameState(bool _gameStarted)
+    {
+        Debug.Log("Setting game state to" + _gameStarted);
+        gameStarted = _gameStarted;
     }
 }

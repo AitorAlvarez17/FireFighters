@@ -21,7 +21,7 @@ public class PlayerMovement : MonoBehaviour
     // Update is called once per frame
     void FixedUpdate()
     {
-        if (this.gameObject.GetComponent<UDPClient>().thisPlayer == null)
+        if (this.gameObject.GetComponent<UDPClient>().thisPlayer == null || this.gameObject.GetComponent<ServerController>().gameStarted == false)
             return;
 
         if (!Input.GetButton("Horizontal") && !Input.GetButton("Vertical"))
