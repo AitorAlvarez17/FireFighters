@@ -225,7 +225,7 @@ public class Lumberjack : MonoBehaviour
     public void SmoothRotation(Vector3 directions)
     {
         Quaternion rotation = Quaternion.LookRotation(directions, Vector3.up);
-        trans.rotation = Quaternion.RotateTowards(trans.rotation, rotation, 1000 * Time.deltaTime);
+        trans.rotation = Quaternion.RotateTowards(trans.rotation, rotation, 10000 * Time.deltaTime);
     }
 
     public void OnTriggerEnter(Collider other)
