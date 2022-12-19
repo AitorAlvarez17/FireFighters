@@ -294,12 +294,13 @@ public class UDPClient : MonoBehaviour
                 receiveMessage = serializer.DeserializePackage(dataTMP);
                 thisPlayer.dirty = true;
 
-                if (receiveMessage.playersOnline > playersOnline)
+                if (receiveMessage.playersOnline != playersOnline)
                 {
                     gameMatrix = receiveMessage.worldMatrix;
                     newConection = true;
                     Debug.Log("Players Online in the receive message: " + receiveMessage.playersOnline);
                     Debug.Log("Players Online in the local" + playersOnline);
+                    playersOnline = receiveMessage.playersOnline;
                 }
                 
                 
