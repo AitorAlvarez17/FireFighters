@@ -156,6 +156,7 @@ public class UDPClient : MonoBehaviour
             {
                 Debug.Log("Fire changed");
                 this.gameObject.GetComponent<WorldController>().UpdateFires(gameMatrix);
+                receiveMessage.ClearCharge();
                 fireChanged = false;
             }
             if (debugMatrix == true)
