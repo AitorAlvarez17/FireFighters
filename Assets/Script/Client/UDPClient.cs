@@ -160,18 +160,19 @@ public class UDPClient : MonoBehaviour
                 debugMatrix = true;
                 fireChanged = false;
             }
-            if (debugMatrix == true)
-            {
-                DebugMatrix();
-                debugMatrix = false;
-            }
             if (newDisconection == true)
             {
                 Debug.Log("Disconnecting!");
                 //delete lumberjack from dolls
                 this.gameObject.GetComponent<WorldController>().DeletePlayer(receiveMessage.id);
                 receiveMessage.SetConnectionState(1);
+                debugMatrix = true;
                 newDisconection = false;
+            }
+            if (debugMatrix == true)
+            {
+                DebugMatrix();
+                debugMatrix = false;
             }
 
             //Debug.Log("Setting Text and dirtyness");
