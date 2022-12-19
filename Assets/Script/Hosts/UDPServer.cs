@@ -263,6 +263,7 @@ public class UDPServer : MonoBehaviour
 
                 if (receivedMessage.amount > 0)
                 {
+                    Debug.Log("Server processing Fire");
                     //here we change the matrix with the new life
                     UpdateFireMatrix(receivedMessage.fireID, receivedMessage.fireAction, receivedMessage.amount, receivedMessage.fireLife);
                     //and here we change the receivedMessage for pingPong comeback

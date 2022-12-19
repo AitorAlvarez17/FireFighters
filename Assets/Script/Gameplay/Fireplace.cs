@@ -87,6 +87,9 @@ public class Fireplace : MonoBehaviour
             //get the action from the lumberjack and put it into it
             if (GC.transform.GetComponent<UDPClient>() != null)
             {
+                if (other.transform.GetComponent<Lumberjack>().charge.Amount == 0)
+                    return;
+
                 //IMPORTANT! - this is prediction
                 HealBar(other.transform.GetComponent<Lumberjack>().charge.Type, other.transform.GetComponent<Lumberjack>().charge.Amount);
 

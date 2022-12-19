@@ -401,7 +401,7 @@ public class UDPClient : MonoBehaviour
             udpSocket.SendTo(dataTMP, dataTMP.Length, SocketFlags.None, serverEP);
 
             //this is dangerous! as receiveMessage on ServerWill keep the same until next update, be sure that receivedMessage doesn't stuck the the old values
-            sendMessage.SetFireAction(_id, 0, 0, _life);
+            //sendMessage.SetFireAction(_id, 0, 0, _life);
             Debug.Log("Interacting with Fireplace: [ID: " + _id + "], [ACTION " + _action + "], [AMOUNT: " + _amount + "");
         }
         catch (Exception ex)
