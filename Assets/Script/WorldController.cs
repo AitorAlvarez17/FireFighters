@@ -114,7 +114,10 @@ public class WorldController : MonoBehaviour
             if (item.Item1 != 0)
             {
                 Debug.Log("Updating FIRE " + item.Item1 + "");
-                worldDolls[item.Item1].firePlace.SetLife(item.Item2);
+                if (worldDolls.ContainsKey(item.Item1))
+                    worldDolls[item.Item1].firePlace.SetLife(item.Item2);
+                else
+                    Debug.Log("Doll was not in the dictionary");
             }
             else
             {
