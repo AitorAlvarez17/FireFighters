@@ -260,6 +260,7 @@ public class UDPClient : MonoBehaviour
         {
             sendMessage.SetUsername("Player" + thisPlayer.id);
             sendMessage.SetMessage(_message);
+            sendMessage.SetConnectionState(1);
             Debug.Log("[CLIENT] Sending to server: " + serverIPEP.ToString() + " Message: " + _message + "From:" + sendMessage.username);
             data = serializer.SerializePackage(sendMessage);
             recv = udpSocket.SendTo(data, data.Length, SocketFlags.None, serverEP);
