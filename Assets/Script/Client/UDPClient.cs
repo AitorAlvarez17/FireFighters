@@ -156,7 +156,6 @@ public class UDPClient : MonoBehaviour
             {
                 Debug.Log("Fire changed");
                 this.gameObject.GetComponent<WorldController>().UpdateFires(gameMatrix);
-                receiveMessage.ClearCharge();
                 fireChanged = false;
             }
             if (debugMatrix == true)
@@ -312,13 +311,14 @@ public class UDPClient : MonoBehaviour
 
                 if (receiveMessage.gameStarted == true)
                 {
+                    Debug.Log("Starting game");
                     startGame = true;
                 }
 
                 if (receiveMessage.id == thisPlayer.id)
                 {
                     //CHECK PP WITH TIMESTAMP
-                    //Debug.Log("Not Moving, this was MINE");
+                    Debug.Log("this was MINE");
                     if (receiveMessage.amount > 0)
                     {
                         Debug.Log("PingPong Received Fireplace: [ID: " + receiveMessage.fireID + "], [ACTION " + receiveMessage.fireAction + "], [AMOUNT: " + receiveMessage.amount + "");
@@ -332,6 +332,7 @@ public class UDPClient : MonoBehaviour
                 }
                 else
                 {
+                    Debug.Log("this was NOT MINE" + "ID Receiving [" + receiveMessage.id + "]" + "Internal ID ["+ thisPlayer.id + "]" + "Fire life of receivingID" + receiveMessage.fireLifeMatrix[receiveMessage.id - 1]);
                     if (receiveMessage.state == 0)
                     {
                         Debug.Log("Detected disconected state by Client");
@@ -398,8 +399,7 @@ public class UDPClient : MonoBehaviour
             udpSocket.SendTo(dataTMP, dataTMP.Length, SocketFlags.None, serverEP);
 
             //this is dangerous! as receiveMessage on ServerWill keep the same until next update, be sure that receivedMessage doesn't stuck the the old values
-
-            //sendMessage.SetFireAction(0, 0);
+            sendMessage.SetFireAction(_id, 0, 0, _life);
             Debug.Log("Interacting with Fireplace: [ID: " + _id + "], [ACTION " + _action + "], [AMOUNT: " + _amount + "");
         }
         catch (Exception ex)
