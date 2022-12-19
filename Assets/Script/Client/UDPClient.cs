@@ -365,6 +365,7 @@ public class UDPClient : MonoBehaviour
             sendMessage.SetId(thisPlayer.id);
             sendMessage.SetWorldMatrix(gameMatrix);
             sendMessage.SetPlayersOnline(playersOnline);
+            sendMessage.SetConnectionState(1);
 
             sendMessage.SetTimeStamp(timeStamp);
 
@@ -392,6 +393,7 @@ public class UDPClient : MonoBehaviour
             //ping to everybody;
             sendMessage.SetFireAction(_id, _action, _amount, _life);
             sendMessage.SetTimeStamp(timeStamp);
+            sendMessage.SetConnectionState(1);
             dataTMP = serializer.SerializePackage(sendMessage);
             udpSocket.SendTo(dataTMP, dataTMP.Length, SocketFlags.None, serverEP);
 

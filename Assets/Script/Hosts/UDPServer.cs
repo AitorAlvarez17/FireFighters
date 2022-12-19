@@ -333,6 +333,7 @@ public class UDPServer : MonoBehaviour
             Debug.Log("[GAME STARTED!]");
             sendMessage.SetMessage("");
             sendMessage.SetGameState(state);
+            sendMessage.SetConnectionState(1);
             sendMessage.SetWorldMatrix(gameMatrix);
             Debug.Log("Actual Matrix Starting: \n");
             ReceivedMatrix();
