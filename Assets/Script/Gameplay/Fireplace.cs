@@ -74,11 +74,11 @@ public class Fireplace : MonoBehaviour
 
     public void OnTriggerEnter(Collider other)
     {
-        if (other.transform.GetComponent<Lumberjack>().interacter != true)
-            return;
-
-        if (other.transform.GetComponent<Lumberjack>() != null)
+        if (other.transform.tag == "Lumber")
         {
+            if (other.transform.GetComponent<Lumberjack>().interacter != true)
+                return;
+
             if (GC == null)
             {
                 GC = GameObject.FindGameObjectWithTag("GameController");
