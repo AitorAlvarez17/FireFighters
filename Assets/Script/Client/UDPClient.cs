@@ -291,7 +291,8 @@ public class UDPClient : MonoBehaviour
                     gameMatrix = receiveMessage.worldMatrix;
                     newConection = true;
                     Debug.Log("Players Online in the receive message: " + receiveMessage.playersOnline);
-                    Debug.Log("Players Online in the local" + playersOnline);
+                    Debug.Log("From" + receiveMessage.id);
+                    Debug.Log("Receiving in " + thisPlayer.id);
                     playersOnline = receiveMessage.playersOnline;
                 }
                 
@@ -363,8 +364,12 @@ public class UDPClient : MonoBehaviour
             sendMessage.SetUsername(thisPlayer.username);
             sendMessage.SetId(thisPlayer.id);
             sendMessage.SetWorldMatrix(gameMatrix);
+            sendMessage.SetPlayersOnline(playersOnline);
 
             sendMessage.SetTimeStamp(timeStamp);
+
+            Debug.Log("Sending from" + sendMessage.id + "Movement with PlayersOnline:" + sendMessage.playersOnline);
+
             //Debug.Log("Pinging Mov from Client ID: " + sendMessage.id);
 
             //Debug.Log("[CLIENT] Sending to server: " + serverIPEP.ToString() + " Message: " + packageMovement[0] + "From:" + message.username);

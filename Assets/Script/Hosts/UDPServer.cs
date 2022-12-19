@@ -209,6 +209,7 @@ public class UDPServer : MonoBehaviour
                 Debug.Log("New client added to the list");
                 UDPClientList.Add(clientEP);
                 UpdateGameMatrix(1, UDPClientList.Count);
+                sendMessage.SetPlayersOnline(playersOnline);
                 ModifyReceivedMessage();
                 SetServerInfo();
             }
@@ -249,6 +250,7 @@ public class UDPServer : MonoBehaviour
                     Debug.Log("Adding a new remote conection point! :" + clientEP.ToString());
                     UDPClientList.Add(clientEP);
                     UpdateGameMatrix(1, UDPClientList.Count);
+                    sendMessage.SetPlayersOnline(playersOnline);
                     ModifyReceivedMessage();
                     serverDirty = true;
                 }
@@ -266,6 +268,7 @@ public class UDPServer : MonoBehaviour
                 if (receivedMessage.state == 0)
                 {
                     UpdateGameMatrix(2, receivedMessage.id);
+                    sendMessage.SetPlayersOnline(playersOnline);
                     UDPClientList.Remove(clientEP);
                     ModifyReceivedMessage();
                     Debug.Log("Disconecting from server!" + "ID:"+ receivedMessage.id);
@@ -274,8 +277,6 @@ public class UDPServer : MonoBehaviour
                 //Debug.Log("[SERVER] Received message ID:" + receivedMessage.id);
 
                 EchoData(receivedMessage);
-
-
             }
         }
         catch (Exception e)
