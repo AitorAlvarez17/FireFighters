@@ -62,7 +62,6 @@ public class WorldController : MonoBehaviour
 
         pos++;
         worldDolls.Add(key, new PlayerSawmill(playerPref.GetComponent<Lumberjack>(), firePref.GetComponent<Fireplace>()));
-
     }
 
     public void CreatePlayer(int key, bool interacter = false)

@@ -119,25 +119,25 @@ public class UDPClient : MonoBehaviour
                 this.transform.GetComponent<ServerController>().HideInfo();
                 startGame = false;
             }
-            if (newConection == true && justConnected == false)
-            {
-                this.gameObject.GetComponent<WorldController>().WelcomeClient(gameMatrix, thisPlayer.id);
-                debugMatrix = true;
-                newConection = false;
-            }
             if (justConnected == true)
             {
                 //carefull
                 Debug.Log("Just Connected ID ANTES with ID" + receiveMessage.id);
                 Debug.Log("Just Connected State ANTES with State" + receiveMessage.state);
                 WelcomeWorld();
-                DebugMatrix();
                 sendMessage.SetConnectionState(receiveMessage.state);
                 sendMessage.SetUsername("Player" + thisPlayer.id);
                 sendMessage.SetId(thisPlayer.id);
                 Debug.Log("Just Connected ID DESPUES with ID" + sendMessage.username);
                 Debug.Log("Creating Server repre");
                 justConnected = false;
+                debugMatrix = true;
+            }
+            if (newConection == true && justConnected == false)
+            {
+                this.gameObject.GetComponent<WorldController>().WelcomeClient(gameMatrix, thisPlayer.id);
+                debugMatrix = true;
+                newConection = false;
             }
             if (receiveMessage != null && receiveMessage.message != null && receiveMessage.message != "")
             {
@@ -157,6 +157,7 @@ public class UDPClient : MonoBehaviour
                 Debug.Log("Fire changed");
                 this.gameObject.GetComponent<WorldController>().UpdateFires(gameMatrix);
                 receiveMessage.ClearCharge();
+                debugMatrix = true;
                 fireChanged = false;
             }
             if (debugMatrix == true)
@@ -326,7 +327,6 @@ public class UDPClient : MonoBehaviour
                         Debug.Log("PingPong Received Fireplace: [ID: " + receiveMessage.fireID + "], [ACTION " + receiveMessage.fireAction + "], [AMOUNT: " + receiveMessage.amount + "");
                         //here confirm prediction!
                         gameMatrix = receiveMessage.worldMatrix;
-                        debugMatrix = true;
                         fireChanged = true;
                     }
 
@@ -334,7 +334,7 @@ public class UDPClient : MonoBehaviour
                 }
                 else
                 {
-                    Debug.Log("this was NOT MINE" + "ID Receiving [" + receiveMessage.id + "]" + "Internal ID ["+ thisPlayer.id + "]" + "Fire life of receivingID");
+                    Debug.Log("this was NOT MINE" + "ID Receiving [" + receiveMessage.id + "]" + "Internal ID ["+ thisPlayer.id + "]" + "Fire life of receivingID" + receiveMessage.fireID);
                     if (receiveMessage.state == 0)
                     {
                         Debug.Log("Detected disconected state by Client");
@@ -346,7 +346,6 @@ public class UDPClient : MonoBehaviour
                         Debug.Log("Server Received Fireplace: [ID: " + receiveMessage.fireID + "], [ACTION " + receiveMessage.fireAction + "], [AMOUNT: " + receiveMessage.amount + "");
                         //here mimetize data!
                         gameMatrix = receiveMessage.worldMatrix;
-                        debugMatrix = true;
                         fireChanged = true;
                     }
 
@@ -449,12 +448,12 @@ public class UDPClient : MonoBehaviour
         this.gameObject.GetComponent<WorldController>().MovePlayer(_key, _positions, _directions);
     }
 
-    public void UpdateGameMatrix(int _key, Tuple<int, int>[] newMatrix)
-    {
-        //here there is a little controversy as gameMatrix element id-1 is copying newMatrix element id so there is a 1 "step" difference
-        gameMatrix[_key - 1] = newMatrix[_key];
-        debugMatrix = true;
-    }
+    //public void UpdateGameMatrix(int _key, Tuple<int, int>[] newMatrix)
+    //{
+    //    //here there is a little controversy as gameMatrix element id-1 is copying newMatrix element id so there is a 1 "step" difference
+    //    gameMatrix[_key - 1] = newMatrix[_key];
+    //    debugMatrix = true;
+    //}
     public void DebugMatrix()
     {
         Debug.Log("Debugging Matrix!");
