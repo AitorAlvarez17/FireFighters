@@ -52,8 +52,6 @@ public class UDPServer : MonoBehaviour
     // This is the brain of the game - the first int stands for the ID of the Sawmill (Lumberjack + Fireplace) and the seconds stands for the health of it
     public Tuple<int, int>[] gameMatrix = new Tuple<int, int>[4] { Tuple.Create(0,100), Tuple.Create(0, 100), Tuple.Create(0, 100), Tuple.Create(0, 100) };
     public int playersOnline = 0;
-    public bool thisPlayerSetup = false;
-
 
     //Client
     public bool isMoving = false;
@@ -109,15 +107,14 @@ public class UDPServer : MonoBehaviour
 
     public void SetServerInfo()
     {
-        sendMessage.SetUsername(thisPlayer.username);
-        sendMessage.SetId(thisPlayer.id);
-        sendMessage.SetPositions(thisPlayer.positions);
+        sendMessage.SetUsername("Server");
+        sendMessage.SetId(999);
+        sendMessage.SetPositions(new float[3] { 0, 0, 0 });
         //UpdateGameMatrix(playersOnline);
         sendMessage.SetWorldMatrix(gameMatrix);
         sendMessage.SetPlayersOnline(playersOnline);
         sendMessage.SetConnectionState(1);
         serverDirty = true;
-        thisPlayerSetup = true;
     }
 
     private void ServerActions()
@@ -131,11 +128,7 @@ public class UDPServer : MonoBehaviour
             {
                   IpText.text = "IP:" + serverIP;
                   this.gameObject.GetComponent<UDPClient>().ConnectToServer(serverIP, "Pending");
-                  //EchoData(rece); /*<- Here echo the players online to all clients and in Client create the players*/
-                  ////this.gameObject.GetComponent<WorldController>().CreatePlayer(playersOnline);
-                  ////DebugMatrix();
                   initServer = false;
-                //Debug.Log("Message checked and creating:" + receivedMessage.message + " From: " + receivedMessage.username);
             }
            
             serverDirty = false;
@@ -190,8 +183,6 @@ public class UDPServer : MonoBehaviour
         clientIPEP = new IPEndPoint(ipAddress, serverPort);
         clientEP = (EndPoint)clientIPEP;
 
-        thisPlayer = new Player("Player" + (playersOnline + 1).ToString(), true, (playersOnline + 1), 0, 0);
-        Debug.Log("BEGINNING OF THE GENERAL SERVER THREAD");
         SetServerInfo();
         initServer = true;
 
@@ -219,9 +210,9 @@ public class UDPServer : MonoBehaviour
                 UDPClientList.Add(clientEP);
                 UpdateGameMatrix(1, UDPClientList.Count);
                 ModifyReceivedMessage();
+                SetServerInfo();
             }
             // Comunicate to the client what his new id is
-            serverDirty = true;
             isMoving = false;
             SendData(receivedMessage);
 
@@ -259,11 +250,13 @@ public class UDPServer : MonoBehaviour
                     UDPClientList.Add(clientEP);
                     UpdateGameMatrix(1, UDPClientList.Count);
                     ModifyReceivedMessage();
+                    serverDirty = true;
                 }
 
                 if (receivedMessage.amount > 0)
                 {
                     Debug.Log("Server processing Fire");
+                    Debug.Log("Amount of fire charging: " + receivedMessage.amount + "From player" + receivedMessage.id);
                     //here we change the matrix with the new life
                     UpdateFireMatrix(receivedMessage.fireID, receivedMessage.fireAction, receivedMessage.amount, receivedMessage.fireLife);
                     //and here we change the receivedMessage for pingPong comeback
@@ -272,18 +265,16 @@ public class UDPServer : MonoBehaviour
 
                 if (receivedMessage.state == 0)
                 {
-                    Debug.Log("Received a disconect state from" + receivedMessage.id);
-                    UpdateGameMatrix(2, UDPClientList.Count);
+                    UpdateGameMatrix(2, receivedMessage.id);
                     UDPClientList.Remove(clientEP);
                     ModifyReceivedMessage();
-                    Debug.Log("Disconecting from server!");
+                    Debug.Log("Disconecting from server!" + "ID:"+ receivedMessage.id);
                 }
 
-                Debug.Log("[SERVER] Received message ID:" + receivedMessage.id);
+                //Debug.Log("[SERVER] Received message ID:" + receivedMessage.id);
 
                 EchoData(receivedMessage);
 
-                serverDirty = true;
 
             }
         }
@@ -317,9 +308,7 @@ public class UDPServer : MonoBehaviour
             dataTMP = serializer.SerializePackage(_message);
             foreach (EndPoint ip in UDPClientList)
             {
-                //Debug.Log("SERVER Sending message to " + ip.ToString() + ": " + _message.message);
                 udpSocket.SendTo(dataTMP, dataTMP.Length, SocketFlags.None, ip);
-                //Debug.Log("Echo to: " + ip);
             }
         }
         catch (Exception e)
@@ -340,10 +329,12 @@ public class UDPServer : MonoBehaviour
         byte[] dataTMP = new byte[1024];
         try
         {
-            Debug.Log("GAME STARTED!");
+            Debug.Log("[GAME STARTED!]");
             sendMessage.SetMessage("");
             sendMessage.SetGameState(state);
-            //Debug.Log("Sending from Ping Server: ID: " + sendMessage.id);
+            sendMessage.SetWorldMatrix(gameMatrix);
+            Debug.Log("Actual Matrix Starting: \n");
+            ReceivedMatrix();
             EchoData(sendMessage);
         }
         catch (Exception e)
@@ -402,7 +393,6 @@ public class UDPServer : MonoBehaviour
         }
 
         gameMatrix[_fireID - 1] = Tuple.Create(_fireID, _newLife);
-        serverDirty = true;
     }
 
     public void ModifyReceivedMessage()
@@ -411,15 +401,25 @@ public class UDPServer : MonoBehaviour
         receivedMessage.SetPlayersOnline(playersOnline);
     }
 
-    public void DebugMatrix()
+    public void ReceivedMatrix()
     {
-        Debug.Log("Debuging the Matrix");
+        Debug.Log( "Debug Matrix from Server Variable: \n");
+        Debug.Log( "Matrix [ID: " + gameMatrix[0].Item1 + "]" + "[LIFE: " + gameMatrix[0].Item2 + "]\n");
+        Debug.Log("Matrix [ID: " + gameMatrix[1].Item1 + "]" + "[LIFE: " + gameMatrix[1].Item2 + "]\n");
+        Debug.Log("Matrix [ID: " + gameMatrix[2].Item1 + "]" + "[LIFE: " + gameMatrix[2].Item2 + "]\n");
+        Debug.Log("Matrix [ID: " + gameMatrix[3].Item1 + "]" + "[LIFE: " + gameMatrix[3].Item2 + "]\n");
 
-        matrixDebug.text = "GAME MATRIX: \n";
-        matrixDebug.text += "Matrix [ID: " + gameMatrix[0].Item1 + "]" + "[LIFE: " + gameMatrix[0].Item2 + "]\n";
-        matrixDebug.text += "Matrix [ID: " + gameMatrix[1].Item1 + "]" + "[LIFE: " + gameMatrix[1].Item2 + "]\n";
-        matrixDebug.text += "Matrix [ID: " + gameMatrix[2].Item1 + "]" + "[LIFE: " + gameMatrix[2].Item2 + "]\n";
-        matrixDebug.text += "Matrix [ID: " + gameMatrix[3].Item1 + "]" + "[LIFE: " + gameMatrix[3].Item2 + "]\n";
+        Debug.Log("Debug Matrix from Server Send Message: \n");
+        Debug.Log("Matrix [ID: " + sendMessage.worldMatrix[0].Item1 + "]" + "[LIFE: " + sendMessage.worldMatrix[0].Item2 + "]\n");
+        Debug.Log("Matrix [ID: " + sendMessage.worldMatrix[1].Item1 + "]" + "[LIFE: " + sendMessage.worldMatrix[1].Item2 + "]\n");
+        Debug.Log("Matrix [ID: " + sendMessage.worldMatrix[2].Item1 + "]" + "[LIFE: " + sendMessage.worldMatrix[2].Item2 + "]\n");
+        Debug.Log("Matrix [ID: " + sendMessage.worldMatrix[3].Item1 + "]" + "[LIFE: " + sendMessage.worldMatrix[3].Item2 + "]\n");
+
+        Debug.Log("Debug Matrix from Server Receive Message: \n");
+        Debug.Log("Matrix [ID: " + receivedMessage.worldMatrix[0].Item1 + "]" + "[LIFE: " + receivedMessage.worldMatrix[0].Item2 + "]\n");
+        Debug.Log("Matrix [ID: " + receivedMessage.worldMatrix[1].Item1 + "]" + "[LIFE: " + receivedMessage.worldMatrix[1].Item2 + "]\n");
+        Debug.Log("Matrix [ID: " + receivedMessage.worldMatrix[2].Item1 + "]" + "[LIFE: " + receivedMessage.worldMatrix[2].Item2 + "]\n");
+        Debug.Log("Matrix [ID: " + receivedMessage.worldMatrix[3].Item1 + "]" + "[LIFE: " + receivedMessage.worldMatrix[3].Item2 + "]\n");
     }
 
     #endregion

@@ -46,11 +46,7 @@ public class Three : MonoBehaviour
     {
        // Debug.Log("other" + other);
 
-        if (other.transform.GetComponent<Lumberjack>() == null)
-            return;
-
-        GC.GetComponent<WorldController>().worldDolls[other.transform.GetComponent<Lumberjack>().internalId].lumberjack.charge.SumWood(5);
-        GC.GetComponent<WorldController>().worldDolls[other.transform.GetComponent<Lumberjack>().internalId].lumberjack.PrintDebug();
+        
     }
 
     public int Damage()

@@ -114,7 +114,6 @@ public class UDPClient : MonoBehaviour
         {
             if (startGame == true && this.transform.GetComponent<ServerController>().gameStarted == false)
             {
-                Debug.Log("Starting game!");
                 this.transform.GetComponent<ServerController>().gameStarted = true;
                 this.transform.GetComponent<ServerController>().HideInfo();
                 startGame = false;
@@ -122,14 +121,10 @@ public class UDPClient : MonoBehaviour
             if (justConnected == true)
             {
                 //carefull
-                Debug.Log("Just Connected ID ANTES with ID" + receiveMessage.id);
-                Debug.Log("Just Connected State ANTES with State" + receiveMessage.state);
                 WelcomeWorld();
                 sendMessage.SetConnectionState(receiveMessage.state);
                 sendMessage.SetUsername("Player" + thisPlayer.id);
                 sendMessage.SetId(thisPlayer.id);
-                Debug.Log("Just Connected ID DESPUES with ID" + sendMessage.username);
-                Debug.Log("Creating Server repre");
                 justConnected = false;
                 debugMatrix = true;
             }
@@ -147,16 +142,13 @@ public class UDPClient : MonoBehaviour
             }
             if (receiveMessage.positions[0] != 0f || receiveMessage.positions[2] != 0f && isMoving == true)
             {
-                Debug.Log("Moving");
-                //Debug.Log("This player ID (check):" + thisPlayer.id);
-                //Debug.Log("Received message ID: " + receiveMessage.id);
                 MoveWorld(receiveMessage.id, receiveMessage.positions, receiveMessage.movementDirection);
             }
             if (fireChanged == true)
             {
                 Debug.Log("Fire changed");
                 this.gameObject.GetComponent<WorldController>().UpdateFires(gameMatrix);
-                receiveMessage.ClearCharge();
+                sendMessage.ClearCharge();
                 debugMatrix = true;
                 fireChanged = false;
             }
@@ -175,7 +167,6 @@ public class UDPClient : MonoBehaviour
                 debugMatrix = false;
             }
 
-            //Debug.Log("Setting Text and dirtyness");
             this.gameObject.GetComponent<ServerController>().clientName.text = this.gameObject.GetComponent<UDPClient>().thisPlayer.username;
             thisPlayer.dirty = false;
         }
@@ -184,7 +175,6 @@ public class UDPClient : MonoBehaviour
     private void OnDisable()
     {
         PingDisconect();
-        Debug.Log("Test JSON Serialization:" + testString);
         Debug.Log("CLIENT Closing TCP socket & thread...");
 
         if (udpSocket != null)
@@ -315,14 +305,13 @@ public class UDPClient : MonoBehaviour
 
                 if (receiveMessage.gameStarted == true)
                 {
-                    Debug.Log("Starting game");
                     startGame = true;
                 }
 
                 if (receiveMessage.id == thisPlayer.id)
                 {
                     //CHECK PP WITH TIMESTAMP
-                    Debug.Log("this was MINE");
+                    //Debug.Log("this was MINE");
                     if (receiveMessage.amount > 0)
                     {
                         Debug.Log("PingPong Received Fireplace: [ID: " + receiveMessage.fireID + "], [ACTION " + receiveMessage.fireAction + "], [AMOUNT: " + receiveMessage.amount + "");
@@ -335,7 +324,7 @@ public class UDPClient : MonoBehaviour
                 }
                 else
                 {
-                    Debug.Log("this was NOT MINE" + "ID Receiving [" + receiveMessage.id + "]" + "Internal ID ["+ thisPlayer.id + "]" + "Fire life of receivingID" + receiveMessage.fireID);
+                    //Debug.Log("this was NOT MINE" + "ID Receiving [" + receiveMessage.id + "]" + "Internal ID ["+ thisPlayer.id + "]" + "Fire life of receivingID" + receiveMessage.fireID);
                     if (receiveMessage.state == 0)
                     {
                         Debug.Log("Detected disconected state by Client");
@@ -373,6 +362,7 @@ public class UDPClient : MonoBehaviour
             sendMessage.SetDirection(movementDirection);
             sendMessage.SetUsername(thisPlayer.username);
             sendMessage.SetId(thisPlayer.id);
+            sendMessage.SetWorldMatrix(gameMatrix);
 
             sendMessage.SetTimeStamp(timeStamp);
             //Debug.Log("Pinging Mov from Client ID: " + sendMessage.id);
@@ -402,7 +392,7 @@ public class UDPClient : MonoBehaviour
 
             //this is dangerous! as receiveMessage on ServerWill keep the same until next update, be sure that receivedMessage doesn't stuck the the old values
             //sendMessage.SetFireAction(_id, 0, 0, _life);
-            Debug.Log("Interacting with Fireplace: [ID: " + _id + "], [ACTION " + _action + "], [AMOUNT: " + _amount + "");
+            Debug.Log("Pinging Fireplace: [ID: " + _id + "], [ACTION " + _action + "], [AMOUNT: " + _amount + "");
         }
         catch (Exception ex)
         {
@@ -433,7 +423,7 @@ public class UDPClient : MonoBehaviour
 
     public void WelcomeWorld()
     {
-        Debug.Log("The number of players online is:" + receiveMessage.playersOnline);
+        Debug.Log("[WELCOME WORLD], The number of players online is:" + receiveMessage.playersOnline);
         playersOnline = receiveMessage.playersOnline;
         gameMatrix = receiveMessage.worldMatrix;
         //this bc is the second pos but 1 in index

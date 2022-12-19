@@ -74,6 +74,7 @@ public class Fireplace : MonoBehaviour
 
     public void OnTriggerEnter(Collider other)
     {
+        Debug.Log("Colliding with" + other.transform.tag);
         if (other.transform.tag == "Lumber")
         {
             if (other.transform.GetComponent<Lumberjack>().interacter != true)
