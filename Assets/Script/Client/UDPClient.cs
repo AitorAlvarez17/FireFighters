@@ -334,7 +334,7 @@ public class UDPClient : MonoBehaviour
                 }
                 else
                 {
-                    Debug.Log("this was NOT MINE" + "ID Receiving [" + receiveMessage.id + "]" + "Internal ID ["+ thisPlayer.id + "]" + "Fire life of receivingID" + receiveMessage.fireLifeMatrix[receiveMessage.id - 1]);
+                    Debug.Log("this was NOT MINE" + "ID Receiving [" + receiveMessage.id + "]" + "Internal ID ["+ thisPlayer.id + "]" + "Fire life of receivingID");
                     if (receiveMessage.state == 0)
                     {
                         Debug.Log("Detected disconected state by Client");
