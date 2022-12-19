@@ -115,6 +115,7 @@ public class UDPServer : MonoBehaviour
         //UpdateGameMatrix(playersOnline);
         sendMessage.SetWorldMatrix(gameMatrix);
         sendMessage.SetPlayersOnline(playersOnline);
+        sendMessage.SetConnectionState(1);
         serverDirty = true;
         thisPlayerSetup = true;
     }
@@ -262,14 +263,13 @@ public class UDPServer : MonoBehaviour
 
                 if (receivedMessage.amount > 0)
                 {
-                    fireChanging = true;
                     //here we change the matrix with the new life
                     UpdateFireMatrix(receivedMessage.fireID, receivedMessage.fireAction, receivedMessage.amount, receivedMessage.fireLife);
                     //and here we change the receivedMessage for pingPong comeback
                     ModifyReceivedMessage();
                 }
 
-                if (receivedMessage.state == false)
+                if (receivedMessage.state == 0)
                 {
                     Debug.Log("Received a disconect state from" + receivedMessage.id);
                     UpdateGameMatrix(2, UDPClientList.Count);
@@ -401,7 +401,6 @@ public class UDPServer : MonoBehaviour
         }
 
         gameMatrix[_fireID - 1] = Tuple.Create(_fireID, _newLife);
-        debugMatrix = true;
         serverDirty = true;
     }
 

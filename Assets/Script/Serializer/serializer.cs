@@ -102,7 +102,7 @@ public static class serializer
 
         float timeStamp = reader.ReadSingle();
         bool gameStarted = reader.ReadBoolean();
-        bool state = reader.ReadBoolean();
+        int state = reader.ReadInt32();
 
         //foreach (var item in positions)
         //{

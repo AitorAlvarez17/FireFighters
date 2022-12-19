@@ -3492,12 +3492,7 @@ PrefabInstance:
     - target: {fileID: 5998753301368964986, guid: 86cf92c35d531994985ec91ac20fec9c,
         type: 3}
       propertyPath: m_IsActive
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 5998753301368964986, guid: 86cf92c35d531994985ec91ac20fec9c,
-        type: 3}
-      propertyPath: m_TagString
-      value: Lumber
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 5998753301368964990, guid: 86cf92c35d531994985ec91ac20fec9c,
         type: 3}

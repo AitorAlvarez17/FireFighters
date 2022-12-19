@@ -122,15 +122,20 @@ public class UDPClient : MonoBehaviour
             if (newConection == true && justConnected == false)
             {
                 this.gameObject.GetComponent<WorldController>().WelcomeClient(gameMatrix, thisPlayer.id);
-                
+                debugMatrix = true;
                 newConection = false;
             }
             if (justConnected == true)
             {
-                receiveMessage.SetState(true);
-                receiveMessage.SetUsername("Player" + thisPlayer.id);
+                //carefull
+                Debug.Log("Just Connected ID ANTES with ID" + receiveMessage.id);
+                Debug.Log("Just Connected State ANTES with State" + receiveMessage.state);
                 WelcomeWorld();
                 DebugMatrix();
+                sendMessage.SetConnectionState(receiveMessage.state);
+                sendMessage.SetUsername("Player" + thisPlayer.id);
+                sendMessage.SetId(thisPlayer.id);
+                Debug.Log("Just Connected ID DESPUES with ID" + sendMessage.username);
                 Debug.Log("Creating Server repre");
                 justConnected = false;
             }
@@ -145,7 +150,7 @@ public class UDPClient : MonoBehaviour
                 Debug.Log("Moving");
                 //Debug.Log("This player ID (check):" + thisPlayer.id);
                 //Debug.Log("Received message ID: " + receiveMessage.id);
-                UpdateWorld(1, receiveMessage.id, receiveMessage.positions, receiveMessage.movementDirection);
+                MoveWorld(receiveMessage.id, receiveMessage.positions, receiveMessage.movementDirection);
             }
             if (fireChanged == true)
             {
@@ -164,7 +169,7 @@ public class UDPClient : MonoBehaviour
                 Debug.Log("Disconnecting!");
                 //delete lumberjack from dolls
                 this.gameObject.GetComponent<WorldController>().DeletePlayer(receiveMessage.id);
-                receiveMessage.SetState(true);
+                receiveMessage.SetConnectionState(1);
                 newDisconection = false;
             }
 
@@ -289,20 +294,18 @@ public class UDPClient : MonoBehaviour
                 receiveMessage = serializer.DeserializePackage(dataTMP);
                 thisPlayer.dirty = true;
 
-                if (receiveMessage.playersOnline != playersOnline)
+                if (receiveMessage.playersOnline > playersOnline)
                 {
-                    playersOnline = receiveMessage.playersOnline;
                     gameMatrix = receiveMessage.worldMatrix;
-                    debugMatrix = true;
                     newConection = true;
                     Debug.Log("Players Online in the receive message: " + receiveMessage.playersOnline);
-                    Debug.Log("Players Online in the last message " + playersOnline);
+                    Debug.Log("Players Online in the local" + playersOnline);
                 }
                 
                 
-                    //time in ms
-                    //RTT calculates the time that a packed lasts to go from client to server and comeback
-                    //we use RTT / 2 to calculate the avg time of traveling of client - server
+                //time in ms
+                //RTT calculates the time that a packed lasts to go from client to server and comeback
+                //we use RTT / 2 to calculate the avg time of traveling of client - server
                 RTT = timeStamp - receiveMessage.timeStamp;
                 RTT = RTT * 1000;
                 newRtt = true;
@@ -329,7 +332,7 @@ public class UDPClient : MonoBehaviour
                 }
                 else
                 {
-                    if (receiveMessage.state == false)
+                    if (receiveMessage.state == 0)
                     {
                         Debug.Log("Detected disconected state by Client");
                         newDisconection = true;
@@ -346,12 +349,8 @@ public class UDPClient : MonoBehaviour
 
                     isMoving = true;
                 }
-
-
-                
                 //Debug.Log("[CIENT] Receive data!: " + receiveMessage.message);
                 //Debug.Log("[CLIENT] Received Id!" + receiveMessage.id);
-
             }
         }
         catch(Exception e)
@@ -414,10 +413,11 @@ public class UDPClient : MonoBehaviour
         try
         {
             Debug.Log("Pinging the disconect");
+            Debug.Log("From ID:" + thisPlayer.id);
             byte[] dataTMP = new byte[1024];
             //ping to everybody;
             sendMessage.SetId(thisPlayer.id);
-            sendMessage.SetState(false);
+            sendMessage.SetConnectionState(0);
             dataTMP = serializer.SerializePackage(sendMessage);
             udpSocket.SendTo(dataTMP, dataTMP.Length, SocketFlags.None, serverEP);
 
@@ -442,22 +442,9 @@ public class UDPClient : MonoBehaviour
     }
 
 
-    public void UpdateWorld(int action, int _key, float[] _positions = null, float[] _directions = null, Tuple<int, int>[] newMatrix = null, int _life = -1)
+    public void MoveWorld(int _key, float[] _positions = null, float[] _directions = null, Tuple<int, int>[] newMatrix = null, int _life = -1)
     {
-        switch (action)
-        {
-            case 1:
-                this.gameObject.GetComponent<WorldController>().MovePlayer(_key, _positions, _directions);
-                break;
-            case 2:
-                //here i copy the life directly bc it has been checked by server and you need no longer comprovation, also
-                //if we want to override a client prediciton is nice to just equal the life to the new one.
-                UpdateGameMatrix(_key, newMatrix);
-                this.gameObject.GetComponent<WorldController>().SetFireLife(_key, _life);
-                break;
-            default:
-                break;
-        }
+        this.gameObject.GetComponent<WorldController>().MovePlayer(_key, _positions, _directions);
     }
 
     public void UpdateGameMatrix(int _key, Tuple<int, int>[] newMatrix)
