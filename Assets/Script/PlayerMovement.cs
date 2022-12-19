@@ -25,8 +25,11 @@ public class PlayerMovement : MonoBehaviour
             return;
 
         if (!Input.GetButton("Horizontal") && !Input.GetButton("Vertical"))
+        {
+            isMoving = false;
             return;
-
+        }
+            
         float horizontalInput = Input.GetAxis("Horizontal");
         float verticalInput = Input.GetAxis("Vertical");
 
