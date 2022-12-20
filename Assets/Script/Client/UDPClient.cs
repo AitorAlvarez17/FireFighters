@@ -159,7 +159,7 @@ public class UDPClient : MonoBehaviour
                 this.gameObject.GetComponent<WorldController>().DeletePlayer(receiveMessage.id);
                 receiveMessage.SetConnectionState(1);
                 debugMatrix = true;
-                //newDisconection = false;
+                newDisconection = false;
             }
             if (debugMatrix == true)
             {

@@ -78,7 +78,12 @@ public class Fireplace : MonoBehaviour
         if (other.transform.tag == "Lumber")
         {
             if (other.transform.GetComponent<Lumberjack>().interacter != true)
+            {
+                other.transform.GetComponent<Lumberjack>().charge.ClearCharge();
+                other.transform.GetComponent<Lumberjack>().PrintDebug();
+
                 return;
+            }
 
             if (GC == null)
             {
