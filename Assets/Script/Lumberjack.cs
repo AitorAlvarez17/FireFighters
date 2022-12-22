@@ -84,6 +84,7 @@ public class Lumberjack : MonoBehaviour
         SetOutfit(_id);
         SetInteracter(interacter);
         charge = new Charge(0, 0);
+        PrintDebug();
     }
 
     public void SetId(int _id)
