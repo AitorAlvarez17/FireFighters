@@ -74,38 +74,31 @@ public class Fireplace : MonoBehaviour
 
     public void OnTriggerEnter(Collider other)
     {
-        if (other.transform.GetComponent<Lumberjack>() == null)
-            return;
-
-        if (other.transform.GetComponent<Lumberjack>().interacter != true)
-            return;
-
-        if (GC == null)
+        Debug.Log("Colliding with" + other.transform.tag);
+        if (other.transform.tag == "Lumber")
         {
-            GC = GameObject.FindGameObjectWithTag("GameController");
+            if (other.transform.GetComponent<Lumberjack>().interacter != true)
+                return;
+
+            if (GC == null)
+            {
+                GC = GameObject.FindGameObjectWithTag("GameController");
+            }
+
+            //get the action from the lumberjack and put it into it
+            if (GC.transform.GetComponent<UDPClient>() != null)
+            {
+                if (other.transform.GetComponent<Lumberjack>().charge.Amount == 0)
+                    return;
+
+                //IMPORTANT! - this is prediction
+                HealBar(other.transform.GetComponent<Lumberjack>().charge.Type, other.transform.GetComponent<Lumberjack>().charge.Amount);
+
+                GC.GetComponent<UDPClient>().PingFireAction(internalID, other.transform.GetComponent<Lumberjack>().charge.Type, other.transform.GetComponent<Lumberjack>().charge.Amount, life);
+                other.transform.GetComponent<Lumberjack>().charge.ClearCharge();
+                other.transform.GetComponent<Lumberjack>().PrintDebug();
+            }
         }
-
-        //get the action from the lumberjack and put it into it
-        if (GC.transform.GetComponent<UDPClient>() != null)
-        {
-            //IMPORTANT! - this is prediction
-            HealBar(other.transform.GetComponent<Lumberjack>().charge.Type, other.transform.GetComponent<Lumberjack>().charge.Amount);
-            
-            GC.GetComponent<UDPClient>().PingFireAction(internalID, other.transform.GetComponent<Lumberjack>().charge.Type, other.transform.GetComponent<Lumberjack>().charge.Amount, life);
-            other.transform.GetComponent<Lumberjack>().charge.ClearCharge();
-            other.transform.GetComponent<Lumberjack>().PrintDebug();
-
-        }
-        if (GC.transform.GetComponent<UDPServer>() != null)
-        {
-            //HealBar(other.transform.GetComponent<Lumberjack>().charge.Type, other.transform.GetComponent<Lumberjack>().charge.Amount);
-
-            //GC.GetComponent<UDPServer>().PingFireAction(internalID, other.transform.GetComponent<Lumberjack>().charge.Type, other.transform.GetComponent<Lumberjack>().charge.Amount, life);
-            //other.transform.GetComponent<Lumberjack>().charge.ClearCharge();
-            //other.transform.GetComponent<Lumberjack>().PrintDebug();
-        }
-        //PingFireAction(int action, int amount);
-
     }
 
     public void FirePlaceActions(float lifeFraction)

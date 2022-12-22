@@ -25,8 +25,11 @@ public class PlayerMovement : MonoBehaviour
             return;
 
         if (!Input.GetButton("Horizontal") && !Input.GetButton("Vertical"))
+        {
+            isMoving = false;
             return;
-
+        }
+            
         float horizontalInput = Input.GetAxis("Horizontal");
         float verticalInput = Input.GetAxis("Vertical");
 
@@ -54,7 +57,7 @@ public class PlayerMovement : MonoBehaviour
         if (isMoving == false)
             return;
 
-        Debug.Log("Movement Direction:" + movementDirection);
+        //Debug.Log("Movement Direction:" + movementDirection);
         float[] movementDirectionSerializable = new float[3];
 
         movementDirectionSerializable[0] = movementDirection.x;
