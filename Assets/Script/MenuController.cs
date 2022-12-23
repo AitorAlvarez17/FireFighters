@@ -12,13 +12,11 @@ public class MenuController : MonoBehaviour
     public void SetAsServer()
     {
         SceneManager.LoadScene("ServerScene", LoadSceneMode.Single);
-        // SceneManager.UnloadSceneAsync(createGame.scene.name);
     }
 
     public void SetAsClient()
     {
         SceneManager.LoadScene("ClientScene", LoadSceneMode.Single);
-        // SceneManager.UnloadSceneAsync(joinGame.scene.name);
 
     }
     // Start is called before the first frame update

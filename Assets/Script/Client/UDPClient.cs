@@ -63,24 +63,20 @@ public class UDPClient : MonoBehaviour
         serverIP = ServerController.MyServerInstance.IPServer;
         serverPort = ServerController.MyServerInstance.serverPort;
         playersOnline = 99;
-    //testBytes = serializer.SerializePlayerInfo(playerInfo);
 }
 
     public void Awake()
     {
-        //PlayerManager.AddPlayer();
     }
 
     private void Update()
     {
         timeStamp = Time.realtimeSinceStartup;
-        //Debug.Log(timeStamp + "ms");
 
         PlayerActions();
 
         if (newRtt == true)
         {
-            //Debug.Log("New RTT" + RTT + "Ms");
             newRtt = false;
         }
 
@@ -136,7 +132,6 @@ public class UDPClient : MonoBehaviour
             }
             if (receiveMessage != null && receiveMessage.message != null && receiveMessage.message != "")
             {
-                //Debug.Log("Message checked and creating...!: " + receiveMessage.message + "From Client:" + receiveMessage.username);
                 CreateMessage(receiveMessage);
                 receiveMessage.SetMessage(null);
             }
@@ -229,7 +224,6 @@ public class UDPClient : MonoBehaviour
         sendMessage.SetPositions(thisPlayer.positions);
         sendMessage.SetWorldMatrix(gameMatrix);
         sendMessage.SetPlayersOnline(0);
-        //Debug.Log("Resending the hello string!");
         SendString("Hi! I just connected...");
 
         // Receive from server and initialize the world
@@ -312,7 +306,6 @@ public class UDPClient : MonoBehaviour
                 if (receiveMessage.id == thisPlayer.id)
                 {
                     //CHECK PP WITH TIMESTAMP
-                    //Debug.Log("this was MINE");
                     if (receiveMessage.amount > 0)
                     {
                         Debug.Log("PingPong Received Fireplace: [ID: " + receiveMessage.fireID + "], [ACTION " + receiveMessage.fireAction + "], [AMOUNT: " + receiveMessage.amount + "");
@@ -325,13 +318,11 @@ public class UDPClient : MonoBehaviour
                 }
                 else
                 {
-                    //Debug.Log("this was NOT MINE" + "ID Receiving [" + receiveMessage.id + "]" + "Internal ID ["+ thisPlayer.id + "]" + "Fire life of receivingID" + receiveMessage.fireID);
                     if (receiveMessage.state == 0)
                     {
                         Debug.Log("Detected disconected state by Client");
                         newDisconection = true;
                     }
-                    //Debug.Log("This is not MINE!");
                     if (receiveMessage.amount > 0)
                     {
                         Debug.Log("Server Received Fireplace: [ID: " + receiveMessage.fireID + "], [ACTION " + receiveMessage.fireAction + "], [AMOUNT: " + receiveMessage.amount + "");
@@ -342,8 +333,6 @@ public class UDPClient : MonoBehaviour
 
                     isMoving = true;
                 }
-                //Debug.Log("[CIENT] Receive data!: " + receiveMessage.message);
-                //Debug.Log("[CLIENT] Received Id!" + receiveMessage.id);
             }
         }
         catch(Exception e)
@@ -370,9 +359,7 @@ public class UDPClient : MonoBehaviour
 
             Debug.Log("Sending from" + sendMessage.id + "Movement with PlayersOnline:" + sendMessage.playersOnline);
 
-            //Debug.Log("Pinging Mov from Client ID: " + sendMessage.id);
 
-            //Debug.Log("[CLIENT] Sending to server: " + serverIPEP.ToString() + " Message: " + packageMovement[0] + "From:" + message.username);
             dataTMP = serializer.SerializePackage(sendMessage);
             udpSocket.SendTo(dataTMP, dataTMP.Length, SocketFlags.None, serverEP);
 
@@ -396,7 +383,6 @@ public class UDPClient : MonoBehaviour
             udpSocket.SendTo(dataTMP, dataTMP.Length, SocketFlags.None, serverEP);
 
             //this is dangerous! as receiveMessage on ServerWill keep the same until next update, be sure that receivedMessage doesn't stuck the the old values
-            //sendMessage.SetFireAction(_id, 0, 0, _life);
             Debug.Log("Pinging Fireplace: [ID: " + _id + "], [ACTION " + _action + "], [AMOUNT: " + _amount + "");
         }
         catch (Exception ex)
@@ -444,12 +430,7 @@ public class UDPClient : MonoBehaviour
         this.gameObject.GetComponent<WorldController>().MovePlayer(_key, _positions, _directions);
     }
 
-    //public void UpdateGameMatrix(int _key, Tuple<int, int>[] newMatrix)
-    //{
-    //    //here there is a little controversy as gameMatrix element id-1 is copying newMatrix element id so there is a 1 "step" difference
-    //    gameMatrix[_key - 1] = newMatrix[_key];
-    //    debugMatrix = true;
-    //}
+
     public void DebugMatrix()
     {
         Debug.Log("Debugging Matrix!");

@@ -61,7 +61,6 @@ public class Fireplace : MonoBehaviour
                 break;
         }
         
-        //Ping Life();
     }
 
     public void SetLife(int _life)

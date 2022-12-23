@@ -69,6 +69,7 @@ public class Lumberjack : MonoBehaviour
 
     //0 for nothing, 1 for wood, 2 for water
     public Charge charge = null;
+
     //visuals
     public GameObject avatar;
 
@@ -164,23 +165,9 @@ public class Lumberjack : MonoBehaviour
 
     public void Move(float[] _positions, Vector3 _directions)
     {
-
-        //Vector3 newPosition = new Vector3(_positions[0], _positions[1], _positions[2]);
         Vector3 transBuffer = trans.transform.position;
-
-
         SmoothRotation(_directions);
-        //Debug.Log("Moving Doll" + internalId + "to:" + _positions[0] + _positions[2]);
-
-        //IP HAS TO BE SO SIMILAR TO PP
-        //trans.position = Vector3.Lerp(trans.position, newPosition, /*IP*/);
-
         trans.position = new Vector3(_positions[0], trans.position.y, _positions[2]);
-
-        //if(prediction.isWrong)
-        //CorrectMovement();
-
-        //MovementPrediction();
     }
 
     public void MovementPrediction()
@@ -190,7 +177,7 @@ public class Lumberjack : MonoBehaviour
 
     public void MovementCorrection()
     {
-        //correct the movement 
+        //correct the movement on client
     }
 
     public void SmoothRotation(Vector3 directions)

@@ -48,7 +48,9 @@ public static class serializer
             writer.Write(worldPlayer.Item2);
         }
         writer.Write(_message.playersOnline);
-        //FIRE STUFF
+
+        //FIREPLACES
+ 
         writer.Write(_message.fireAction);
         writer.Write(_message.amount);
         writer.Write(_message.fireID);
@@ -103,11 +105,6 @@ public static class serializer
         float timeStamp = reader.ReadSingle();
         bool gameStarted = reader.ReadBoolean();
         int state = reader.ReadInt32();
-
-        //foreach (var item in positions)
-        //{
-        //Debug.Log("Position :" + item);
-        //}
 
         PlayerPackage newMessage = new PlayerPackage(message, username,positions,direction,id, worldMatrix, playersOnline, fireaction, amount, fireID, fireLife, timeStamp, gameStarted, state);
 

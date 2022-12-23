@@ -9,7 +9,7 @@ using UnityEngine;
 using TMPro;
 using Unity.VisualScripting;
 
-//Do a parent class that is MonoBehaviour and make this heritage from the parent in order to make it virtual for PlayerMovement
+//FUTURE CHANGE: Create a parent class that is MonoBehaviour and make this heritage from the parent in order to make it virtual for PlayerMovement
 public class UDPServer : MonoBehaviour
 {
     public float timeStamp;
@@ -36,20 +36,20 @@ public class UDPServer : MonoBehaviour
 
     public Player thisPlayer;
 
-    // As the game is threaded we gotta difference from message Receive and message Send
+    // the game is threaded, so we gotta differenciate between message Receive and message Send
     public PlayerPackage receivedMessage = new PlayerPackage(null, "Server");
     public PlayerPackage sendMessage = new PlayerPackage(null, "Server");
 
     public bool onLine = false;
     public bool initServer = false;
 
-    // Declare Client's endpoint
+    // Declaration of Client's endpoint
     private IPEndPoint clientIPEP;
     private EndPoint clientEP;
 
     public List<EndPoint> UDPClientList = new List<EndPoint>();
 
-    // This is the brain of the game - the first int stands for the ID of the Sawmill (Lumberjack + Fireplace) and the seconds stands for the health of it
+    // This is the brain of the game - the first int stands for the ID of the Sawmill (Lumberjack + Fireplace) and the seconds stands for its health
     public Tuple<int, int>[] gameMatrix = new Tuple<int, int>[4] { Tuple.Create(0,100), Tuple.Create(0, 100), Tuple.Create(0, 100), Tuple.Create(0, 100) };
     public int playersOnline = 0;
 
@@ -58,7 +58,7 @@ public class UDPServer : MonoBehaviour
     public bool fireChanging = false;
     public bool debugMatrix = false;
 
-    // Instanciation both variables and starts server
+    // Instanciation of both variables and server start
     void Start()
     {
         serverDirty = false;
@@ -77,31 +77,13 @@ public class UDPServer : MonoBehaviour
     private void Update()
     {
         timeStamp = Time.realtimeSinceStartup;
-        //Debug.Log(timeStamp + "ms");
 
         ServerActions();
-
-        //if (Input.GetKeyDown(KeyCode.Alpha1))
-        //{
-        //    this.gameObject.GetComponent<WorldController>().worldDolls[thisPlayer.id].lumberjack.charge.SumWood(5);
-        //    this.gameObject.GetComponent<WorldController>().worldDolls[thisPlayer.id].lumberjack.PrintDebug();
-        //}
-
-        //if (Input.GetKeyDown(KeyCode.Alpha2))
-        //{
-        //    this.gameObject.GetComponent<WorldController>().worldDolls[thisPlayer.id].lumberjack.charge.SumWater(5);
-        //    this.gameObject.GetComponent<WorldController>().worldDolls[thisPlayer.id].lumberjack.PrintDebug();
-        //}
     }
 
     public void SetUsernameAndConnect(string username)
     {
-        //thisPlayer.username = username;
-        //onLine = true;
-
-        //this.gameObject.GetComponent<ServerController>().clientName.text = thisPlayer.username;
-        //this.gameObject.GetComponent<ReadServer>().LoginInput.SetActive(false);
-        //this.gameObject.GetComponent<PlayerMovement>().player.GetComponent<Lumberjack>().Init(thisPlayer.id, thisPlayer.username);
+       //FUTURE CHANGE: Set usernames for each player.
 
     }
 
@@ -110,7 +92,6 @@ public class UDPServer : MonoBehaviour
         sendMessage.SetUsername("Server");
         sendMessage.SetId(999);
         sendMessage.SetPositions(new float[3] { 0, 0, 0 });
-        //UpdateGameMatrix(playersOnline);
         sendMessage.SetWorldMatrix(gameMatrix);
         sendMessage.SetPlayersOnline(playersOnline);
         sendMessage.SetConnectionState(1);
@@ -121,9 +102,7 @@ public class UDPServer : MonoBehaviour
     {
         if (serverDirty == false)
             return;
-            
 
-            //Well positioned function
             if (initServer == true)
             {
                   IpText.text = "IP:" + serverIP;
@@ -234,14 +213,13 @@ public class UDPServer : MonoBehaviour
     {
         try
         {
-            while (true)// Look at Promises, Async, Await
+            while (true)
             {
                 IPEndPoint sender = new IPEndPoint(IPAddress.Any, 9050);
                 EndPoint clientEP = (EndPoint)(sender);
 
                 int recv = 0;
                 byte[] dataTMP = new byte[1024];
-                // Carefull with this, there is a bug because we fullfill the byte[] buffer
                 recv = udpSocket.ReceiveFrom(dataTMP, ref clientEP);
                 receivedMessage = serializer.DeserializePackage(dataTMP);
 
@@ -273,8 +251,6 @@ public class UDPServer : MonoBehaviour
                     ModifyReceivedMessage();
                     Debug.Log("Disconecting from server!" + "ID:"+ receivedMessage.id);
                 }
-
-                //Debug.Log("[SERVER] Received message ID:" + receivedMessage.id);
 
                 EchoData(receivedMessage);
             }
@@ -319,10 +295,7 @@ public class UDPServer : MonoBehaviour
     }
 
 
-    //public void UpdateWorld(int _key, float[] _positions)
-    //{
-    //    this.gameObject.GetComponent<WorldController>().MovePlayer(_key, _positions);
-    //}
+
 
     #region Pings
     public void PingGameStarted(bool state)
