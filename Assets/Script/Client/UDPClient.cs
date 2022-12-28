@@ -32,6 +32,8 @@ public class UDPClient : MonoBehaviour
     //declare thread and socket
     private Thread clientThread;
     private Thread receiveThread = null;
+    private Thread sendThread = null;
+
     private Socket udpSocket;
 
     // Server end point (Ip + Port)
@@ -53,7 +55,6 @@ public class UDPClient : MonoBehaviour
     public bool fireChanged = false;
     public bool debugMatrix = false;
     public bool newConection = true;
-    public bool newDisconection = false;
     public bool startGame = false;
 
     //instanciation both variables
@@ -63,8 +64,11 @@ public class UDPClient : MonoBehaviour
         serverIP = ServerController.MyServerInstance.IPServer;
         serverPort = ServerController.MyServerInstance.serverPort;
         playersOnline = 99;
-    //testBytes = serializer.SerializePlayerInfo(playerInfo);
-}
+
+        sendThread = new Thread(Send);
+        sendThread.Start();
+        //testBytes = serializer.SerializePlayerInfo(playerInfo);
+    }
 
     public void Awake()
     {
@@ -122,7 +126,6 @@ public class UDPClient : MonoBehaviour
             {
                 //carefull
                 WelcomeWorld();
-                sendMessage.SetConnectionState(receiveMessage.state);
                 sendMessage.SetUsername("Player" + thisPlayer.id);
                 sendMessage.SetId(thisPlayer.id);
                 justConnected = false;
@@ -152,15 +155,6 @@ public class UDPClient : MonoBehaviour
                 debugMatrix = true;
                 fireChanged = false;
             }
-            if (newDisconection == true)
-            {
-                Debug.Log("Disconnecting!");
-                //delete lumberjack from dolls
-                this.gameObject.GetComponent<WorldController>().DeletePlayer(receiveMessage.id);
-                receiveMessage.SetConnectionState(1);
-                debugMatrix = true;
-                newDisconection = false;
-            }
             if (debugMatrix == true)
             {
                 DebugMatrix();
@@ -174,7 +168,6 @@ public class UDPClient : MonoBehaviour
     //closing both the socket and the thread on exit and all coroutines
     private void OnDisable()
     {
-        PingDisconect();
         Debug.Log("CLIENT Closing TCP socket & thread...");
 
         if (udpSocket != null)
@@ -243,6 +236,8 @@ public class UDPClient : MonoBehaviour
 
             isMoving = false;
 
+            
+
             receiveThread = new Thread(Receive);
             receiveThread.Start();
         }
@@ -260,7 +255,6 @@ public class UDPClient : MonoBehaviour
         {
             sendMessage.SetUsername("Player" + thisPlayer.id);
             sendMessage.SetMessage(_message);
-            sendMessage.SetConnectionState(1);
             Debug.Log("[CLIENT] Sending to server: " + serverIPEP.ToString() + " Message: " + _message + "From:" + sendMessage.username);
             data = serializer.SerializePackage(sendMessage);
             recv = udpSocket.SendTo(data, data.Length, SocketFlags.None, serverEP);
@@ -270,6 +264,28 @@ public class UDPClient : MonoBehaviour
         catch (Exception e)
         {
             Debug.Log("[CLIENT] Failed to send message. Error: " + e.ToString());
+        }
+    }
+
+    private void Send()
+    {
+        try
+        {
+            while (true)
+            {
+                NewMessage();
+                
+                //PingMessage();
+                //PingMovement();
+                //PingFireAction();
+
+                Debug.Log("Sending...");
+                Thread.Sleep(100);
+            }
+        }
+        catch (Exception ex)
+        {
+            Debug.Log("Error sending" + ex);
         }
     }
 
@@ -327,11 +343,6 @@ public class UDPClient : MonoBehaviour
                 else
                 {
                     //Debug.Log("this was NOT MINE" + "ID Receiving [" + receiveMessage.id + "]" + "Internal ID ["+ thisPlayer.id + "]" + "Fire life of receivingID" + receiveMessage.fireID);
-                    if (receiveMessage.state == 0)
-                    {
-                        Debug.Log("Detected disconected state by Client");
-                        newDisconection = true;
-                    }
                     //Debug.Log("This is not MINE!");
                     if (receiveMessage.amount > 0)
                     {
@@ -366,11 +377,10 @@ public class UDPClient : MonoBehaviour
             sendMessage.SetId(thisPlayer.id);
             sendMessage.SetWorldMatrix(gameMatrix);
             sendMessage.SetPlayersOnline(playersOnline);
-            sendMessage.SetConnectionState(1);
 
             sendMessage.SetTimeStamp(timeStamp);
 
-            Debug.Log("Sending from" + sendMessage.id + "Movement with PlayersOnline:" + sendMessage.playersOnline);
+            //Debug.Log("Sending from" + sendMessage.id + "Movement with PlayersOnline:" + sendMessage.playersOnline);
 
             //Debug.Log("Pinging Mov from Client ID: " + sendMessage.id);
 
@@ -394,34 +404,12 @@ public class UDPClient : MonoBehaviour
             //ping to everybody;
             sendMessage.SetFireAction(_id, _action, _amount, _life);
             sendMessage.SetTimeStamp(timeStamp);
-            sendMessage.SetConnectionState(1);
             dataTMP = serializer.SerializePackage(sendMessage);
             udpSocket.SendTo(dataTMP, dataTMP.Length, SocketFlags.None, serverEP);
 
             //this is dangerous! as receiveMessage on ServerWill keep the same until next update, be sure that receivedMessage doesn't stuck the the old values
             //sendMessage.SetFireAction(_id, 0, 0, _life);
             Debug.Log("Pinging Fireplace: [ID: " + _id + "], [ACTION " + _action + "], [AMOUNT: " + _amount + "");
-        }
-        catch (Exception ex)
-        {
-            Debug.Log("[CLIENT] Failed to send message. Error: " + ex.ToString());
-        }
-    }
-
-    public void PingDisconect()
-    {
-        try
-        {
-            Debug.Log("Pinging the disconect");
-            Debug.Log("From ID:" + thisPlayer.id);
-            byte[] dataTMP = new byte[1024];
-            //ping to everybody;
-            sendMessage.SetId(thisPlayer.id);
-            sendMessage.SetConnectionState(0);
-            dataTMP = serializer.SerializePackage(sendMessage);
-            udpSocket.SendTo(dataTMP, dataTMP.Length, SocketFlags.None, serverEP);
-
-            //this is dangerous! as receiveMessage on ServerWill keep the same until next update, be sure that receivedMessage doesn't stuck the the old values
         }
         catch (Exception ex)
         {
@@ -461,5 +449,10 @@ public class UDPClient : MonoBehaviour
         matrixDebug.text += "Matrix [ID: " + gameMatrix[1].Item1 + "]" + "[LIFE: " + gameMatrix[1].Item2 + "] \n";
         matrixDebug.text += "Matrix [ID: " + gameMatrix[2].Item1 + "]" + "[LIFE: " + gameMatrix[2].Item2 + "] \n";
         matrixDebug.text += "Matrix [ID: " + gameMatrix[3].Item1 + "]" + "[LIFE: " + gameMatrix[3].Item2 + "] \n";
+    }
+
+    public void NewMessage()
+    {
+        sendMessage = new PlayerPackage(thisPlayer.username, thisPlayer.id, gameMatrix);
     }
 }

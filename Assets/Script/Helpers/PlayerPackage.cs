@@ -29,7 +29,6 @@ public class PlayerPackage
     public float timeStamp = 0f;
 
     public bool gameStarted = false;
-    public int state = 1;
     //Message constructor
     public PlayerPackage(string _message, string _username)
     {
@@ -42,7 +41,7 @@ public class PlayerPackage
     }   
 
     //position constructor
-    public PlayerPackage(string _message, string _username,float[] position, float[] _movementDirection, int _id, Tuple<int, int>[] _worldMatrix, int _playersOnline, int _fireAction, int _amount, int _fireId, int _fireLife, float _timeStamp, bool _gameStarted, int _state)
+    public PlayerPackage(string _message, string _username,float[] position, float[] _movementDirection, int _id, Tuple<int, int>[] _worldMatrix, int _playersOnline, int _fireAction, int _amount, int _fireId, int _fireLife, float _timeStamp, bool _gameStarted)
     {
         message = _message;
         username = _username;
@@ -66,7 +65,33 @@ public class PlayerPackage
         fireLife = _fireLife;
         timeStamp = _timeStamp;
         gameStarted = _gameStarted;
-        state = _state;
+    }
+
+    //Empty message only with identification info 
+    public PlayerPackage(string _username, int _id, Tuple<int, int>[] _matrix)
+    {
+        message = "";
+        username = _username;
+        positions[0] = 0f;
+        positions[1] = 0f;
+        positions[2] = 0f;
+
+        movementDirection[0] = 0f;
+        movementDirection[1] = 0f;
+        movementDirection[2] = 0f;
+
+        id = _id;
+        worldMatrix[0] = _matrix[0];
+        worldMatrix[1] = _matrix[1];
+        worldMatrix[2] = _matrix[2];
+        worldMatrix[3] = _matrix[3];
+        playersOnline = 0;
+        fireAction = 0;
+        amount = 0;
+        fireID = _id;
+        fireLife = 0;
+        timeStamp = 0;
+        gameStarted = false;
     }
 
     public void SetMessage(string _message)
@@ -137,8 +162,4 @@ public class PlayerPackage
         gameStarted = _gameStarted;
     }
 
-    public void SetConnectionState(int _state)
-    {
-        state = _state;
-    }
 }

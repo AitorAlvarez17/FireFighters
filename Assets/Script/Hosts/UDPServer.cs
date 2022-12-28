@@ -113,7 +113,6 @@ public class UDPServer : MonoBehaviour
         //UpdateGameMatrix(playersOnline);
         sendMessage.SetWorldMatrix(gameMatrix);
         sendMessage.SetPlayersOnline(playersOnline);
-        sendMessage.SetConnectionState(1);
         serverDirty = true;
     }
 
@@ -265,15 +264,6 @@ public class UDPServer : MonoBehaviour
                     ModifyReceivedMessage();
                 }
 
-                if (receivedMessage.state == 0)
-                {
-                    UpdateGameMatrix(2, receivedMessage.id);
-                    sendMessage.SetPlayersOnline(playersOnline);
-                    UDPClientList.Remove(clientEP);
-                    ModifyReceivedMessage();
-                    Debug.Log("Disconecting from server!" + "ID:"+ receivedMessage.id);
-                }
-
                 //Debug.Log("[SERVER] Received message ID:" + receivedMessage.id);
 
                 EchoData(receivedMessage);
@@ -333,7 +323,6 @@ public class UDPServer : MonoBehaviour
             Debug.Log("[GAME STARTED!]");
             sendMessage.SetMessage("");
             sendMessage.SetGameState(state);
-            sendMessage.SetConnectionState(1);
             sendMessage.SetWorldMatrix(gameMatrix);
             Debug.Log("Actual Matrix Starting: \n");
             ReceivedMatrix();
@@ -358,10 +347,6 @@ public class UDPServer : MonoBehaviour
                 // gameMatrix[id] is the DATA value // id + 1 is the VISUAL VALUE ... id's will be 1,2,3,4 not 0,1,2,3
                 gameMatrix[id - 1] = Tuple.Create(id, 100);
                 playersOnline++;
-                break;
-            case 2:
-                gameMatrix[id - 1] = Tuple.Create(0, 100);
-                playersOnline--;
                 break;
             default:
                 break;
@@ -405,23 +390,23 @@ public class UDPServer : MonoBehaviour
 
     public void ReceivedMatrix()
     {
-        Debug.Log( "Debug Matrix from Server Variable: \n");
-        Debug.Log( "Matrix [ID: " + gameMatrix[0].Item1 + "]" + "[LIFE: " + gameMatrix[0].Item2 + "]\n");
-        Debug.Log("Matrix [ID: " + gameMatrix[1].Item1 + "]" + "[LIFE: " + gameMatrix[1].Item2 + "]\n");
-        Debug.Log("Matrix [ID: " + gameMatrix[2].Item1 + "]" + "[LIFE: " + gameMatrix[2].Item2 + "]\n");
-        Debug.Log("Matrix [ID: " + gameMatrix[3].Item1 + "]" + "[LIFE: " + gameMatrix[3].Item2 + "]\n");
+        //Debug.Log( "Debug Matrix from Server Variable: \n");
+        //Debug.Log( "Matrix [ID: " + gameMatrix[0].Item1 + "]" + "[LIFE: " + gameMatrix[0].Item2 + "]\n");
+        //Debug.Log("Matrix [ID: " + gameMatrix[1].Item1 + "]" + "[LIFE: " + gameMatrix[1].Item2 + "]\n");
+        //Debug.Log("Matrix [ID: " + gameMatrix[2].Item1 + "]" + "[LIFE: " + gameMatrix[2].Item2 + "]\n");
+        //Debug.Log("Matrix [ID: " + gameMatrix[3].Item1 + "]" + "[LIFE: " + gameMatrix[3].Item2 + "]\n");
 
-        Debug.Log("Debug Matrix from Server Send Message: \n");
-        Debug.Log("Matrix [ID: " + sendMessage.worldMatrix[0].Item1 + "]" + "[LIFE: " + sendMessage.worldMatrix[0].Item2 + "]\n");
-        Debug.Log("Matrix [ID: " + sendMessage.worldMatrix[1].Item1 + "]" + "[LIFE: " + sendMessage.worldMatrix[1].Item2 + "]\n");
-        Debug.Log("Matrix [ID: " + sendMessage.worldMatrix[2].Item1 + "]" + "[LIFE: " + sendMessage.worldMatrix[2].Item2 + "]\n");
-        Debug.Log("Matrix [ID: " + sendMessage.worldMatrix[3].Item1 + "]" + "[LIFE: " + sendMessage.worldMatrix[3].Item2 + "]\n");
+        //Debug.Log("Debug Matrix from Server Send Message: \n");
+        //Debug.Log("Matrix [ID: " + sendMessage.worldMatrix[0].Item1 + "]" + "[LIFE: " + sendMessage.worldMatrix[0].Item2 + "]\n");
+        //Debug.Log("Matrix [ID: " + sendMessage.worldMatrix[1].Item1 + "]" + "[LIFE: " + sendMessage.worldMatrix[1].Item2 + "]\n");
+        //Debug.Log("Matrix [ID: " + sendMessage.worldMatrix[2].Item1 + "]" + "[LIFE: " + sendMessage.worldMatrix[2].Item2 + "]\n");
+        //Debug.Log("Matrix [ID: " + sendMessage.worldMatrix[3].Item1 + "]" + "[LIFE: " + sendMessage.worldMatrix[3].Item2 + "]\n");
 
-        Debug.Log("Debug Matrix from Server Receive Message: \n");
-        Debug.Log("Matrix [ID: " + receivedMessage.worldMatrix[0].Item1 + "]" + "[LIFE: " + receivedMessage.worldMatrix[0].Item2 + "]\n");
-        Debug.Log("Matrix [ID: " + receivedMessage.worldMatrix[1].Item1 + "]" + "[LIFE: " + receivedMessage.worldMatrix[1].Item2 + "]\n");
-        Debug.Log("Matrix [ID: " + receivedMessage.worldMatrix[2].Item1 + "]" + "[LIFE: " + receivedMessage.worldMatrix[2].Item2 + "]\n");
-        Debug.Log("Matrix [ID: " + receivedMessage.worldMatrix[3].Item1 + "]" + "[LIFE: " + receivedMessage.worldMatrix[3].Item2 + "]\n");
+        //Debug.Log("Debug Matrix from Server Receive Message: \n");
+        //Debug.Log("Matrix [ID: " + receivedMessage.worldMatrix[0].Item1 + "]" + "[LIFE: " + receivedMessage.worldMatrix[0].Item2 + "]\n");
+        //Debug.Log("Matrix [ID: " + receivedMessage.worldMatrix[1].Item1 + "]" + "[LIFE: " + receivedMessage.worldMatrix[1].Item2 + "]\n");
+        //Debug.Log("Matrix [ID: " + receivedMessage.worldMatrix[2].Item1 + "]" + "[LIFE: " + receivedMessage.worldMatrix[2].Item2 + "]\n");
+        //Debug.Log("Matrix [ID: " + receivedMessage.worldMatrix[3].Item1 + "]" + "[LIFE: " + receivedMessage.worldMatrix[3].Item2 + "]\n");
     }
 
     #endregion
