@@ -40,7 +40,7 @@ public class Player
         this.dirty = false;
         this.charge = _charge;
         this.amount = _amount;
-        
+        this.directions = new float[3] { 0, 0, 0 };
     }
 }
 
