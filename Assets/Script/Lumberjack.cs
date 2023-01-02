@@ -201,15 +201,20 @@ public class Lumberjack : MonoBehaviour
 
     public void OnTriggerEnter(Collider other)
     {
+        if (interacter == false)
+            return;
+
+        Debug.Log("Lumberjack Entered the Trigger");
         if (other.tag == "Water")
         {
             charge.SumWater(5);
-            PrintDebug();
+            
         }
         else if(other.tag == "Three")
         {
             charge.SumWood(5);
-            PrintDebug();
         }
+
+        PrintDebug();
     }
 }

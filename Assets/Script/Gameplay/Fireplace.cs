@@ -77,7 +77,7 @@ public class Fireplace : MonoBehaviour
         Debug.Log("Colliding with" + other.transform.tag);
         if (other.transform.tag == "Lumber")
         {
-            if (other.transform.GetComponent<Lumberjack>().interacter != true)
+            if (other.transform.GetComponent<Lumberjack>().interacter == false)
             {
                 other.transform.GetComponent<Lumberjack>().charge.ClearCharge();
                 other.transform.GetComponent<Lumberjack>().PrintDebug();

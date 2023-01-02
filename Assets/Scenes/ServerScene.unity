@@ -2956,6 +2956,11 @@ PrefabInstance:
       propertyPath: m_Mesh
       value: 
       objectReference: {fileID: 696792787}
+    - target: {fileID: 3046448429832771554, guid: bb5f8f0a4ab9ee1449f2fc0b8a5ae15d,
+        type: 3}
+      propertyPath: m_Enabled
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 4539377177305290984, guid: bb5f8f0a4ab9ee1449f2fc0b8a5ae15d,
         type: 3}
       propertyPath: m_RootOrder
@@ -3015,6 +3020,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Name
       value: World
+      objectReference: {fileID: 0}
+    - target: {fileID: 5294164295683712613, guid: bb5f8f0a4ab9ee1449f2fc0b8a5ae15d,
+        type: 3}
+      propertyPath: m_Enabled
+      value: 1
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: bb5f8f0a4ab9ee1449f2fc0b8a5ae15d, type: 3}
