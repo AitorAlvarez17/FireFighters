@@ -7,11 +7,13 @@ public class PlayerSawmill
 {
     public Lumberjack lumberjack;
     public Fireplace firePlace;
+    public GameObject movementPredicter;
 
-    public PlayerSawmill(Lumberjack  _lumberjack, Fireplace _firePlace)
+    public PlayerSawmill(Lumberjack  _lumberjack, Fireplace _firePlace, GameObject _predictioner)
     {
         lumberjack = _lumberjack;
         firePlace = _firePlace;
+        movementPredicter = _predictioner;
     }
 }
 
@@ -20,6 +22,7 @@ public class WorldController : MonoBehaviour
 
     public GameObject playerGO;
     public GameObject fireGO;
+    public GameObject predictGO;
 
     public List<Transform> spawnPoints = new List<Transform>();
     public List<Transform> firePoints = new List<Transform>();
@@ -52,7 +55,8 @@ public class WorldController : MonoBehaviour
         GameObject playerPref = Instantiate(playerGO, spawnPoints[pos].position, Quaternion.identity);
         playerPref.GetComponent<Lumberjack>().Init(key);
         playerPref.transform.localScale = new Vector3(1.88f, 1.88f, 1.88f);
-        
+
+        GameObject predictPref = Instantiate(predictGO, spawnPoints[pos].position, Quaternion.identity);
         //playerGO.GetComponent<Lumberjack>().Init(key);
 
         //Create fireplace
@@ -61,7 +65,7 @@ public class WorldController : MonoBehaviour
 
 
         pos++;
-        worldDolls.Add(key, new PlayerSawmill(playerPref.GetComponent<Lumberjack>(), firePref.GetComponent<Fireplace>()));
+        worldDolls.Add(key, new PlayerSawmill(playerPref.GetComponent<Lumberjack>(), firePref.GetComponent<Fireplace>(), predictPref));
     }
 
     public void CreatePlayer(int key, bool interacter = false)
@@ -74,6 +78,8 @@ public class WorldController : MonoBehaviour
         playerPref.transform.localScale = new Vector3(1.88f, 1.88f, 1.88f);
         Vector3 spawnOrientation = new Vector3(0f, 90 * (worldDolls.Count + 1) + 45, 0f);
 
+        GameObject predictPref = Instantiate(predictGO, spawnPoints[pos].position, Quaternion.identity);
+
         playerPref.transform.Rotate(spawnOrientation, Space.World);
         //playerGO.GetComponent<Lumberjack>().Init(key);
 
@@ -83,7 +89,7 @@ public class WorldController : MonoBehaviour
 
 
         pos++;
-        worldDolls.Add(key, new PlayerSawmill(playerPref.GetComponent<Lumberjack>(), firePref.GetComponent<Fireplace>()));
+        worldDolls.Add(key, new PlayerSawmill(playerPref.GetComponent<Lumberjack>(), firePref.GetComponent<Fireplace>(), predictPref));
 
     }
 
@@ -146,7 +152,7 @@ public class WorldController : MonoBehaviour
             if (index.Item1 == _key)
             {
                 CreatePlayer(_key, true);
-                this.gameObject.GetComponent<PlayerMovement>().player = worldDolls[_key].lumberjack.gameObject;
+                this.gameObject.GetComponent<PlayerMovement>().player = worldDolls[_key].movementPredicter.gameObject;
                 GameObject.FindGameObjectWithTag("MainCamera").GetComponent<CameraMovement>().target = worldDolls[_key].lumberjack.transform;
             }
         }

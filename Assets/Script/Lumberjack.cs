@@ -169,16 +169,19 @@ public class Lumberjack : MonoBehaviour
 
     public void Move(float[] _positions, Vector3 _directions, float IP)
     {
-
+        float timeElapsed = 0f;
         //Vector3 newPosition = new Vector3(_positions[0], _positions[1], _positions[2]);
-        Vector3 transBuffer = trans.transform.position;
 
 
         SmoothRotation(_directions, IP);
         //Debug.Log("Moving Doll" + internalId + "to:" + _positions[0] + _positions[2]);
-        Vector3 newPositions = new Vector3(_positions[0], _positions[1], _positions[2]);
         //IP HAS TO BE SO SIMILAR TO PP
-        trans.position = Vector3.Lerp(trans.position, newPositions, IP);
+
+        Debug.Log("Moving");
+        StartCoroutine(Lerp(_positions, _directions, IP));
+
+        
+        
 
         //trans.position = new Vector3(_positions[0], trans.position.y, _positions[2]);
 
@@ -186,6 +189,24 @@ public class Lumberjack : MonoBehaviour
         //CorrectMovement();
 
         //MovementPrediction();
+    }
+
+    IEnumerator Lerp(float[] _positions, Vector3 _directions, float IP)
+    {
+        Vector3 transBuffer = trans.transform.position;
+        Vector3 newPositions = new Vector3(_positions[0], _positions[1], _positions[2]);
+
+        float timeElapsed = 0;
+        while (timeElapsed < IP)
+        {
+            trans.position = Vector3.Lerp(transBuffer, newPositions, timeElapsed / IP);
+            timeElapsed += Time.deltaTime;
+        }
+        //Debug.Log("Time elapsed:" + timeElapsed + " s");
+
+        trans.position = newPositions;
+
+        yield break;
     }
 
     public void MovementPrediction()
@@ -200,8 +221,9 @@ public class Lumberjack : MonoBehaviour
 
     public void SmoothRotation(Vector3 directions, float IP)
     {
+        //Debug.Log("Rotating" + directions);
         Quaternion rotation = Quaternion.LookRotation(directions, Vector3.up);
-        trans.rotation = Quaternion.RotateTowards(trans.rotation, rotation, IP);
+        trans.rotation = Quaternion.RotateTowards(trans.rotation, rotation, 360f);
     }
 
     public void OnTriggerEnter(Collider other)
