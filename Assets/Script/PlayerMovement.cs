@@ -25,8 +25,11 @@ public class PlayerMovement : MonoBehaviour
             return;
 
         if (!Input.GetButton("Horizontal") && !Input.GetButton("Vertical"))
+        {
+            isMoving = false;
             return;
-
+        }
+            
         float horizontalInput = Input.GetAxis("Horizontal");
         float verticalInput = Input.GetAxis("Vertical");
 
@@ -54,14 +57,18 @@ public class PlayerMovement : MonoBehaviour
         if (isMoving == false)
             return;
 
-        Debug.Log("Movement Direction:" + movementDirection);
+        //Debug.Log("Movement Direction:" + movementDirection);
         float[] movementDirectionSerializable = new float[3];
 
-        movementDirectionSerializable[0] = movementDirection.x;
-        movementDirectionSerializable[1] = movementDirection.y;
-        movementDirectionSerializable[2] = movementDirection.z;
+        this.gameObject.GetComponent<UDPClient>().thisPlayer.directions[0] = movementDirection.x;
+        this.gameObject.GetComponent<UDPClient>().thisPlayer.directions[1] = movementDirection.y;
+        this.gameObject.GetComponent<UDPClient>().thisPlayer.directions[2] = movementDirection.z;
 
-        this.gameObject.GetComponent<UDPClient>().PingMovement(this.gameObject.GetComponent<UDPClient>().thisPlayer.positions, movementDirectionSerializable);
+        //movementDirectionSerializable[0] = movementDirection.x;
+        //movementDirectionSerializable[1] = movementDirection.y;
+        //movementDirectionSerializable[2] = movementDirection.z;
+
+        this.gameObject.GetComponent<UDPClient>().PingMovement(this.gameObject.GetComponent<UDPClient>().thisPlayer.positions, this.gameObject.GetComponent<UDPClient>().thisPlayer.directions);
 
         movementDirection = Vector3.zero;
     }

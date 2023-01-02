@@ -67,6 +67,33 @@ public class PlayerPackage
         gameStarted = _gameStarted;
     }
 
+    //Empty message only with identification info 
+    public PlayerPackage(string _username, int _id, Tuple<int, int>[] _matrix)
+    {
+        message = "";
+        username = _username;
+        positions[0] = 0f;
+        positions[1] = 0f;
+        positions[2] = 0f;
+
+        movementDirection[0] = 0f;
+        movementDirection[1] = 0f;
+        movementDirection[2] = 0f;
+
+        id = _id;
+        worldMatrix[0] = _matrix[0];
+        worldMatrix[1] = _matrix[1];
+        worldMatrix[2] = _matrix[2];
+        worldMatrix[3] = _matrix[3];
+        playersOnline = 0;
+        fireAction = 0;
+        amount = 0;
+        fireID = _id;
+        fireLife = 0;
+        timeStamp = 0;
+        gameStarted = false;
+    }
+
     public void SetMessage(string _message)
     {
         message = _message;
@@ -95,6 +122,11 @@ public class PlayerPackage
         amount = _amount;
         fireID = _id;
         fireLife = _life;
+    }
+
+    public void ClearCharge()
+    {
+        amount = 0;
     }
 
     public void SetWorldMatrixPos(int pos, int value)
@@ -129,4 +161,5 @@ public class PlayerPackage
         Debug.Log("Setting game state to" + _gameStarted);
         gameStarted = _gameStarted;
     }
+
 }

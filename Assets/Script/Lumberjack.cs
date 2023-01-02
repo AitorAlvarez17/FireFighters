@@ -113,6 +113,7 @@ public class Lumberjack : MonoBehaviour
                 resDebug.color = Color.grey;
                 break;
             case 1:
+                Debug.Log("Printing WOOD");
                 resDebug.text = "Wood: " + charge.Amount;
                 resDebug.color = Color.red;
                 break;
@@ -176,37 +177,6 @@ public class Lumberjack : MonoBehaviour
 
         trans.position = new Vector3(_positions[0], trans.position.y, _positions[2]);
 
-        Vector3 velocity = (trans.position - transBuffer) / deltaTime;
-        velocity.Normalize();
-
-        //ZZ NEGATIVO BACK
-        //  Z POSITIVO PALANTE
-        //X NEGATIVO LEFT
-        //X POSITIVO DERECHA
-
-        if (velocity != Vector3.zero)
-        {
-            if (velocity.z < 0f)
-            {
-                Debug.Log("Facing Backwards");
-            }
-            if (velocity.z > 0f)
-            {
-                Debug.Log("Facing Froward");
-            }
-            if (velocity.x > 0f)
-            {
-                Debug.Log("Facing Right");
-            }
-            if (velocity.x < 0f)
-            {
-                Debug.Log("Facing lEFT");
-            }
-
-            Debug.Log("Velocity:" + velocity);
-
-        }
-
         //if(prediction.isWrong)
         //CorrectMovement();
 
@@ -231,10 +201,20 @@ public class Lumberjack : MonoBehaviour
 
     public void OnTriggerEnter(Collider other)
     {
-        if (other.tag != "Water")
+        if (interacter == false)
             return;
 
-        charge.SumWater(5);
+        Debug.Log("Lumberjack Entered the Trigger");
+        if (other.tag == "Water")
+        {
+            charge.SumWater(5);
+            
+        }
+        else if(other.tag == "Three")
+        {
+            charge.SumWood(5);
+        }
+
         PrintDebug();
     }
 }

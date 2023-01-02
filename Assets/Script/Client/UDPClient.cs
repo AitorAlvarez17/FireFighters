@@ -32,6 +32,8 @@ public class UDPClient : MonoBehaviour
     //declare thread and socket
     private Thread clientThread;
     private Thread receiveThread = null;
+    private Thread sendThread = null;
+
     private Socket udpSocket;
 
     // Server end point (Ip + Port)
@@ -62,8 +64,11 @@ public class UDPClient : MonoBehaviour
         serverIP = ServerController.MyServerInstance.IPServer;
         serverPort = ServerController.MyServerInstance.serverPort;
         playersOnline = 99;
-    //testBytes = serializer.SerializePlayerInfo(playerInfo);
-}
+
+        sendThread = new Thread(Send);
+        sendThread.Start();
+        //testBytes = serializer.SerializePlayerInfo(playerInfo);
+    }
 
     public void Awake()
     {
@@ -113,24 +118,24 @@ public class UDPClient : MonoBehaviour
         {
             if (startGame == true && this.transform.GetComponent<ServerController>().gameStarted == false)
             {
-                Debug.Log("Starting game!");
                 this.transform.GetComponent<ServerController>().gameStarted = true;
                 this.transform.GetComponent<ServerController>().HideInfo();
                 startGame = false;
             }
+            if (justConnected == true)
+            {
+                //carefull
+                WelcomeWorld();
+                sendMessage.SetUsername("Player" + thisPlayer.id);
+                sendMessage.SetId(thisPlayer.id);
+                justConnected = false;
+                debugMatrix = true;
+            }
             if (newConection == true && justConnected == false)
             {
                 this.gameObject.GetComponent<WorldController>().WelcomeClient(gameMatrix, thisPlayer.id);
-                
+                debugMatrix = true;
                 newConection = false;
-            }
-            if (justConnected == true)
-            {
-                receiveMessage.SetUsername("Player" + thisPlayer.id);
-                WelcomeWorld();
-                DebugMatrix();
-                Debug.Log("Creating Server repre");
-                justConnected = false;
             }
             if (receiveMessage != null && receiveMessage.message != null && receiveMessage.message != "")
             {
@@ -140,14 +145,14 @@ public class UDPClient : MonoBehaviour
             }
             if (receiveMessage.positions[0] != 0f || receiveMessage.positions[2] != 0f && isMoving == true)
             {
-                Debug.Log("Moving");
-                //Debug.Log("This player ID (check):" + thisPlayer.id);
-                //Debug.Log("Received message ID: " + receiveMessage.id);
-                UpdateWorld(1, receiveMessage.id, receiveMessage.positions, receiveMessage.movementDirection);
+                MoveWorld(receiveMessage.id, receiveMessage.positions, receiveMessage.movementDirection);
             }
             if (fireChanged == true)
             {
+                Debug.Log("Fire changed");
                 this.gameObject.GetComponent<WorldController>().UpdateFires(gameMatrix);
+                sendMessage.ClearCharge();
+                debugMatrix = true;
                 fireChanged = false;
             }
             if (debugMatrix == true)
@@ -156,7 +161,6 @@ public class UDPClient : MonoBehaviour
                 debugMatrix = false;
             }
 
-            //Debug.Log("Setting Text and dirtyness");
             this.gameObject.GetComponent<ServerController>().clientName.text = this.gameObject.GetComponent<UDPClient>().thisPlayer.username;
             thisPlayer.dirty = false;
         }
@@ -164,8 +168,6 @@ public class UDPClient : MonoBehaviour
     //closing both the socket and the thread on exit and all coroutines
     private void OnDisable()
     {
-
-        Debug.Log("Test JSON Serialization:" + testString);
         Debug.Log("CLIENT Closing TCP socket & thread...");
 
         if (udpSocket != null)
@@ -234,6 +236,8 @@ public class UDPClient : MonoBehaviour
 
             isMoving = false;
 
+            
+
             receiveThread = new Thread(Receive);
             receiveThread.Start();
         }
@@ -263,6 +267,28 @@ public class UDPClient : MonoBehaviour
         }
     }
 
+    private void Send()
+    {
+        try
+        {
+            while (true)
+            {
+                NewMessage();
+                
+                //PingMessage();
+                //PingMovement();
+                //PingFireAction();
+
+                Debug.Log("Sending...");
+                Thread.Sleep(100);
+            }
+        }
+        catch (Exception ex)
+        {
+            Debug.Log("Error sending" + ex);
+        }
+    }
+
     private void Receive()
     {
         try
@@ -277,15 +303,17 @@ public class UDPClient : MonoBehaviour
                 receiveMessage = serializer.DeserializePackage(dataTMP);
                 thisPlayer.dirty = true;
 
-                if (receiveMessage.playersOnline != playersOnline)
+                if (receiveMessage.playersOnline > playersOnline)
                 {
-                    playersOnline = receiveMessage.playersOnline;
                     gameMatrix = receiveMessage.worldMatrix;
-                    debugMatrix = true;
                     newConection = true;
                     Debug.Log("Players Online in the receive message: " + receiveMessage.playersOnline);
-                    Debug.Log("Players Online in the last message " + playersOnline);
+                    Debug.Log("From" + receiveMessage.id);
+                    Debug.Log("Receiving in " + thisPlayer.id);
+                    playersOnline = receiveMessage.playersOnline;
                 }
+                
+                
                 //time in ms
                 //RTT calculates the time that a packed lasts to go from client to server and comeback
                 //we use RTT / 2 to calculate the avg time of traveling of client - server
@@ -301,13 +329,12 @@ public class UDPClient : MonoBehaviour
                 if (receiveMessage.id == thisPlayer.id)
                 {
                     //CHECK PP WITH TIMESTAMP
-                    //Debug.Log("Not Moving, this was MINE");
+                    //Debug.Log("this was MINE");
                     if (receiveMessage.amount > 0)
                     {
                         Debug.Log("PingPong Received Fireplace: [ID: " + receiveMessage.fireID + "], [ACTION " + receiveMessage.fireAction + "], [AMOUNT: " + receiveMessage.amount + "");
                         //here confirm prediction!
                         gameMatrix = receiveMessage.worldMatrix;
-                        debugMatrix = true;
                         fireChanged = true;
                     }
 
@@ -315,22 +342,20 @@ public class UDPClient : MonoBehaviour
                 }
                 else
                 {
+                    //Debug.Log("this was NOT MINE" + "ID Receiving [" + receiveMessage.id + "]" + "Internal ID ["+ thisPlayer.id + "]" + "Fire life of receivingID" + receiveMessage.fireID);
                     //Debug.Log("This is not MINE!");
                     if (receiveMessage.amount > 0)
                     {
                         Debug.Log("Server Received Fireplace: [ID: " + receiveMessage.fireID + "], [ACTION " + receiveMessage.fireAction + "], [AMOUNT: " + receiveMessage.amount + "");
                         //here mimetize data!
                         gameMatrix = receiveMessage.worldMatrix;
-                        debugMatrix = true;
                         fireChanged = true;
                     }
 
                     isMoving = true;
                 }
-
                 //Debug.Log("[CIENT] Receive data!: " + receiveMessage.message);
                 //Debug.Log("[CLIENT] Received Id!" + receiveMessage.id);
-
             }
         }
         catch(Exception e)
@@ -350,8 +375,13 @@ public class UDPClient : MonoBehaviour
             sendMessage.SetDirection(movementDirection);
             sendMessage.SetUsername(thisPlayer.username);
             sendMessage.SetId(thisPlayer.id);
+            sendMessage.SetWorldMatrix(gameMatrix);
+            sendMessage.SetPlayersOnline(playersOnline);
 
             sendMessage.SetTimeStamp(timeStamp);
+
+            //Debug.Log("Sending from" + sendMessage.id + "Movement with PlayersOnline:" + sendMessage.playersOnline);
+
             //Debug.Log("Pinging Mov from Client ID: " + sendMessage.id);
 
             //Debug.Log("[CLIENT] Sending to server: " + serverIPEP.ToString() + " Message: " + packageMovement[0] + "From:" + message.username);
@@ -379,8 +409,9 @@ public class UDPClient : MonoBehaviour
 
             //this is dangerous! as receiveMessage on ServerWill keep the same until next update, be sure that receivedMessage doesn't stuck the the old values
 
-            //sendMessage.SetFireAction(0, 0);
-            Debug.Log("Interacting with Fireplace: [ID: " + _id + "], [ACTION " + _action + "], [AMOUNT: " + _amount + "");
+            //sendMessage.SetFireAction(_id, 0, 0, _life);
+            Debug.Log("Pinging Fireplace: [ID: " + _id + "], [ACTION " + _action + "], [AMOUNT: " + _amount + "");
+
         }
         catch (Exception ex)
         {
@@ -390,7 +421,7 @@ public class UDPClient : MonoBehaviour
 
     public void WelcomeWorld()
     {
-        Debug.Log("The number of players online is:" + receiveMessage.playersOnline);
+        Debug.Log("[WELCOME WORLD], The number of players online is:" + receiveMessage.playersOnline);
         playersOnline = receiveMessage.playersOnline;
         gameMatrix = receiveMessage.worldMatrix;
         //this bc is the second pos but 1 in index
@@ -401,30 +432,17 @@ public class UDPClient : MonoBehaviour
     }
 
 
-    public void UpdateWorld(int action, int _key, float[] _positions = null, float[] _directions = null, Tuple<int, int>[] newMatrix = null, int _life = -1)
+    public void MoveWorld(int _key, float[] _positions = null, float[] _directions = null, Tuple<int, int>[] newMatrix = null, int _life = -1)
     {
-        switch (action)
-        {
-            case 1:
-                this.gameObject.GetComponent<WorldController>().MovePlayer(_key, _positions, _directions);
-                break;
-            case 2:
-                //here i copy the life directly bc it has been checked by server and you need no longer comprovation, also
-                //if we want to override a client prediciton is nice to just equal the life to the new one.
-                UpdateGameMatrix(_key, newMatrix);
-                this.gameObject.GetComponent<WorldController>().SetFireLife(_key, _life);
-                break;
-            default:
-                break;
-        }
+        this.gameObject.GetComponent<WorldController>().MovePlayer(_key, _positions, _directions);
     }
 
-    public void UpdateGameMatrix(int _key, Tuple<int, int>[] newMatrix)
-    {
-        //here there is a little controversy as gameMatrix element id-1 is copying newMatrix element id so there is a 1 "step" difference
-        gameMatrix[_key - 1] = newMatrix[_key];
-        debugMatrix = true;
-    }
+    //public void UpdateGameMatrix(int _key, Tuple<int, int>[] newMatrix)
+    //{
+    //    //here there is a little controversy as gameMatrix element id-1 is copying newMatrix element id so there is a 1 "step" difference
+    //    gameMatrix[_key - 1] = newMatrix[_key];
+    //    debugMatrix = true;
+    //}
     public void DebugMatrix()
     {
         Debug.Log("Debugging Matrix!");
@@ -433,5 +451,10 @@ public class UDPClient : MonoBehaviour
         matrixDebug.text += "Matrix [ID: " + gameMatrix[1].Item1 + "]" + "[LIFE: " + gameMatrix[1].Item2 + "] \n";
         matrixDebug.text += "Matrix [ID: " + gameMatrix[2].Item1 + "]" + "[LIFE: " + gameMatrix[2].Item2 + "] \n";
         matrixDebug.text += "Matrix [ID: " + gameMatrix[3].Item1 + "]" + "[LIFE: " + gameMatrix[3].Item2 + "] \n";
+    }
+
+    public void NewMessage()
+    {
+        sendMessage = new PlayerPackage(thisPlayer.username, thisPlayer.id, gameMatrix);
     }
 }
