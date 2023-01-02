@@ -56,6 +56,7 @@ public class UDPClient : MonoBehaviour
     public bool debugMatrix = false;
     public bool newConection = true;
     public bool startGame = false;
+    public bool newMessage = false;
 
     //instanciation both variables
     void Start()
@@ -65,8 +66,7 @@ public class UDPClient : MonoBehaviour
         serverPort = ServerController.MyServerInstance.serverPort;
         playersOnline = 99;
 
-        sendThread = new Thread(Send);
-        sendThread.Start();
+        
         //testBytes = serializer.SerializePlayerInfo(playerInfo);
     }
 
@@ -137,11 +137,12 @@ public class UDPClient : MonoBehaviour
                 debugMatrix = true;
                 newConection = false;
             }
-            if (receiveMessage != null && receiveMessage.message != null && receiveMessage.message != "")
+            if (newMessage == true)
             {
                 //Debug.Log("Message checked and creating...!: " + receiveMessage.message + "From Client:" + receiveMessage.username);
                 CreateMessage(receiveMessage);
-                receiveMessage.SetMessage(null);
+                sendMessage.SetMessage("");
+                newMessage = false;
             }
             if (receiveMessage.positions[0] != 0f || receiveMessage.positions[2] != 0f && isMoving == true)
             {
@@ -222,6 +223,7 @@ public class UDPClient : MonoBehaviour
         sendMessage.SetPositions(thisPlayer.positions);
         sendMessage.SetWorldMatrix(gameMatrix);
         sendMessage.SetPlayersOnline(0);
+        sendMessage.SetMessage("");
         //Debug.Log("Resending the hello string!");
         SendString("Hi! I just connected...");
 
@@ -235,6 +237,7 @@ public class UDPClient : MonoBehaviour
             thisPlayer.dirty = true;
 
             isMoving = false;
+
 
             
 
@@ -273,13 +276,14 @@ public class UDPClient : MonoBehaviour
         {
             while (true)
             {
-                NewMessage();
-                
-                //PingMessage();
-                //PingMovement();
-                //PingFireAction();
-
                 Debug.Log("Sending...");
+                byte[] dataTMP = new byte[1024];
+
+                dataTMP = serializer.SerializePackage(sendMessage);
+                udpSocket.SendTo(dataTMP, dataTMP.Length, SocketFlags.None, serverEP);
+
+                //carefull with data as it keeps setted, this can be so confusing if you cross it with a local dataTMP value, just to know.
+                //PP is the time between sent packets and is used right here.
                 Thread.Sleep(100);
             }
         }
@@ -312,8 +316,11 @@ public class UDPClient : MonoBehaviour
                     Debug.Log("Receiving in " + thisPlayer.id);
                     playersOnline = receiveMessage.playersOnline;
                 }
-                
-                
+
+                if (receiveMessage != null && receiveMessage.message != null && receiveMessage.message != "")
+                {
+                    newMessage = true;
+                }
                 //time in ms
                 //RTT calculates the time that a packed lasts to go from client to server and comeback
                 //we use RTT / 2 to calculate the avg time of traveling of client - server
@@ -324,6 +331,9 @@ public class UDPClient : MonoBehaviour
                 if (receiveMessage.gameStarted == true)
                 {
                     startGame = true;
+
+                    sendThread = new Thread(Send);
+                    sendThread.Start();
                 }
 
                 if (receiveMessage.id == thisPlayer.id)
@@ -369,7 +379,6 @@ public class UDPClient : MonoBehaviour
     {
         try
         {
-            byte[] dataTMP = new byte[1024];
             sendMessage.SetMessage("");
             sendMessage.SetPositions(packageMovement);
             sendMessage.SetDirection(movementDirection);
@@ -385,10 +394,7 @@ public class UDPClient : MonoBehaviour
             //Debug.Log("Pinging Mov from Client ID: " + sendMessage.id);
 
             //Debug.Log("[CLIENT] Sending to server: " + serverIPEP.ToString() + " Message: " + packageMovement[0] + "From:" + message.username);
-            dataTMP = serializer.SerializePackage(sendMessage);
-            udpSocket.SendTo(dataTMP, dataTMP.Length, SocketFlags.None, serverEP);
-
-            //carefull with data as it keeps setted, this can be so confusing if you cross it with a local dataTMP value, just to know.
+            
         }
         catch (Exception e)
         {
@@ -400,12 +406,10 @@ public class UDPClient : MonoBehaviour
     {
         try
         {
-            byte[] dataTMP = new byte[1024];
+            //byte[] dataTMP = new byte[1024];
             //ping to everybody;
             sendMessage.SetFireAction(_id, _action, _amount, _life);
             sendMessage.SetTimeStamp(timeStamp);
-            dataTMP = serializer.SerializePackage(sendMessage);
-            udpSocket.SendTo(dataTMP, dataTMP.Length, SocketFlags.None, serverEP);
 
             //this is dangerous! as receiveMessage on ServerWill keep the same until next update, be sure that receivedMessage doesn't stuck the the old values
             //sendMessage.SetFireAction(_id, 0, 0, _life);
@@ -451,8 +455,4 @@ public class UDPClient : MonoBehaviour
         matrixDebug.text += "Matrix [ID: " + gameMatrix[3].Item1 + "]" + "[LIFE: " + gameMatrix[3].Item2 + "] \n";
     }
 
-    public void NewMessage()
-    {
-        sendMessage = new PlayerPackage(thisPlayer.username, thisPlayer.id, gameMatrix);
-    }
 }

@@ -26,6 +26,7 @@ public class Player
     //0 for nothing, 1 for wood, 2 for water
     public int charge;
     public int amount;
+    public int life;
 
     public void UpdatePosition(float[] positions)
     {

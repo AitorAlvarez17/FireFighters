@@ -10,6 +10,7 @@ public class Charge
     //0 for nothing, 1 for wood, 2 for water
     private int type;
 
+
     public Charge(int _amount, int _type)
     {
         amount = _amount;
