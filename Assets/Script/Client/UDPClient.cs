@@ -327,9 +327,7 @@ public class UDPClient : MonoBehaviour
                 //time in ms
                 //RTT calculates the time that a packed lasts to go from client to server and comeback
                 //we use RTT / 2 to calculate the avg time of traveling of client - server
-                RTT = timeStamp - receiveMessage.timeStamp;
-                RTT = RTT / 2;
-                newRtt = true;
+                
 
                 //Debug.Log("New RTT" + RTT + "Ms" + "from a packet of Player" + receiveMessage.id);
 
@@ -344,6 +342,14 @@ public class UDPClient : MonoBehaviour
 
                 if (receiveMessage.id == thisPlayer.id)
                 {
+                    //RTT 
+                    RTT = timeStamp - receiveMessage.timeStamp;
+                    RTT = RTT / 2;
+                    if (RTT > 0)
+                    {
+                        Debug.LogWarning("New RTT from [ME] with" + RTT + "s" + "at: " + timeStamp + "s playtime.");
+                    }
+                    newRtt = true;
                     //CHECK PP WITH TIMESTAMP
                     //Debug.Log("this was MINE");
                     if (receiveMessage.amount > 0)
@@ -358,6 +364,10 @@ public class UDPClient : MonoBehaviour
                 }
                 else
                 {
+                    if (RTT > 0)
+                    {
+                        Debug.LogWarning("New RTT from [" + receiveMessage.id + "] with" + RTT + "s" + "at: " + timeStamp + "s playtime.");
+                    }
                     //Debug.Log("this was NOT MINE" + "ID Receiving [" + receiveMessage.id + "]" + "Internal ID ["+ thisPlayer.id + "]" + "Fire life of receivingID" + receiveMessage.fireID);
                     //Debug.Log("This is not MINE!");
                     if (receiveMessage.amount > 0)
