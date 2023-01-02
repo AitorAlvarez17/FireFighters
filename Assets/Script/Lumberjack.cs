@@ -65,6 +65,10 @@ public class Lumberjack : MonoBehaviour
     public Material[] shirts;
     public Material[] hair;
 
+    public bool isMoving = false; 
+    public bool isPredictingMovement = false;
+    public bool isCorrectingMov = false;
+
     public bool interacter = false;
     public float deltaTime = 0f;
 
@@ -163,20 +167,20 @@ public class Lumberjack : MonoBehaviour
         deltaTime = Time.deltaTime;
     }
 
-    public void Move(float[] _positions, Vector3 _directions)
+    public void Move(float[] _positions, Vector3 _directions, float IP)
     {
 
         //Vector3 newPosition = new Vector3(_positions[0], _positions[1], _positions[2]);
         Vector3 transBuffer = trans.transform.position;
 
 
-        SmoothRotation(_directions);
+        SmoothRotation(_directions, IP);
         //Debug.Log("Moving Doll" + internalId + "to:" + _positions[0] + _positions[2]);
-
+        Vector3 newPositions = new Vector3(_positions[0], _positions[1], _positions[2]);
         //IP HAS TO BE SO SIMILAR TO PP
-        //trans.position = Vector3.Lerp(trans.position, newPosition, /*IP*/);
+        trans.position = Vector3.Lerp(trans.position, newPositions, IP);
 
-        trans.position = new Vector3(_positions[0], trans.position.y, _positions[2]);
+        //trans.position = new Vector3(_positions[0], trans.position.y, _positions[2]);
 
         //if(prediction.isWrong)
         //CorrectMovement();
@@ -194,10 +198,10 @@ public class Lumberjack : MonoBehaviour
         //correct the movement 
     }
 
-    public void SmoothRotation(Vector3 directions)
+    public void SmoothRotation(Vector3 directions, float IP)
     {
         Quaternion rotation = Quaternion.LookRotation(directions, Vector3.up);
-        trans.rotation = Quaternion.RotateTowards(trans.rotation, rotation, 10000 * Time.deltaTime);
+        trans.rotation = Quaternion.RotateTowards(trans.rotation, rotation, IP);
     }
 
     public void OnTriggerEnter(Collider other)

@@ -10,8 +10,10 @@ using TMPro;
 
 public class UDPClient : MonoBehaviour
 {
+    //CSP Vars
     public float timeStamp;
     public float RTT;
+    public int PP = 200;
 
     public bool newRtt = false;
     // Servers'IP and port
@@ -84,7 +86,7 @@ public class UDPClient : MonoBehaviour
 
         if (newRtt == true)
         {
-            //Debug.Log("New RTT" + RTT + "Ms");
+
             newRtt = false;
         }
 
@@ -276,15 +278,16 @@ public class UDPClient : MonoBehaviour
         {
             while (true)
             {
-                Debug.Log("Sending...");
                 byte[] dataTMP = new byte[1024];
+
+                sendMessage.SetTimeStamp(timeStamp);
 
                 dataTMP = serializer.SerializePackage(sendMessage);
                 udpSocket.SendTo(dataTMP, dataTMP.Length, SocketFlags.None, serverEP);
 
                 //carefull with data as it keeps setted, this can be so confusing if you cross it with a local dataTMP value, just to know.
                 //PP is the time between sent packets and is used right here.
-                Thread.Sleep(100);
+                Thread.Sleep(PP);
             }
         }
         catch (Exception ex)
@@ -325,8 +328,11 @@ public class UDPClient : MonoBehaviour
                 //RTT calculates the time that a packed lasts to go from client to server and comeback
                 //we use RTT / 2 to calculate the avg time of traveling of client - server
                 RTT = timeStamp - receiveMessage.timeStamp;
-                RTT = RTT * 1000;
+                RTT = RTT / 2;
                 newRtt = true;
+
+                //Debug.Log("New RTT" + RTT + "Ms" + "from a packet of Player" + receiveMessage.id);
+
 
                 if (receiveMessage.gameStarted == true)
                 {
@@ -348,7 +354,7 @@ public class UDPClient : MonoBehaviour
                         fireChanged = true;
                     }
 
-                    isMoving = false;
+                    isMoving = true;
                 }
                 else
                 {
@@ -387,7 +393,6 @@ public class UDPClient : MonoBehaviour
             sendMessage.SetWorldMatrix(gameMatrix);
             sendMessage.SetPlayersOnline(playersOnline);
 
-            sendMessage.SetTimeStamp(timeStamp);
 
             //Debug.Log("Sending from" + sendMessage.id + "Movement with PlayersOnline:" + sendMessage.playersOnline);
 
@@ -409,7 +414,6 @@ public class UDPClient : MonoBehaviour
             //byte[] dataTMP = new byte[1024];
             //ping to everybody;
             sendMessage.SetFireAction(_id, _action, _amount, _life);
-            sendMessage.SetTimeStamp(timeStamp);
 
             //this is dangerous! as receiveMessage on ServerWill keep the same until next update, be sure that receivedMessage doesn't stuck the the old values
             //sendMessage.SetFireAction(_id, 0, 0, _life);
@@ -436,7 +440,7 @@ public class UDPClient : MonoBehaviour
 
     public void MoveWorld(int _key, float[] _positions = null, float[] _directions = null, Tuple<int, int>[] newMatrix = null, int _life = -1)
     {
-        this.gameObject.GetComponent<WorldController>().MovePlayer(_key, _positions, _directions);
+        this.gameObject.GetComponent<WorldController>().MovePlayer(_key, _positions, _directions, PP);
     }
 
     //public void UpdateGameMatrix(int _key, Tuple<int, int>[] newMatrix)

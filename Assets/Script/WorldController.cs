@@ -94,10 +94,10 @@ public class WorldController : MonoBehaviour
         worldDolls.Remove(key);
     }
 
-    public void MovePlayer(int _key, float[] _positions, float[] _directions)
+    public void MovePlayer(int _key, float[] _positions, float[] _directions, float IP)
     {
         if (worldDolls.ContainsKey(_key))
-            worldDolls[_key].lumberjack.Move(_positions, new Vector3(_directions[0], _directions[1], _directions[2]));
+            worldDolls[_key].lumberjack.Move(_positions, new Vector3(_directions[0], _directions[1], _directions[2]), IP);
         else
             Debug.Log("Key" + _key + "was not supported!");
     }

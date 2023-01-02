@@ -33,6 +33,7 @@ public class PlayerMovement : MonoBehaviour
         float horizontalInput = Input.GetAxis("Horizontal");
         float verticalInput = Input.GetAxis("Vertical");
 
+        Transform posBuffer = player.transform;
         Vector3 movementDirection = new Vector3(horizontalInput, 0, verticalInput);
         movementDirection.Normalize();
 
@@ -42,14 +43,15 @@ public class PlayerMovement : MonoBehaviour
         }
         else
         {
-            SmoothRotation(movementDirection);
-            player.transform.Translate(movementDirection * speed * Time.deltaTime, Space.World);
+            //this is a Prediction
+            //SmoothRotation(movementDirection);
+            posBuffer.Translate(movementDirection * speed * Time.deltaTime, Space.World);
             isMoving = true;
 
 
-            this.gameObject.GetComponent<UDPClient>().thisPlayer.positions[0] = player.transform.position.x;
-            this.gameObject.GetComponent<UDPClient>().thisPlayer.positions[1] = player.transform.position.y;
-            this.gameObject.GetComponent<UDPClient>().thisPlayer.positions[2] = player.transform.position.z;
+            this.gameObject.GetComponent<UDPClient>().thisPlayer.positions[0] = posBuffer.transform.position.x;
+            this.gameObject.GetComponent<UDPClient>().thisPlayer.positions[1] = posBuffer.transform.position.y;
+            this.gameObject.GetComponent<UDPClient>().thisPlayer.positions[2] = posBuffer.transform.position.z;
             WalkingAnimation();
 
         }
