@@ -162,7 +162,8 @@ public class WorldController : MonoBehaviour
             if (index.Item1 == _key)
             {
                 CreatePlayer(_key, true);
-                this.gameObject.GetComponent<PlayerMovement>().player = worldDolls[_key].movementPredicter.gameObject;
+                this.gameObject.GetComponent<PlayerMovement>().predicter = worldDolls[_key].movementPredicter.gameObject;
+                this.gameObject.GetComponent<PlayerMovement>().player = worldDolls[_key].lumberjack.gameObject;
                 GameObject.FindGameObjectWithTag("MainCamera").GetComponent<CameraMovement>().target = worldDolls[_key].lumberjack.transform;
             }
         }
