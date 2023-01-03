@@ -14,9 +14,8 @@ public class UDPClient : MonoBehaviour
     public float timeStamp;
     public float RTT;
     public int PP = 100;
-    public bool newRtt = false;
-    public bool reckoning = false;
 
+    public bool newRtt = false;
     // Servers'IP and port
     private string serverIP;
     private int serverPort;
@@ -68,6 +67,8 @@ public class UDPClient : MonoBehaviour
         serverIP = ServerController.MyServerInstance.IPServer;
         serverPort = ServerController.MyServerInstance.serverPort;
         playersOnline = 99;
+
+        
         //testBytes = serializer.SerializePlayerInfo(playerInfo);
     }
 
@@ -83,6 +84,12 @@ public class UDPClient : MonoBehaviour
 
         PlayerActions();
 
+        if (newRtt == true)
+        {
+
+            newRtt = false;
+        }
+
         if (thisPlayer != null)
         {
             if (Input.GetKeyDown(KeyCode.Alpha1))
@@ -97,6 +104,7 @@ public class UDPClient : MonoBehaviour
                 this.gameObject.GetComponent<WorldController>().worldDolls[thisPlayer.id].lumberjack.PrintDebug();
             }
         }
+        
     }
 
     public void CreateMessage(PlayerPackage _Message)
@@ -155,15 +163,6 @@ public class UDPClient : MonoBehaviour
                 DebugMatrix();
                 debugMatrix = false;
             }
-
-            //if (reckoning == true)
-            //{
-            //    this.gameObject.GetComponent<WorldController>().IsDeadReckoning(true);
-            //}
-            //else
-            //{
-            //    this.gameObject.GetComponent<WorldController>().IsDeadReckoning(false);
-            //}
 
             this.gameObject.GetComponent<ServerController>().clientName.text = this.gameObject.GetComponent<UDPClient>().thisPlayer.username;
             thisPlayer.dirty = false;
@@ -286,16 +285,9 @@ public class UDPClient : MonoBehaviour
                 dataTMP = serializer.SerializePackage(sendMessage);
                 udpSocket.SendTo(dataTMP, dataTMP.Length, SocketFlags.None, serverEP);
 
-                //RECKONING START!
-                
-
                 //carefull with data as it keeps setted, this can be so confusing if you cross it with a local dataTMP value, just to know.
                 //PP is the time between sent packets and is used right here.
                 Thread.Sleep(PP);
-
-                
-                reckoning = true;
-                //getting assumed that this space is 100 ms of meanwhile... we will reckon here the lumberjacks that are remote.
             }
         }
         catch (Exception ex)
@@ -317,11 +309,6 @@ public class UDPClient : MonoBehaviour
                 recv = udpSocket.ReceiveFrom(dataTMP, ref Remote);
                 receiveMessage = serializer.DeserializePackage(dataTMP);
                 thisPlayer.dirty = true;
-
-               
-                //RECKONING END
-                RTT = timeStamp - receiveMessage.timeStamp;
-                RTT = RTT / 2;
 
                 if (receiveMessage.playersOnline > playersOnline)
                 {
@@ -356,11 +343,13 @@ public class UDPClient : MonoBehaviour
                 if (receiveMessage.id == thisPlayer.id)
                 {
                     //RTT 
+                    RTT = timeStamp - receiveMessage.timeStamp;
+                    RTT = RTT / 2;
                     if (RTT > 0)
                     {
                         Debug.LogWarning("New RTT from [ME] value: " + RTT + "s" + "at: " + timeStamp + "s playtime.");
-                        newRtt = true;
                     }
+                    newRtt = true;
                     //CHECK PP WITH TIMESTAMP
                     //Debug.Log("this was MINE");
                     if (receiveMessage.amount > 0)
@@ -383,12 +372,9 @@ public class UDPClient : MonoBehaviour
                 }
                 else
                 {
-                    Debug.Log("Reckoning set to false at" + timeStamp);
-                    reckoning = false;
                     if (RTT > 0)
                     {
                         Debug.LogWarning("New RTT from [" + receiveMessage.id + "] with" + RTT + "s" + "at: " + timeStamp + "s playtime.");
-                        newRtt = true;
                     }
                     //Debug.Log("this was NOT MINE" + "ID Receiving [" + receiveMessage.id + "]" + "Internal ID ["+ thisPlayer.id + "]" + "Fire life of receivingID" + receiveMessage.fireID);
                     //Debug.Log("This is not MINE!");
