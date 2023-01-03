@@ -84,12 +84,7 @@ public class UDPClient : MonoBehaviour
 
         PlayerActions();
 
-        if (newRtt == true)
-        {
-
-            newRtt = false;
-        }
-
+        
         if (thisPlayer != null)
         {
             if (Input.GetKeyDown(KeyCode.Alpha1))
@@ -145,6 +140,11 @@ public class UDPClient : MonoBehaviour
                 CreateMessage(receiveMessage);
                 sendMessage.SetMessage("");
                 newMessage = false;
+            }
+            if (newRtt == true)
+            {
+                this.gameObject.GetComponent<WorldController>().SetReckoningRTTS(RTT);
+                newRtt = false;
             }
             if (isMoving == true)
             {
@@ -310,6 +310,9 @@ public class UDPClient : MonoBehaviour
                 receiveMessage = serializer.DeserializePackage(dataTMP);
                 thisPlayer.dirty = true;
 
+                RTT = timeStamp - receiveMessage.timeStamp;
+                RTT = RTT / 2;
+
                 if (receiveMessage.playersOnline > playersOnline)
                 {
                     gameMatrix = receiveMessage.worldMatrix;
@@ -343,13 +346,12 @@ public class UDPClient : MonoBehaviour
                 if (receiveMessage.id == thisPlayer.id)
                 {
                     //RTT 
-                    RTT = timeStamp - receiveMessage.timeStamp;
-                    RTT = RTT / 2;
+                    
                     if (RTT > 0)
                     {
                         Debug.LogWarning("New RTT from [ME] value: " + RTT + "s" + "at: " + timeStamp + "s playtime.");
+                        newRtt = true;
                     }
-                    newRtt = true;
                     //CHECK PP WITH TIMESTAMP
                     //Debug.Log("this was MINE");
                     if (receiveMessage.amount > 0)
@@ -375,6 +377,7 @@ public class UDPClient : MonoBehaviour
                     if (RTT > 0)
                     {
                         Debug.LogWarning("New RTT from [" + receiveMessage.id + "] with" + RTT + "s" + "at: " + timeStamp + "s playtime.");
+                        newRtt = true;
                     }
                     //Debug.Log("this was NOT MINE" + "ID Receiving [" + receiveMessage.id + "]" + "Internal ID ["+ thisPlayer.id + "]" + "Fire life of receivingID" + receiveMessage.fireID);
                     //Debug.Log("This is not MINE!");

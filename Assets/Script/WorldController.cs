@@ -29,6 +29,7 @@ public class WorldController : MonoBehaviour
     public Dictionary<int, PlayerSawmill> worldDolls = new Dictionary<int, PlayerSawmill>();
 
 
+
     int pos = 0;
 
     private void Awake()
@@ -92,6 +93,13 @@ public class WorldController : MonoBehaviour
 
     }
 
+    public void SetReckoningRTTS(float _newRtt)
+    {
+        foreach (PlayerSawmill item in worldDolls.Values)
+        {
+            item.lumberjack.rtt = _newRtt;
+        }
+    }
     public void DeletePlayer(int key)
     {
         GameObject.Destroy(worldDolls[key].lumberjack.transform.gameObject);

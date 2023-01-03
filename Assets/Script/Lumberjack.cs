@@ -70,6 +70,7 @@ public class Lumberjack : MonoBehaviour
     //duration of the interpolation
     float IP = 0f;
     public bool isLerping = false;
+    public float rtt = 0f;
 
     public float time = 0f;
     public float lastTime = 0f;
@@ -194,7 +195,8 @@ public class Lumberjack : MonoBehaviour
 
     public void Move(float[] _positions, Vector3 _directions, float _IP)
     {
-        Debug.Log("Time difference of:" + (time - lastTime) + " s");
+        //Debug.Log("Time difference of:" + (time - lastTime) + " s");
+        //Debug.Log("The RTT added to IP is: " + ((time - lastTime) - (_IP / 1000)));
         //possible upgrade: use RTT in order to lerp having in accountance lag.
         Vector3 newPositions = new Vector3(_positions[0], _positions[1], _positions[2]);
 
@@ -209,7 +211,7 @@ public class Lumberjack : MonoBehaviour
             IP += _IP + 1000f;
             aimPosition = newPositions;
             transBuffer = trans.transform.position;
-            Debug.Log("Is lerping with a accumulated IP of" + IP);
+            //Debug.Log("Is lerping with a accumulated IP of" + IP);
             //i will try to stay here but with the IP closely to PP
         }
         else
@@ -218,10 +220,11 @@ public class Lumberjack : MonoBehaviour
             IP = _IP + 1000f;
             aimPosition = newPositions;
             transBuffer = trans.transform.position;
-            Debug.Log("[NEW] lerping with a accumulated IP of" + IP);
+            //Debug.Log("[NEW] lerping with a accumulated IP of" + IP);
 
             StartCoroutine(Lerp());
         }
+        
     }
 
     IEnumerator Lerp()
@@ -242,8 +245,12 @@ public class Lumberjack : MonoBehaviour
 
         trans.position = aimPosition;
 
-        Debug.Log("Leaving Lerp with a time Elapsed of " + timeElapsed);
         isLerping = false;
+
+        if (rtt > 0)
+        {
+            Debug.Log("It should dead reckon a little " + rtt);
+        }
         yield break;
     }
 
