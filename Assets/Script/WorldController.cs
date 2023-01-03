@@ -47,12 +47,12 @@ public class WorldController : MonoBehaviour
         
     }
 
-    public void CreatePlayer(int key, bool reckoning)
+    public void CreatePlayer(int key)
     {
         //Lumberjack
         Debug.Log("New Lumberjack! KEY:" + key);
         GameObject playerPref = Instantiate(playerGO, spawnPoints[pos].position, Quaternion.identity);
-        playerPref.GetComponent<Lumberjack>().Init(key, reckoning);
+        playerPref.GetComponent<Lumberjack>().Init(key);
         playerPref.transform.localScale = new Vector3(1.88f, 1.88f, 1.88f);
 
         GameObject predictPref = Instantiate(predictGO, spawnPoints[pos].position, Quaternion.identity);
@@ -67,13 +67,13 @@ public class WorldController : MonoBehaviour
         worldDolls.Add(key, new PlayerSawmill(playerPref.GetComponent<Lumberjack>(), firePref.GetComponent<Fireplace>(), predictPref));
     }
 
-    public void CreatePlayer(int key, bool reckoning, bool interacter = false)
+    public void CreatePlayer(int key, bool interacter = false)
     {
 
         //Lumberjack
         Debug.Log("New Lumberjack! KEY:" + key);
         GameObject playerPref = Instantiate(playerGO, spawnPoints[pos].position, Quaternion.identity);
-        playerPref.GetComponent<Lumberjack>().Init(key, reckoning, interacter);
+        playerPref.GetComponent<Lumberjack>().Init(key, interacter);
         playerPref.transform.localScale = new Vector3(1.88f, 1.88f, 1.88f);
         Vector3 spawnOrientation = new Vector3(0f, 90 * (worldDolls.Count + 1) + 45, 0f);
 
@@ -92,6 +92,16 @@ public class WorldController : MonoBehaviour
 
     }
 
+    public void IsDeadReckoning(bool reck)
+    {
+        foreach (PlayerSawmill item in worldDolls.Values)
+        {
+            if(item.lumberjack.interacter == false)
+            {
+                item.lumberjack.deadRackoning = reck;
+            }
+        }
+    }
     public void DeletePlayer(int key)
     {
         GameObject.Destroy(worldDolls[key].lumberjack.transform.gameObject);
@@ -147,12 +157,13 @@ public class WorldController : MonoBehaviour
             {
                 //Dead Reckoning only hides latency for REMOTE users
                 Debug.Log("Creating doll with key" + index.Item1);
-                CreatePlayer(index.Item1, true);
+                CreatePlayer(index.Item1);
             }
             if (index.Item1 == _key)
             {
-                CreatePlayer(_key, false, true);
-                this.gameObject.GetComponent<PlayerMovement>().player = worldDolls[_key].movementPredicter.gameObject;
+                CreatePlayer(_key, true);
+                this.gameObject.GetComponent<PlayerMovement>().predicter = worldDolls[_key].movementPredicter.gameObject;
+                this.gameObject.GetComponent<PlayerMovement>().player = worldDolls[_key].lumberjack.gameObject;
                 GameObject.FindGameObjectWithTag("MainCamera").GetComponent<CameraMovement>().target = worldDolls[_key].lumberjack.transform;
             }
         }

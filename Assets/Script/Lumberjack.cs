@@ -67,6 +67,8 @@ public class Lumberjack : MonoBehaviour
     public Material[] shirts;
     public Material[] hair;
 
+    public float reckoningRTT = 0f;
+
     //duration of the interpolation
     float IP = 0f;
     public bool isLerping = false;
@@ -95,13 +97,12 @@ public class Lumberjack : MonoBehaviour
 
     }
 
-    public void Init(int _id, bool reckoning , bool interacter = false)
+    public void Init(int _id, bool interacter = false)
     {
         SetUsername("Player" + _id);
         SetId(_id);
         SetOutfit(_id);
         SetInteracter(interacter);
-        SetRackoning(reckoning);
         charge = new Charge(0, 0);
         PrintDebug();
     }
@@ -186,10 +187,15 @@ public class Lumberjack : MonoBehaviour
         deltaTime = Time.deltaTime;
         time += Time.deltaTime;
 
-        if (deadRackoning == true)
-        {
-            //Debug.Log("Is reckoning");
-        }
+        //if (deadRackoning == true)
+        //{
+        //    Debug.Log("Is reckoning at:" + time + "s");
+        //    //Debug.Log("Is reckoning");
+        //}
+        //else
+        //{
+        //    Debug.Log("Correcting the wrong reckoning at:" + time + "s");
+        //}
     }
 
     public void Move(float[] _positions, Vector3 _directions, float _IP)
