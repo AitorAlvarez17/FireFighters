@@ -178,6 +178,7 @@ GameObject:
   - component: {fileID: 1547186000463645822}
   - component: {fileID: 3046448430310993601}
   - component: {fileID: 3917412339212319678}
+  - component: {fileID: 7545344327326986206}
   m_Layer: 0
   m_Name: ThreeGameplayPrefab - copia
   m_TagString: Three
@@ -250,6 +251,22 @@ Rigidbody:
   m_Interpolate: 0
   m_Constraints: 0
   m_CollisionDetection: 0
+--- !u!208 &7545344327326986206
+NavMeshObstacle:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1768951431979030616}
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Shape: 0
+  m_Extents: {x: 0.03, y: 0.00001, z: 0.03}
+  m_MoveThreshold: 0.1
+  m_Carve: 0
+  m_CarveOnlyStationary: 1
+  m_Center: {x: 0, y: 0, z: -0.03}
+  m_TimeToStationary: 0.5
 --- !u!1 &2070487002539493312
 GameObject:
   m_ObjectHideFlags: 0
