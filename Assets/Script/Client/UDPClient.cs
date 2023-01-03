@@ -13,7 +13,7 @@ public class UDPClient : MonoBehaviour
     //CSP Vars
     public float timeStamp;
     public float RTT;
-    public int PP = 200;
+    public int PP = 100;
 
     public bool newRtt = false;
     // Servers'IP and port
@@ -146,7 +146,7 @@ public class UDPClient : MonoBehaviour
                 sendMessage.SetMessage("");
                 newMessage = false;
             }
-            if (receiveMessage.positions[0] != 0f || receiveMessage.positions[2] != 0f && isMoving == true)
+            if (isMoving == true)
             {
                 MoveWorld(receiveMessage.id, receiveMessage.positions, receiveMessage.movementDirection);
             }
@@ -225,7 +225,7 @@ public class UDPClient : MonoBehaviour
         sendMessage.SetPositions(thisPlayer.positions);
         sendMessage.SetWorldMatrix(gameMatrix);
         sendMessage.SetPlayersOnline(0);
-        sendMessage.SetMessage("");
+        sendMessage.SetMessage("Hi! I just connected...");
         //Debug.Log("Resending the hello string!");
         SendString("Hi! I just connected...");
 
@@ -360,7 +360,15 @@ public class UDPClient : MonoBehaviour
                         fireChanged = true;
                     }
 
-                    isMoving = true;
+                    if (receiveMessage.velocity > 0f)
+                    {
+                        isMoving = true;
+                    }
+                    else
+                    {
+                        isMoving = false;
+                    }
+                    
                 }
                 else
                 {
@@ -378,7 +386,14 @@ public class UDPClient : MonoBehaviour
                         fireChanged = true;
                     }
 
-                    isMoving = true;
+                    if (receiveMessage.velocity > 0f)
+                    {
+                        isMoving = true;
+                    }
+                    else
+                    {
+                        isMoving = false;
+                    }
                 }
                 //Debug.Log("[CIENT] Receive data!: " + receiveMessage.message);
                 //Debug.Log("[CLIENT] Received Id!" + receiveMessage.id);
@@ -391,13 +406,14 @@ public class UDPClient : MonoBehaviour
     }
 
 
-    public void PingMovement(float[] packageMovement, float[]movementDirection)
+    public void PingMovement(float[] packageMovement, float[]movementDirection, float _vel)
     {
         try
         {
             sendMessage.SetMessage("");
             sendMessage.SetPositions(packageMovement);
             sendMessage.SetDirection(movementDirection);
+            sendMessage.SetVelocity(_vel);
             sendMessage.SetUsername(thisPlayer.username);
             sendMessage.SetId(thisPlayer.id);
             sendMessage.SetWorldMatrix(gameMatrix);

@@ -9,6 +9,7 @@ public class PlayerMovement : MonoBehaviour
     public float speed;
     public float rotationSpeed;
     public bool isMoving = false;
+    public float velocity = 0f;
 
     //Client = 0
     //ServeR = 1
@@ -24,8 +25,16 @@ public class PlayerMovement : MonoBehaviour
         if (this.gameObject.GetComponent<UDPClient>().thisPlayer == null || this.gameObject.GetComponent<ServerController>().gameStarted == false)
             return;
 
+        Vector3 lastPosition = player.transform.position;
+
         if (!Input.GetButton("Horizontal") && !Input.GetButton("Vertical"))
         {
+            velocity = ((player.transform.position - lastPosition).magnitude) / Time.deltaTime;
+            this.gameObject.GetComponent<UDPClient>().thisPlayer.velocity = velocity;
+            //Debug.Log("Velocity when stopped:" + velocity);
+
+            this.gameObject.GetComponent<UDPClient>().sendMessage.SetVelocity(velocity);
+
             isMoving = false;
             return;
         }
@@ -38,6 +47,8 @@ public class PlayerMovement : MonoBehaviour
 
         if (movementDirection == Vector3.zero)
         {
+            
+
             isMoving = false;
         }
         else
@@ -45,12 +56,17 @@ public class PlayerMovement : MonoBehaviour
             //this is a Prediction
             SmoothRotation(movementDirection);
             player.transform.Translate(movementDirection * speed * Time.deltaTime, Space.World);
+            var velocity = ((transform.position - lastPosition).magnitude) / Time.deltaTime;
+            //Debug.Log("Velocity when runnin...:" + velocity);
             isMoving = true;
 
 
             this.gameObject.GetComponent<UDPClient>().thisPlayer.positions[0] = player.transform.transform.position.x;
             this.gameObject.GetComponent<UDPClient>().thisPlayer.positions[1] = player.transform.transform.position.y;
             this.gameObject.GetComponent<UDPClient>().thisPlayer.positions[2] = player.transform.transform.position.z;
+
+            this.gameObject.GetComponent<UDPClient>().thisPlayer.velocity = velocity;
+
             WalkingAnimation();
 
         }
@@ -69,7 +85,7 @@ public class PlayerMovement : MonoBehaviour
         //movementDirectionSerializable[1] = movementDirection.y;
         //movementDirectionSerializable[2] = movementDirection.z;
 
-        this.gameObject.GetComponent<UDPClient>().PingMovement(this.gameObject.GetComponent<UDPClient>().thisPlayer.positions, this.gameObject.GetComponent<UDPClient>().thisPlayer.directions);
+        this.gameObject.GetComponent<UDPClient>().PingMovement(this.gameObject.GetComponent<UDPClient>().thisPlayer.positions, this.gameObject.GetComponent<UDPClient>().thisPlayer.directions, this.gameObject.GetComponent<UDPClient>().thisPlayer.velocity);
 
         movementDirection = Vector3.zero;
     }

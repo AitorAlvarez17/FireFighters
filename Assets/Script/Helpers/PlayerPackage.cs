@@ -10,6 +10,7 @@ public class PlayerPackage
 
     public float[] positions = new float[3];
     public float[] movementDirection = new float[3];
+    public float velocity = 0f;
 
     public int id = -1;
 
@@ -41,7 +42,7 @@ public class PlayerPackage
     }   
 
     //position constructor
-    public PlayerPackage(string _message, string _username,float[] position, float[] _movementDirection, int _id, Tuple<int, int>[] _worldMatrix, int _playersOnline, int _fireAction, int _amount, int _fireId, int _fireLife, float _timeStamp, bool _gameStarted)
+    public PlayerPackage(string _message, string _username,float[] position, float[] _movementDirection, int _id, Tuple<int, int>[] _worldMatrix, int _playersOnline, int _fireAction, int _amount, int _fireId, int _fireLife, float _timeStamp, bool _gameStarted, float _vel)
     {
         message = _message;
         username = _username;
@@ -53,6 +54,7 @@ public class PlayerPackage
         movementDirection[1] = _movementDirection[1];
         movementDirection[2] = _movementDirection[2];
 
+        velocity = _vel;
         id = _id;
         worldMatrix[0] = _worldMatrix[0];
         worldMatrix[1] = _worldMatrix[1];
@@ -80,6 +82,7 @@ public class PlayerPackage
         movementDirection[1] = 0f;
         movementDirection[2] = 0f;
 
+        velocity = 0f;
         id = _id;
         worldMatrix[0] = _matrix[0];
         worldMatrix[1] = _matrix[1];
@@ -149,6 +152,10 @@ public class PlayerPackage
         timeStamp = _timeStamp;
     }
 
+    public void SetVelocity(float _vel)
+    {
+        velocity = _vel;
+    }
     public void SetDirection(float[] _dir)
     {
         movementDirection[0] = _dir[0];

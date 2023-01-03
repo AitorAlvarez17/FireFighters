@@ -65,6 +65,16 @@ public class Lumberjack : MonoBehaviour
     public Material[] shirts;
     public Material[] hair;
 
+    //duration of the interpolation
+    float IP = 0f;
+    public bool isLerping = false;
+
+    public float time = 0f;
+
+    public Vector3 aimPosition;
+    public Vector3 transBuffer;
+
+
     public bool isMoving = false; 
     public bool isPredictingMovement = false;
     public bool isCorrectingMov = false;
@@ -165,47 +175,58 @@ public class Lumberjack : MonoBehaviour
     void Update()
     {
         deltaTime = Time.deltaTime;
+        time += Time.deltaTime;
     }
 
-    public void Move(float[] _positions, Vector3 _directions, float IP)
+    public void Move(float[] _positions, Vector3 _directions, float _IP)
     {
-        float timeElapsed = 0f;
-        //Vector3 newPosition = new Vector3(_positions[0], _positions[1], _positions[2]);
-
-
-        SmoothRotation(_directions, IP);
-        //Debug.Log("Moving Doll" + internalId + "to:" + _positions[0] + _positions[2]);
-        //IP HAS TO BE SO SIMILAR TO PP
-
-        Debug.Log("Moving");
-        StartCoroutine(Lerp(_positions, _directions, IP));
-
-        
-        
-
-        //trans.position = new Vector3(_positions[0], trans.position.y, _positions[2]);
-
-        //if(prediction.isWrong)
-        //CorrectMovement();
-
-        //MovementPrediction();
-    }
-
-    IEnumerator Lerp(float[] _positions, Vector3 _directions, float IP)
-    {
-        Vector3 transBuffer = trans.transform.position;
+        Debug.Log("New Move Action at time: " + time + "s");
         Vector3 newPositions = new Vector3(_positions[0], _positions[1], _positions[2]);
 
-        float timeElapsed = 0;
-        while (timeElapsed < IP)
+        SmoothRotation(_directions, IP);
+
+        if (isLerping == true && IP > _IP)
         {
-            trans.position = Vector3.Lerp(transBuffer, newPositions, timeElapsed / IP);
-            timeElapsed += Time.deltaTime;
+            //here IP > PP
+            //+1000 is simply a matter of smoothness, as i lerp with delta time it's interesting to scale the ms to s
+            IP += _IP + 1000f;
+            aimPosition = newPositions;
+            transBuffer = trans.transform.position;
+            Debug.Log("Is lerping with a accumulated IP of" + IP);
+            //i will try to stay here but with the IP closely to PP
         }
+        else
+        {
+            //here IP < PP
+            IP = _IP + 1000f;
+            aimPosition = newPositions;
+            transBuffer = trans.transform.position;
+            Debug.Log("[NEW] lerping with a accumulated IP of" + IP);
+
+            StartCoroutine(Lerp());
+        }
+    }
+
+    IEnumerator Lerp()
+    {
+        isLerping = true;
+        Debug.Log("LERPING!");
+
+        float timeElapsed = 0f;
+        while (timeElapsed < (IP / 1000))
+        {
+            trans.position = Vector3.Lerp(trans.position, aimPosition, timeElapsed / (IP / 1000));
+            //Debug.Log("Position" + trans.position);
+            timeElapsed += Time.deltaTime;
+            yield return null;
+        }
+        //Debug.Log("Time elapsed: " + timeElapsed);
         //Debug.Log("Time elapsed:" + timeElapsed + " s");
 
-        trans.position = newPositions;
+        trans.position = aimPosition;
 
+        Debug.Log("Leaving Lerp with a time Elapsed of " + timeElapsed);
+        isLerping = false;
         yield break;
     }
 

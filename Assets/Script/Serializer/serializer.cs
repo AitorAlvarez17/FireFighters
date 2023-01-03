@@ -39,6 +39,7 @@ public static class serializer
         {
             writer.Write(direction);
         }
+        writer.Write(_message.velocity);
         writer.Write(_message.id);
         foreach (var worldPlayer in _message.worldMatrix)
         {
@@ -81,6 +82,7 @@ public static class serializer
         direction[1] = reader.ReadSingle();
         direction[2] = reader.ReadSingle();
 
+        float velocity = reader.ReadSingle();
         //foreach (var item in positions)
         //{
         //Debug.Log("Position :" + item);
@@ -107,7 +109,7 @@ public static class serializer
         //Debug.Log("Position :" + item);
         //}
 
-        PlayerPackage newMessage = new PlayerPackage(message, username,positions,direction,id, worldMatrix, playersOnline, fireaction, amount, fireID, fireLife, timeStamp, gameStarted);
+        PlayerPackage newMessage = new PlayerPackage(message, username,positions,direction,id, worldMatrix, playersOnline, fireaction, amount, fireID, fireLife, timeStamp, gameStarted, velocity);
 
         bytes = null;
 
