@@ -47,8 +47,6 @@ public class PlayerMovement : MonoBehaviour
 
         if (movementDirection == Vector3.zero)
         {
-            
-
             isMoving = false;
         }
         else

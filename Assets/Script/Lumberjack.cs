@@ -55,6 +55,8 @@ public class Charge
 }
 public class Lumberjack : MonoBehaviour
 {
+    public bool deadRackoning = false;
+
     // Start is called before the first frame update
     public int internalId;
     public Transform trans;
@@ -70,6 +72,7 @@ public class Lumberjack : MonoBehaviour
     public bool isLerping = false;
 
     public float time = 0f;
+    public float lastTime = 0f;
 
     public Vector3 aimPosition;
     public Vector3 transBuffer;
@@ -92,12 +95,13 @@ public class Lumberjack : MonoBehaviour
 
     }
 
-    public void Init(int _id, bool interacter = false)
+    public void Init(int _id, bool reckoning , bool interacter = false)
     {
         SetUsername("Player" + _id);
         SetId(_id);
         SetOutfit(_id);
         SetInteracter(interacter);
+        SetRackoning(reckoning);
         charge = new Charge(0, 0);
         PrintDebug();
     }
@@ -117,6 +121,11 @@ public class Lumberjack : MonoBehaviour
     {
         Debug.Log("Interacter set to: " + value);
         interacter = value;
+    }
+
+    public void SetRackoning(bool rack)
+    {
+        deadRackoning = rack;
     }
 
     public void PrintDebug()
@@ -176,12 +185,20 @@ public class Lumberjack : MonoBehaviour
     {
         deltaTime = Time.deltaTime;
         time += Time.deltaTime;
+
+        if (deadRackoning == true)
+        {
+            //Debug.Log("Is reckoning");
+        }
     }
 
     public void Move(float[] _positions, Vector3 _directions, float _IP)
     {
-        Debug.Log("New Move Action at time: " + time + "s");
+        Debug.Log("Time difference of:" + (time - lastTime) + " s");
+        //possible upgrade: use RTT in order to lerp having in accountance lag.
         Vector3 newPositions = new Vector3(_positions[0], _positions[1], _positions[2]);
+
+        lastTime = time;
 
         SmoothRotation(_directions, IP);
 

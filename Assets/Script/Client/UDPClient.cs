@@ -347,7 +347,7 @@ public class UDPClient : MonoBehaviour
                     RTT = RTT / 2;
                     if (RTT > 0)
                     {
-                        Debug.LogWarning("New RTT from [ME] with" + RTT + "s" + "at: " + timeStamp + "s playtime.");
+                        Debug.LogWarning("New RTT from [ME] value: " + RTT + "s" + "at: " + timeStamp + "s playtime.");
                     }
                     newRtt = true;
                     //CHECK PP WITH TIMESTAMP

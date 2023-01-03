@@ -19,7 +19,6 @@ public class PlayerSawmill
 
 public class WorldController : MonoBehaviour
 {
-
     public GameObject playerGO;
     public GameObject fireGO;
     public GameObject predictGO;
@@ -48,12 +47,12 @@ public class WorldController : MonoBehaviour
         
     }
 
-    public void CreatePlayer(int key)
+    public void CreatePlayer(int key, bool reckoning)
     {
         //Lumberjack
         Debug.Log("New Lumberjack! KEY:" + key);
         GameObject playerPref = Instantiate(playerGO, spawnPoints[pos].position, Quaternion.identity);
-        playerPref.GetComponent<Lumberjack>().Init(key);
+        playerPref.GetComponent<Lumberjack>().Init(key, reckoning);
         playerPref.transform.localScale = new Vector3(1.88f, 1.88f, 1.88f);
 
         GameObject predictPref = Instantiate(predictGO, spawnPoints[pos].position, Quaternion.identity);
@@ -68,13 +67,13 @@ public class WorldController : MonoBehaviour
         worldDolls.Add(key, new PlayerSawmill(playerPref.GetComponent<Lumberjack>(), firePref.GetComponent<Fireplace>(), predictPref));
     }
 
-    public void CreatePlayer(int key, bool interacter = false)
+    public void CreatePlayer(int key, bool reckoning, bool interacter = false)
     {
 
         //Lumberjack
         Debug.Log("New Lumberjack! KEY:" + key);
         GameObject playerPref = Instantiate(playerGO, spawnPoints[pos].position, Quaternion.identity);
-        playerPref.GetComponent<Lumberjack>().Init(key, interacter);
+        playerPref.GetComponent<Lumberjack>().Init(key, reckoning, interacter);
         playerPref.transform.localScale = new Vector3(1.88f, 1.88f, 1.88f);
         Vector3 spawnOrientation = new Vector3(0f, 90 * (worldDolls.Count + 1) + 45, 0f);
 
@@ -146,12 +145,13 @@ public class WorldController : MonoBehaviour
             }
             if (index.Item1 != 0 && index.Item1 != _key)
             {
+                //Dead Reckoning only hides latency for REMOTE users
                 Debug.Log("Creating doll with key" + index.Item1);
-                CreatePlayer(index.Item1);
+                CreatePlayer(index.Item1, true);
             }
             if (index.Item1 == _key)
             {
-                CreatePlayer(_key, true);
+                CreatePlayer(_key, false, true);
                 this.gameObject.GetComponent<PlayerMovement>().player = worldDolls[_key].movementPredicter.gameObject;
                 GameObject.FindGameObjectWithTag("MainCamera").GetComponent<CameraMovement>().target = worldDolls[_key].lumberjack.transform;
             }
