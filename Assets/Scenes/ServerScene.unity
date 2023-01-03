@@ -122,7 +122,7 @@ NavMeshSettings:
     preserveTilesOutsideBounds: 0
     debug:
       m_Flags: 0
-  m_NavMeshData: {fileID: 0}
+  m_NavMeshData: {fileID: 23800000, guid: 63e058eae48eacd469ab4ff19a4e1d36, type: 2}
 --- !u!4 &17412877 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 4605430782051176847, guid: 218324eb8a4ab5840a5dd81b0c691cb5,
@@ -909,13 +909,44 @@ Transform:
     type: 3}
   m_PrefabInstance: {fileID: 1999132363}
   m_PrefabAsset: {fileID: 0}
---- !u!43 &696792787
+--- !u!1 &757612225
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 757612226}
+  m_Layer: 0
+  m_Name: PostPro
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &757612226
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 757612225}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: -5.9162593, y: 0.448555, z: -7.4149294}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_RootOrder: 10
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!43 &885385210
 Mesh:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: WaterVolume--1484
+  m_Name: WaterVolume--37908
   serializedVersion: 10
   m_SubMeshes:
   - serializedVersion: 2
@@ -1073,37 +1104,6 @@ Mesh:
     offset: 0
     size: 0
     path: 
---- !u!1 &757612225
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 757612226}
-  m_Layer: 0
-  m_Name: PostPro
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!4 &757612226
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 757612225}
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -5.9162593, y: 0.448555, z: -7.4149294}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
-  m_Children: []
-  m_Father: {fileID: 0}
-  m_RootOrder: 10
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!4 &891711711 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 6949198993675789578, guid: bb5f8f0a4ab9ee1449f2fc0b8a5ae15d,
@@ -2955,11 +2955,16 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Mesh
       value: 
-      objectReference: {fileID: 696792787}
+      objectReference: {fileID: 885385210}
     - target: {fileID: 3046448429832771554, guid: bb5f8f0a4ab9ee1449f2fc0b8a5ae15d,
         type: 3}
       propertyPath: m_Enabled
       value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 3620457234290409938, guid: bb5f8f0a4ab9ee1449f2fc0b8a5ae15d,
+        type: 3}
+      propertyPath: m_StaticEditorFlags
+      value: 8
       objectReference: {fileID: 0}
     - target: {fileID: 4539377177305290984, guid: bb5f8f0a4ab9ee1449f2fc0b8a5ae15d,
         type: 3}
