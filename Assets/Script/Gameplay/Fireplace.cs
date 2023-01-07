@@ -8,11 +8,14 @@ public class Fireplace : MonoBehaviour
     public GameObject GC;
     public int internalID;
     public string fireName;
+    public AudioClip FX;
+    AudioSource audioSource;
 
     public TextMeshPro lifeText;
 
     private int life = 300;
     public float maxLife = 100;
+    bool soundMade = false;
 
     public Fireplace()
     {
@@ -31,7 +34,7 @@ public class Fireplace : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        
+        audioSource = gameObject.GetComponent<AudioSource>();
     }
 
     // Update is called once per frame
@@ -74,6 +77,7 @@ public class Fireplace : MonoBehaviour
 
     public void OnTriggerEnter(Collider other)
     {
+        
         Debug.Log("Colliding with" + other.transform.tag);
         if (other.transform.tag == "Lumber")
         {
@@ -99,12 +103,18 @@ public class Fireplace : MonoBehaviour
                 //IMPORTANT! - this is prediction
                 HealBar(other.transform.GetComponent<Lumberjack>().charge.Type, other.transform.GetComponent<Lumberjack>().charge.Amount);
 
+                audioSource.PlayOneShot(FX);
                 GC.GetComponent<UDPClient>().PingFireAction(internalID, other.transform.GetComponent<Lumberjack>().charge.Type, other.transform.GetComponent<Lumberjack>().charge.Amount, life);
                 other.transform.GetComponent<Lumberjack>().charge.ClearCharge();
                 other.transform.GetComponent<Lumberjack>().PrintDebug();
             }
         }
     }
+    public void OnTriggerExit(Collider other)
+    {
+        
+    }
+
 
     public void FirePlaceActions(float lifeFraction)
     {

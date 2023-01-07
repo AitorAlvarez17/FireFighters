@@ -1584,6 +1584,7 @@ GameObject:
   - component: {fileID: 5998753301368964987}
   - component: {fileID: 5636736408836846913}
   - component: {fileID: 4706802539861499031}
+  - component: {fileID: 6712642811295171918}
   m_Layer: 0
   m_Name: Player
   m_TagString: Lumber
@@ -1723,6 +1724,14 @@ Rigidbody:
   m_Interpolate: 0
   m_Constraints: 0
   m_CollisionDetection: 0
+--- !u!81 &6712642811295171918
+AudioListener:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5998753301368964986}
+  m_Enabled: 1
 --- !u!1 &6399894789660105561
 GameObject:
   m_ObjectHideFlags: 0
