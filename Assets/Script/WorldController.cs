@@ -129,6 +129,10 @@ public class WorldController : MonoBehaviour
                 Debug.Log("Updating FIRE " + item.Item1 + "");
                 if (worldDolls.ContainsKey(item.Item1))
                     worldDolls[item.Item1].firePlace.SetLife(item.Item2);
+                    if(worldDolls[item.Item1].firePlace.GetLife() <= 0)
+                    {
+                        worldDolls[item.Item1].lumberjack.textInfo.text = "DED";
+                    }
                 else
                     Debug.Log("Doll was not in the dictionary");
             }

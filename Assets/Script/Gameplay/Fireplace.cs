@@ -16,6 +16,11 @@ public class Fireplace : MonoBehaviour
     public SpriteRenderer circularSpriteImage;
 
     private int life = 300;
+
+    public int GetLife()
+    {
+        return life;
+    }
     public float maxLife = 100;
     bool soundMade = false;
 
