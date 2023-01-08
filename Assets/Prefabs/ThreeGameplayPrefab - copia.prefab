@@ -222,7 +222,6 @@ MonoBehaviour:
   life: 0
   phase: 0
   FX: {fileID: 8300000, guid: 3211f8bd0ba8aca4f823697ab84a3b74, type: 3}
-  entered: 0
 --- !u!136 &3046448430310993601
 CapsuleCollider:
   m_ObjectHideFlags: 0
@@ -263,7 +262,7 @@ AudioSource:
   m_Enabled: 1
   serializedVersion: 4
   OutputAudioMixerGroup: {fileID: 0}
-  m_audioClip: {fileID: 0}
+  m_audioClip: {fileID: 8300000, guid: 3211f8bd0ba8aca4f823697ab84a3b74, type: 3}
   m_PlayOnAwake: 0
   m_Volume: 1
   m_Pitch: 1

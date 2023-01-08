@@ -1829,19 +1829,6 @@ MeshCollider:
   m_Convex: 0
   m_CookingOptions: 30
   m_Mesh: {fileID: -8803937527578110353, guid: 5069d0f6b39c8a04398f9409bf5ba858, type: 3}
---- !u!114 &5022475449307908273
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 919132148330015720}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: b1088470a332e9c499fa609617348d65, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  FX: {fileID: 8300000, guid: 3875f5842bd40f247a23b4665b33f450, type: 3}
 --- !u!82 &991610743118060474
 AudioSource:
   m_ObjectHideFlags: 0
@@ -1852,7 +1839,7 @@ AudioSource:
   m_Enabled: 1
   serializedVersion: 4
   OutputAudioMixerGroup: {fileID: 0}
-  m_audioClip: {fileID: 0}
+  m_audioClip: {fileID: 8300000, guid: 3875f5842bd40f247a23b4665b33f450, type: 3}
   m_PlayOnAwake: 0
   m_Volume: 0.5
   m_Pitch: 1
@@ -1938,6 +1925,19 @@ AudioSource:
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 4
+--- !u!114 &5022475449307908273
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 919132148330015720}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b1088470a332e9c499fa609617348d65, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  FX: {fileID: 8300000, guid: 3875f5842bd40f247a23b4665b33f450, type: 3}
 --- !u!1001 &1597301825
 PrefabInstance:
   m_ObjectHideFlags: 0

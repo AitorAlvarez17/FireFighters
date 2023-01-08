@@ -1584,7 +1584,6 @@ GameObject:
   - component: {fileID: 5998753301368964987}
   - component: {fileID: 5636736408836846913}
   - component: {fileID: 4706802539861499031}
-  - component: {fileID: 6712642811295171918}
   m_Layer: 0
   m_Name: Player
   m_TagString: Lumber
@@ -1688,6 +1687,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 62c7ab2eb4468a649bf9218403110f75, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  deadRackoning: 0
   internalId: 1
   trans: {fileID: 5998753301368964990}
   textInfo: {fileID: 455920738}
@@ -1705,6 +1705,15 @@ MonoBehaviour:
   - {fileID: 2100000, guid: 2930828d8da86b0479beccde3b9e2bb6, type: 2}
   - {fileID: 2100000, guid: 5b6cb5ec5e70637479c49254734de713, type: 2}
   - {fileID: 2100000, guid: 9fbfd7773fdbb234db9d4547599522f8, type: 2}
+  isLerping: 0
+  rtt: 0
+  time: 0
+  lastTime: 0
+  aimPosition: {x: 0, y: 0, z: 0}
+  transBuffer: {x: 0, y: 0, z: 0}
+  isMoving: 0
+  isPredictingMovement: 0
+  isCorrectingMov: 0
   interacter: 0
   deltaTime: 0
   avatar: {fileID: 5359579699084540786}
@@ -1724,14 +1733,6 @@ Rigidbody:
   m_Interpolate: 0
   m_Constraints: 0
   m_CollisionDetection: 0
---- !u!81 &6712642811295171918
-AudioListener:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 5998753301368964986}
-  m_Enabled: 1
 --- !u!1 &6399894789660105561
 GameObject:
   m_ObjectHideFlags: 0
