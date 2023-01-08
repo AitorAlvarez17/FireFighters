@@ -10,6 +10,7 @@ public class Charge
     //0 for nothing, 1 for wood, 2 for water
     private int type;
 
+
     public Charge(int _amount, int _type)
     {
         amount = _amount;
@@ -54,6 +55,8 @@ public class Charge
 }
 public class Lumberjack : MonoBehaviour
 {
+    public bool deadRackoning = false;
+
     // Start is called before the first frame update
     public int internalId;
     public Transform trans;
@@ -63,6 +66,22 @@ public class Lumberjack : MonoBehaviour
     public Material[] hats;
     public Material[] shirts;
     public Material[] hair;
+
+    //duration of the interpolation
+    float IP = 0f;
+    public bool isLerping = false;
+    public float rtt = 0f;
+
+    public float time = 0f;
+    public float lastTime = 0f;
+
+    public Vector3 aimPosition;
+    public Vector3 transBuffer;
+
+
+    public bool isMoving = false; 
+    public bool isPredictingMovement = false;
+    public bool isCorrectingMov = false;
 
     public bool interacter = false;
     public float deltaTime = 0f;
@@ -77,12 +96,13 @@ public class Lumberjack : MonoBehaviour
 
     }
 
-    public void Init(int _id, bool interacter = false)
+    public void Init(int _id, bool reckoning , bool interacter = false)
     {
         SetUsername("Player" + _id);
         SetId(_id);
         SetOutfit(_id);
         SetInteracter(interacter);
+        SetRackoning(reckoning);
         charge = new Charge(0, 0);
         PrintDebug();
     }
@@ -102,6 +122,11 @@ public class Lumberjack : MonoBehaviour
     {
         Debug.Log("Interacter set to: " + value);
         interacter = value;
+    }
+
+    public void SetRackoning(bool rack)
+    {
+        deadRackoning = rack;
     }
 
     public void PrintDebug()
@@ -160,27 +185,73 @@ public class Lumberjack : MonoBehaviour
     void Update()
     {
         deltaTime = Time.deltaTime;
+        time += Time.deltaTime;
+
+        if (deadRackoning == true)
+        {
+            //Debug.Log("Is reckoning");
+        }
     }
 
-    public void Move(float[] _positions, Vector3 _directions)
+    public void Move(float[] _positions, Vector3 _directions, float _IP)
     {
+        //Debug.Log("Time difference of:" + (time - lastTime) + " s");
+        //Debug.Log("The RTT added to IP is: " + ((time - lastTime) - (_IP / 1000)));
+        //possible upgrade: use RTT in order to lerp having in accountance lag.
+        Vector3 newPositions = new Vector3(_positions[0], _positions[1], _positions[2]);
 
-        //Vector3 newPosition = new Vector3(_positions[0], _positions[1], _positions[2]);
-        Vector3 transBuffer = trans.transform.position;
+        lastTime = time;
 
+        SmoothRotation(_directions, IP);
 
-        SmoothRotation(_directions);
-        //Debug.Log("Moving Doll" + internalId + "to:" + _positions[0] + _positions[2]);
+        if (isLerping == true && IP > _IP)
+        {
+            //here IP > PP
+            //+1000 is simply a matter of smoothness, as i lerp with delta time it's interesting to scale the ms to s
+            IP += _IP + 1000f;
+            aimPosition = newPositions;
+            transBuffer = trans.transform.position;
+            //Debug.Log("Is lerping with a accumulated IP of" + IP);
+            //i will try to stay here but with the IP closely to PP
+        }
+        else
+        {
+            //here IP < PP
+            IP = _IP + 1000f;
+            aimPosition = newPositions;
+            transBuffer = trans.transform.position;
+            //Debug.Log("[NEW] lerping with a accumulated IP of" + IP);
 
-        //IP HAS TO BE SO SIMILAR TO PP
-        //trans.position = Vector3.Lerp(trans.position, newPosition, /*IP*/);
+            StartCoroutine(Lerp());
+        }
+        
+    }
 
-        trans.position = new Vector3(_positions[0], trans.position.y, _positions[2]);
+    IEnumerator Lerp()
+    {
+        isLerping = true;
+        Debug.Log("LERPING!");
 
-        //if(prediction.isWrong)
-        //CorrectMovement();
+        float timeElapsed = 0f;
+        while (timeElapsed < (IP / 1000))
+        {
+            trans.position = Vector3.Lerp(trans.position, aimPosition, timeElapsed / (IP / 1000));
+            //Debug.Log("Position" + trans.position);
+            timeElapsed += Time.deltaTime;
+            yield return null;
+        }
+        //Debug.Log("Time elapsed: " + timeElapsed);
+        //Debug.Log("Time elapsed:" + timeElapsed + " s");
 
-        //MovementPrediction();
+        trans.position = aimPosition;
+
+        isLerping = false;
+
+        if (rtt > 0)
+        {
+            Debug.Log("It should dead reckon a little " + rtt);
+        }
+        yield break;
     }
 
     public void MovementPrediction()
@@ -193,10 +264,11 @@ public class Lumberjack : MonoBehaviour
         //correct the movement 
     }
 
-    public void SmoothRotation(Vector3 directions)
+    public void SmoothRotation(Vector3 directions, float IP)
     {
+        //Debug.Log("Rotating" + directions);
         Quaternion rotation = Quaternion.LookRotation(directions, Vector3.up);
-        trans.rotation = Quaternion.RotateTowards(trans.rotation, rotation, 10000 * Time.deltaTime);
+        trans.rotation = Quaternion.RotateTowards(trans.rotation, rotation, 360f);
     }
 
     public void OnTriggerEnter(Collider other)
