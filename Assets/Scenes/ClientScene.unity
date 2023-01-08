@@ -4200,7 +4200,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: bb57c59b3df58bd4d9c988b682cad2c1, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  colorList: []
+  colorList:
+  - {r: 0.74509805, g: 0.23921569, b: 0.3137255, a: 1}
+  - {r: 0.16470589, g: 0.47058824, b: 0.7647059, a: 1}
+  - {r: 0.14117648, g: 0.49019608, b: 0.30588236, a: 1}
+  - {r: 0.5058824, g: 0.41568628, b: 0.2901961, a: 1}
   lifeParent: {fileID: 1957439018}
   LifePrefab: {fileID: 2508250198914147305, guid: bec57d68e2eedf54795530521050290d,
     type: 3}
