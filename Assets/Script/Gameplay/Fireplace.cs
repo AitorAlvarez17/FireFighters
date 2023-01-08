@@ -43,6 +43,11 @@ public class Fireplace : MonoBehaviour
 
     public void HealBar(int _type, int _amount)
     {
+        if (_amount > 100)
+        {
+            life = 100;
+            return;
+        }
         switch (_type)
         {
             case 0:
@@ -67,10 +72,15 @@ public class Fireplace : MonoBehaviour
 
     public void SetLife(int _life)
     {
+        if (_life > 100)
+        {
+            life = 100;
+            return;
+        }
         Debug.Log("Life set in Fireplace [ID: " + internalID + "] with" + "[LIFE: ]" + _life);
         life = _life;
         lifeText.text = "LIFE: " + life;
-        // GC.GetComponent<UIHandler>().UpdateFireUI();
+        GC.GetComponent<UIHandler>().UpdatePlayerUI(internalID, _life);
         //Update UI;
     }
 

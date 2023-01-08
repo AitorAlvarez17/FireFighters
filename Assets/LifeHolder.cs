@@ -25,14 +25,14 @@ public class LifeHolder : MonoBehaviour
     {
         player1Name.text = name;
         player1Amount.text = currentLife.ToString();
-        player1Panel.fillAmount = (currentLife / maxLife);
+        
     }
 
-    public void UpdatePlayerUI(int internalID, string name, int currentLife, float maxLife)
+    public void UpdatePlayerUI(int internalID,int currentLife)
     {
-        Debug.Log(internalID);
-        Debug.Log(name);
-        Debug.Log(currentLife);
-        Debug.Log(maxLife);
+        player1Amount.text = currentLife.ToString();
+        player1Panel.fillAmount = (float)(currentLife / 100f);
+        Debug.Log("My life is crazy: " + (float)currentLife / 100f);
+
     }
 }

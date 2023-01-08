@@ -14,7 +14,7 @@ public class UIHandler : MonoBehaviour
     // Replace Quantity
     // Make Bar move.
 
-    
+
     public Transform lifeParent;
 
     private static Dictionary<int, LifeHolder> lifeHolders = new Dictionary<int, LifeHolder>();
@@ -44,43 +44,56 @@ public class UIHandler : MonoBehaviour
         GameObject newLifeBar = Instantiate(LifePrefab, lifeParent);
 
         RectTransform rect = (RectTransform)newLifeBar.transform;
-        newLifeBar.GetComponent<LifeHolder>().Init(internalID,name,currentLife,maxLife);
-        lifeHolders.Add(internalID,  newLifeBar.GetComponent<LifeHolder>());
+        newLifeBar.GetComponent<LifeHolder>().Init(internalID, name, currentLife, maxLife);
+        lifeHolders.Add(internalID, newLifeBar.GetComponent<LifeHolder>());
         ManagePivots(rect, lifeHolders.Count);
 
     }
-    public void UpdatePlayerUI(int internalID, string name, int currentLife, float maxLife)
+    public void UpdatePlayerUI(int internalID, int currentLife)
     {
-        
-        LifePrefab.transform.GetComponent<LifeHolder>().UpdatePlayerUI(internalID,name,currentLife,maxLife);
+        if(lifeHolders.ContainsKey(internalID) == true)
+        {
+            lifeHolders[internalID].transform.GetComponent<LifeHolder>().UpdatePlayerUI(internalID, currentLife);
+        }
+        else
+        {
+            Debug.Log("Key doesnt exists!!");
+        }
     }
 
     private void ManagePivots(RectTransform rect, int id)
     {
+
         switch (id)
         {
             case 1:
+                rect.anchorMin = new Vector2(0f, 1.0f);
+                rect.anchorMax = new Vector2(0f, 1.0f);
                 rect.pivot = new Vector2(0f, 1.0f);
-                rect.position = Vector3.zero;
                 //UP left
                 break;
             case 2:
+                rect.anchorMin = new Vector2(1.0f, 1.0f);
+                rect.anchorMax = new Vector2(1.0f, 1.0f);
                 rect.pivot = new Vector2(1.0f, 1.0f);
-                rect.position = Vector3.zero;
                 //UP right
                 break;
             case 3:
-                rect.pivot = new Vector2(0f, 0f);  
-                rect.position = Vector3.zero; 
+                rect.anchorMin = new Vector2(0f, 0f);
+                rect.anchorMax = new Vector2(0f, 0f);
+                rect.pivot = new Vector2(0f, 0f);
                 //DOWN left
                 break;
             case 4:
+                rect.anchorMin = new Vector2(1.0f, 0f);
+                rect.anchorMax = new Vector2(1.0f, 0f);
                 rect.pivot = new Vector2(1.0f, 0f);
-                rect.position = Vector3.zero;
                 //DOWN right
                 break;
             default:
                 break;
         }
+        rect.anchoredPosition = Vector3.zero;
+        Debug.Log(rect);
     }
 }
