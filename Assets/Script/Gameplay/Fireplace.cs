@@ -40,7 +40,7 @@ public class Fireplace : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        
+
     }
 
     public void HealBar(int _type, int _amount)
@@ -63,13 +63,13 @@ public class Fireplace : MonoBehaviour
             default:
                 break;
         }
-        
+
         //Ping Life();
     }
 
     public void SetLife(int _life)
     {
-        Debug.Log("Life set in Fireplace [ID: "+ internalID + "] with" + "[LIFE: ]" + _life);
+        Debug.Log("Life set in Fireplace [ID: " + internalID + "] with" + "[LIFE: ]" + _life);
         life = _life;
         lifeText.text = "LIFE: " + life;
         FirePlaceActions(life / maxLife);
@@ -77,7 +77,7 @@ public class Fireplace : MonoBehaviour
 
     public void OnTriggerEnter(Collider other)
     {
-        
+
         Debug.Log("Colliding with" + other.transform.tag);
         if (other.transform.tag == "Lumber")
         {
@@ -86,6 +86,7 @@ public class Fireplace : MonoBehaviour
                 other.transform.GetComponent<Lumberjack>().charge.ClearCharge();
                 other.transform.GetComponent<Lumberjack>().PrintDebug();
 
+                audioSource.PlayOneShot(FX);
                 return;
             }
 
@@ -103,7 +104,6 @@ public class Fireplace : MonoBehaviour
                 //IMPORTANT! - this is prediction
                 HealBar(other.transform.GetComponent<Lumberjack>().charge.Type, other.transform.GetComponent<Lumberjack>().charge.Amount);
 
-                audioSource.PlayOneShot(FX);
                 GC.GetComponent<UDPClient>().PingFireAction(internalID, other.transform.GetComponent<Lumberjack>().charge.Type, other.transform.GetComponent<Lumberjack>().charge.Amount, life);
                 other.transform.GetComponent<Lumberjack>().charge.ClearCharge();
                 other.transform.GetComponent<Lumberjack>().PrintDebug();
@@ -112,7 +112,7 @@ public class Fireplace : MonoBehaviour
     }
     public void OnTriggerExit(Collider other)
     {
-        
+
     }
 
 
