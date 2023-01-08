@@ -8,6 +8,9 @@ public class Three : MonoBehaviour
     public int life;
     public int phase;
     private bool recolected;
+    public AudioClip FX;
+    AudioSource audioSource;
+
 
     public bool Recolected
     {
@@ -25,6 +28,8 @@ public class Three : MonoBehaviour
         }
     }
 
+    bool entered;
+
     private void Awake()
     {
         life = 100;
@@ -34,6 +39,9 @@ public class Three : MonoBehaviour
     void Start()
     {
         GC = GameObject.FindGameObjectWithTag("GameController");
+        audioSource = gameObject.GetComponent<AudioSource>();
+        entered = false;
+
     }
 
     // Update is called once per frame
@@ -44,9 +52,20 @@ public class Three : MonoBehaviour
 
     public void OnTriggerEnter(Collider other)
     {
-       // Debug.Log("other" + other);
+        // Debug.Log("other" + other);
+        if(other.transform.tag == "Lumber" && entered==false)
+        {
+            audioSource.PlayOneShot(FX);
+            entered = true;
 
-        
+        }
+
+
+    }
+
+    public void OnTriggerExit(Collider other)
+    {
+        entered = false;
     }
 
     public int Damage()

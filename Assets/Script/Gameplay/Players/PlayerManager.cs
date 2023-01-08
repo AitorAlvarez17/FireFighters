@@ -22,10 +22,12 @@ public class Player
     public bool dirty;
     public float[] positions = new float[3] { 0, 0, 0 };
     public float[] directions = new float[3] { 0, 0, 0 };
+    public float velocity = 0f;
 
     //0 for nothing, 1 for wood, 2 for water
     public int charge;
     public int amount;
+    public int life;
 
     public void UpdatePosition(float[] positions)
     {

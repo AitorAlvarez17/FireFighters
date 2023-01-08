@@ -10,8 +10,10 @@ using TMPro;
 
 public class UDPClient : MonoBehaviour
 {
+    //CSP Vars
     public float timeStamp;
     public float RTT;
+    public int PP = 100;
 
     public bool newRtt = false;
     // Servers'IP and port
@@ -56,6 +58,7 @@ public class UDPClient : MonoBehaviour
     public bool debugMatrix = false;
     public bool newConection = true;
     public bool startGame = false;
+    public bool newMessage = false;
 
     //instanciation both variables
     void Start()
@@ -65,8 +68,7 @@ public class UDPClient : MonoBehaviour
         serverPort = ServerController.MyServerInstance.serverPort;
         playersOnline = 99;
 
-        sendThread = new Thread(Send);
-        sendThread.Start();
+        
         //testBytes = serializer.SerializePlayerInfo(playerInfo);
     }
 
@@ -82,12 +84,7 @@ public class UDPClient : MonoBehaviour
 
         PlayerActions();
 
-        if (newRtt == true)
-        {
-            //Debug.Log("New RTT" + RTT + "Ms");
-            newRtt = false;
-        }
-
+        
         if (thisPlayer != null)
         {
             if (Input.GetKeyDown(KeyCode.Alpha1))
@@ -137,13 +134,19 @@ public class UDPClient : MonoBehaviour
                 debugMatrix = true;
                 newConection = false;
             }
-            if (receiveMessage != null && receiveMessage.message != null && receiveMessage.message != "")
+            if (newMessage == true)
             {
                 //Debug.Log("Message checked and creating...!: " + receiveMessage.message + "From Client:" + receiveMessage.username);
                 CreateMessage(receiveMessage);
-                receiveMessage.SetMessage(null);
+                sendMessage.SetMessage("");
+                newMessage = false;
             }
-            if (receiveMessage.positions[0] != 0f || receiveMessage.positions[2] != 0f && isMoving == true)
+            if (newRtt == true)
+            {
+                this.gameObject.GetComponent<WorldController>().SetReckoningRTTS(RTT);
+                newRtt = false;
+            }
+            if (isMoving == true)
             {
                 MoveWorld(receiveMessage.id, receiveMessage.positions, receiveMessage.movementDirection);
             }
@@ -222,6 +225,7 @@ public class UDPClient : MonoBehaviour
         sendMessage.SetPositions(thisPlayer.positions);
         sendMessage.SetWorldMatrix(gameMatrix);
         sendMessage.SetPlayersOnline(0);
+        sendMessage.SetMessage("Hi! I just connected...");
         //Debug.Log("Resending the hello string!");
         SendString("Hi! I just connected...");
 
@@ -235,6 +239,7 @@ public class UDPClient : MonoBehaviour
             thisPlayer.dirty = true;
 
             isMoving = false;
+
 
             
 
@@ -273,14 +278,16 @@ public class UDPClient : MonoBehaviour
         {
             while (true)
             {
-                NewMessage();
-                
-                //PingMessage();
-                //PingMovement();
-                //PingFireAction();
+                byte[] dataTMP = new byte[1024];
 
-                Debug.Log("Sending...");
-                Thread.Sleep(100);
+                sendMessage.SetTimeStamp(timeStamp);
+
+                dataTMP = serializer.SerializePackage(sendMessage);
+                udpSocket.SendTo(dataTMP, dataTMP.Length, SocketFlags.None, serverEP);
+
+                //carefull with data as it keeps setted, this can be so confusing if you cross it with a local dataTMP value, just to know.
+                //PP is the time between sent packets and is used right here.
+                Thread.Sleep(PP);
             }
         }
         catch (Exception ex)
@@ -303,6 +310,9 @@ public class UDPClient : MonoBehaviour
                 receiveMessage = serializer.DeserializePackage(dataTMP);
                 thisPlayer.dirty = true;
 
+                RTT = timeStamp - receiveMessage.timeStamp;
+                RTT = RTT / 2;
+
                 if (receiveMessage.playersOnline > playersOnline)
                 {
                     gameMatrix = receiveMessage.worldMatrix;
@@ -312,22 +322,36 @@ public class UDPClient : MonoBehaviour
                     Debug.Log("Receiving in " + thisPlayer.id);
                     playersOnline = receiveMessage.playersOnline;
                 }
-                
-                
+
+                if (receiveMessage != null && receiveMessage.message != null && receiveMessage.message != "")
+                {
+                    newMessage = true;
+                }
                 //time in ms
                 //RTT calculates the time that a packed lasts to go from client to server and comeback
                 //we use RTT / 2 to calculate the avg time of traveling of client - server
-                RTT = timeStamp - receiveMessage.timeStamp;
-                RTT = RTT * 1000;
-                newRtt = true;
+                
+
+                //Debug.Log("New RTT" + RTT + "Ms" + "from a packet of Player" + receiveMessage.id);
+
 
                 if (receiveMessage.gameStarted == true)
                 {
                     startGame = true;
+
+                    sendThread = new Thread(Send);
+                    sendThread.Start();
                 }
 
                 if (receiveMessage.id == thisPlayer.id)
                 {
+                    //RTT 
+                    
+                    if (RTT > 0)
+                    {
+                        Debug.LogWarning("New RTT from [ME] value: " + RTT + "s" + "at: " + timeStamp + "s playtime.");
+                        newRtt = true;
+                    }
                     //CHECK PP WITH TIMESTAMP
                     //Debug.Log("this was MINE");
                     if (receiveMessage.amount > 0)
@@ -338,10 +362,23 @@ public class UDPClient : MonoBehaviour
                         fireChanged = true;
                     }
 
-                    isMoving = false;
+                    if (receiveMessage.velocity > 0f)
+                    {
+                        isMoving = true;
+                    }
+                    else
+                    {
+                        isMoving = false;
+                    }
+                    
                 }
                 else
                 {
+                    if (RTT > 0)
+                    {
+                        Debug.LogWarning("New RTT from [" + receiveMessage.id + "] with" + RTT + "s" + "at: " + timeStamp + "s playtime.");
+                        newRtt = true;
+                    }
                     //Debug.Log("this was NOT MINE" + "ID Receiving [" + receiveMessage.id + "]" + "Internal ID ["+ thisPlayer.id + "]" + "Fire life of receivingID" + receiveMessage.fireID);
                     //Debug.Log("This is not MINE!");
                     if (receiveMessage.amount > 0)
@@ -352,7 +389,14 @@ public class UDPClient : MonoBehaviour
                         fireChanged = true;
                     }
 
-                    isMoving = true;
+                    if (receiveMessage.velocity > 0f)
+                    {
+                        isMoving = true;
+                    }
+                    else
+                    {
+                        isMoving = false;
+                    }
                 }
                 //Debug.Log("[CIENT] Receive data!: " + receiveMessage.message);
                 //Debug.Log("[CLIENT] Received Id!" + receiveMessage.id);
@@ -365,30 +409,26 @@ public class UDPClient : MonoBehaviour
     }
 
 
-    public void PingMovement(float[] packageMovement, float[]movementDirection)
+    public void PingMovement(float[] packageMovement, float[]movementDirection, float _vel)
     {
         try
         {
-            byte[] dataTMP = new byte[1024];
             sendMessage.SetMessage("");
             sendMessage.SetPositions(packageMovement);
             sendMessage.SetDirection(movementDirection);
+            sendMessage.SetVelocity(_vel);
             sendMessage.SetUsername(thisPlayer.username);
             sendMessage.SetId(thisPlayer.id);
             sendMessage.SetWorldMatrix(gameMatrix);
             sendMessage.SetPlayersOnline(playersOnline);
 
-            sendMessage.SetTimeStamp(timeStamp);
 
             //Debug.Log("Sending from" + sendMessage.id + "Movement with PlayersOnline:" + sendMessage.playersOnline);
 
             //Debug.Log("Pinging Mov from Client ID: " + sendMessage.id);
 
             //Debug.Log("[CLIENT] Sending to server: " + serverIPEP.ToString() + " Message: " + packageMovement[0] + "From:" + message.username);
-            dataTMP = serializer.SerializePackage(sendMessage);
-            udpSocket.SendTo(dataTMP, dataTMP.Length, SocketFlags.None, serverEP);
-
-            //carefull with data as it keeps setted, this can be so confusing if you cross it with a local dataTMP value, just to know.
+            
         }
         catch (Exception e)
         {
@@ -400,12 +440,9 @@ public class UDPClient : MonoBehaviour
     {
         try
         {
-            byte[] dataTMP = new byte[1024];
+            //byte[] dataTMP = new byte[1024];
             //ping to everybody;
             sendMessage.SetFireAction(_id, _action, _amount, _life);
-            sendMessage.SetTimeStamp(timeStamp);
-            dataTMP = serializer.SerializePackage(sendMessage);
-            udpSocket.SendTo(dataTMP, dataTMP.Length, SocketFlags.None, serverEP);
 
             //this is dangerous! as receiveMessage on ServerWill keep the same until next update, be sure that receivedMessage doesn't stuck the the old values
 
@@ -434,7 +471,7 @@ public class UDPClient : MonoBehaviour
 
     public void MoveWorld(int _key, float[] _positions = null, float[] _directions = null, Tuple<int, int>[] newMatrix = null, int _life = -1)
     {
-        this.gameObject.GetComponent<WorldController>().MovePlayer(_key, _positions, _directions);
+        this.gameObject.GetComponent<WorldController>().MovePlayer(_key, _positions, _directions, PP);
     }
 
     //public void UpdateGameMatrix(int _key, Tuple<int, int>[] newMatrix)
@@ -453,8 +490,4 @@ public class UDPClient : MonoBehaviour
         matrixDebug.text += "Matrix [ID: " + gameMatrix[3].Item1 + "]" + "[LIFE: " + gameMatrix[3].Item2 + "] \n";
     }
 
-    public void NewMessage()
-    {
-        sendMessage = new PlayerPackage(thisPlayer.username, thisPlayer.id, gameMatrix);
-    }
 }
