@@ -13,6 +13,8 @@ public class Fireplace : MonoBehaviour
 
     public TextMeshPro lifeText;
 
+    public SpriteRenderer circularSpriteImage;
+
     private int life = 300;
     public float maxLife = 100;
     bool soundMade = false;
@@ -30,6 +32,8 @@ public class Fireplace : MonoBehaviour
         life = 100;
         lifeText.text = "LIFE: " + life;
         GC.GetComponent<UIHandler>().createPlayerUI(_key, _name, life, maxLife);
+
+        circularSpriteImage.color = GC.GetComponent<UIHandler>().colorList[--_key];
     }
 
     // Start is called before the first frame update
@@ -46,7 +50,7 @@ public class Fireplace : MonoBehaviour
 
     public void HealBar(int _type, int _amount)
     {
-        if(_amount > 100)
+        if (_amount > 100)
         {
             life = 100;
             return;
@@ -75,7 +79,7 @@ public class Fireplace : MonoBehaviour
 
     public void SetLife(int _life)
     {
-        if(_life > 100)
+        if (_life > 100)
         {
             life = 100;
             return;
@@ -125,7 +129,6 @@ public class Fireplace : MonoBehaviour
     {
 
     }
-
 
     public void FirePlaceActions(float lifeFraction)
     {

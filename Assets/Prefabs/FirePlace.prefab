@@ -10614,6 +10614,7 @@ MonoBehaviour:
   fireName: 
   FX: {fileID: 8300000, guid: 257b4dbaf1c25644a8e7d39d9ed3d1b9, type: 3}
   lifeText: {fileID: 2769870272011948282}
+  circularSpriteImage: {fileID: 8943784209315963622}
   maxLife: 100
 --- !u!65 &4497655841904016353
 BoxCollider:
