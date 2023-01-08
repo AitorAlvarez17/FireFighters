@@ -25,7 +25,7 @@ public class LifeHolder : MonoBehaviour
     {
         nameText.text = name;
         lifeText.text = currentLife.ToString();
-        
+        uiBar.fillAmount = 1f;
     }
 
     public void UpdatePlayerUI(int internalID,int currentLife)

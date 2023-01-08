@@ -22,18 +22,6 @@ public class UIHandler : MonoBehaviour
     private TextMeshProUGUI numberOfPlayers;
 
     // Start is called before the first frame update
-    void Start()
-    {
-        numberOfPlayers = ServerController.MyServerInstance.numberOfPlayers;
-
-    }
-
-    // Update is called once per frame
-    void Update()
-    {
-        //UpdatePlayersLife();
-    }
-
     void UpdatePlayersLife()
     {
 
