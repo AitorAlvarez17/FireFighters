@@ -41,6 +41,8 @@ public class UIHandler : MonoBehaviour
 
     public void createPlayerUI(int internalID, string name, int currentLife, float maxLife)
     {
+        if(lifeHolders.ContainsKey(internalID)) return;
+        
         GameObject newLifeBar = Instantiate(LifePrefab, lifeParent);
 
         RectTransform rect = (RectTransform)newLifeBar.transform;
