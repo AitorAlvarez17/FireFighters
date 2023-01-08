@@ -85,6 +85,8 @@ public class Lumberjack : MonoBehaviour
 
     public bool interacter = false;
     public float deltaTime = 0f;
+    
+    public Transform cameraTrans;
 
     //0 for nothing, 1 for wood, 2 for water
     public Charge charge = null;
@@ -110,7 +112,7 @@ public class Lumberjack : MonoBehaviour
     public void SetId(int _id)
     {
         internalId = _id;
-        textInfo.text += "Key ID:" + _id + "\n";
+        //textInfo.text += "Key ID:" + _id + "\n";
     }
     public void SetUsername(string username)
     {
@@ -144,7 +146,7 @@ public class Lumberjack : MonoBehaviour
                 break;
             case 2:
                 resDebug.text = "Water: " + charge.Amount;
-                resDebug.color = Color.blue;
+                resDebug.color = Color.cyan;
                 break;
             default:
                 break;
@@ -186,6 +188,7 @@ public class Lumberjack : MonoBehaviour
     {
         deltaTime = Time.deltaTime;
         time += Time.deltaTime;
+
 
         if (deadRackoning == true)
         {
