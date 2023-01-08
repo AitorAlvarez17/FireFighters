@@ -3880,11 +3880,6 @@ PrefabInstance:
       propertyPath: m_Name
       value: ThePredictioner
       objectReference: {fileID: 0}
-    - target: {fileID: 1355507563070956435, guid: fd1006c8ba5b917429140c6665c12291,
-        type: 3}
-      propertyPath: m_IsActive
-      value: 0
-      objectReference: {fileID: 0}
     - target: {fileID: 3372013064763489101, guid: fd1006c8ba5b917429140c6665c12291,
         type: 3}
       propertyPath: m_RootOrder

@@ -124,6 +124,7 @@ public class WorldController : MonoBehaviour
     {
         foreach (var item in gameMatrix)
         {
+            int checkWin = worldDolls.Count;
             if (item.Item1 != 0)
             {
                 Debug.Log("Updating FIRE " + item.Item1 + "");
@@ -131,9 +132,21 @@ public class WorldController : MonoBehaviour
                     worldDolls[item.Item1].firePlace.SetLife(item.Item2);
                     if(worldDolls[item.Item1].firePlace.GetLife() <= 0)
                     {
+                        checkWin--;
                         worldDolls[item.Item1].lumberjack.textInfo.text = "DED";
                         worldDolls[item.Item1].lumberjack.gameObject.SetActive(false);
                         worldDolls[item.Item1].firePlace.gameObject.SetActive(false);
+                    }
+
+                    if(checkWin == 1)
+                    {
+                        foreach (PlayerSawmill sawmill in worldDolls.Values)
+                        {
+                            if(sawmill.firePlace.GetLife() > 0)
+                            {
+                                Debug.Log("The winner is" + sawmill.lumberjack.internalId);
+                            }
+                        }
                     }
                 else
                     Debug.Log("Doll was not in the dictionary");
@@ -167,7 +180,7 @@ public class WorldController : MonoBehaviour
             {
                 CreatePlayer(_key, false, true);
                 this.gameObject.GetComponent<PlayerMovement>().player = worldDolls[_key].movementPredicter.gameObject;
-                GameObject.FindGameObjectWithTag("MainCamera").GetComponent<CameraMovement>().target = worldDolls[_key].lumberjack.transform;
+                GameObject.FindGameObjectWithTag("MainCamera").GetComponent<CameraMovement>().target = worldDolls[_key].movementPredicter.transform;
             }
         }
     }
