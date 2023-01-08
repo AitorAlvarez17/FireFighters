@@ -66,12 +66,12 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: 21300000, guid: 91cb1d970b4e7914491741c4ed9fca2b, type: 3}
+  m_Sprite: {fileID: 21300000, guid: d166959f88f54c443ad7774b92848264, type: 3}
   m_Type: 3
   m_PreserveAspect: 0
   m_FillCenter: 1
   m_FillMethod: 0
-  m_FillAmount: 0.633
+  m_FillAmount: 0.724
   m_FillClockwise: 1
   m_FillOrigin: 0
   m_UseSpriteMesh: 0
@@ -379,9 +379,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3e3693f81af578d4299bab16a6d946c6, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  player1Name: {fileID: 2508250198538518797}
-  player1Amount: {fileID: 2508250199694106701}
-  player1Panel: {fileID: 2508250198246719168}
+  nameText: {fileID: 2508250198538518797}
+  lifeText: {fileID: 2508250199694106701}
+  uiBar: {fileID: 2508250198246719168}
 --- !u!1 &2508250199252735519
 GameObject:
   m_ObjectHideFlags: 0

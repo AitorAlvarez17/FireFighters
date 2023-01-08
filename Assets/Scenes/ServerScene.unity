@@ -777,6 +777,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: bb57c59b3df58bd4d9c988b682cad2c1, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  colorList:
+  - {r: 0, g: 0, b: 0, a: 0}
+  - {r: 0, g: 0, b: 0, a: 0}
+  - {r: 0, g: 0, b: 0, a: 0}
+  - {r: 0, g: 0, b: 0, a: 0}
   lifeParent: {fileID: 1152944662}
   LifePrefab: {fileID: 2508250198914147305, guid: bec57d68e2eedf54795530521050290d,
     type: 3}

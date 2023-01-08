@@ -13,7 +13,7 @@ public class UIHandler : MonoBehaviour
     // Replace Names
     // Replace Quantity
     // Make Bar move.
-
+    public List<Color> colorList;
 
     public Transform lifeParent;
 
@@ -51,7 +51,7 @@ public class UIHandler : MonoBehaviour
     }
     public void UpdatePlayerUI(int internalID, int currentLife)
     {
-        if(lifeHolders.ContainsKey(internalID) == true)
+        if (lifeHolders.ContainsKey(internalID) == true)
         {
             lifeHolders[internalID].transform.GetComponent<LifeHolder>().UpdatePlayerUI(internalID, currentLife);
         }
@@ -70,24 +70,29 @@ public class UIHandler : MonoBehaviour
                 rect.anchorMin = new Vector2(0f, 1.0f);
                 rect.anchorMax = new Vector2(0f, 1.0f);
                 rect.pivot = new Vector2(0f, 1.0f);
+                lifeHolders[id].uiBar.color = colorList[0];
+                
                 //UP left
                 break;
             case 2:
                 rect.anchorMin = new Vector2(1.0f, 1.0f);
                 rect.anchorMax = new Vector2(1.0f, 1.0f);
                 rect.pivot = new Vector2(1.0f, 1.0f);
+                lifeHolders[id].uiBar.color = colorList[1];
                 //UP right
                 break;
             case 3:
                 rect.anchorMin = new Vector2(0f, 0f);
                 rect.anchorMax = new Vector2(0f, 0f);
                 rect.pivot = new Vector2(0f, 0f);
+                lifeHolders[id].uiBar.color = colorList[2];
                 //DOWN left
                 break;
             case 4:
                 rect.anchorMin = new Vector2(1.0f, 0f);
                 rect.anchorMax = new Vector2(1.0f, 0f);
                 rect.pivot = new Vector2(1.0f, 0f);
+                lifeHolders[id].uiBar.color = colorList[3];
                 //DOWN right
                 break;
             default:

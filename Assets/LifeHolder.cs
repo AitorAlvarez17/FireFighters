@@ -6,8 +6,8 @@ using TMPro;
 
 public class LifeHolder : MonoBehaviour
 {
-    public TextMeshProUGUI player1Name, player1Amount;
-    public Image player1Panel;
+    public TextMeshProUGUI nameText, lifeText;
+    public Image uiBar;
 
     // Start is called before the first frame update
     void Start()
@@ -23,15 +23,15 @@ public class LifeHolder : MonoBehaviour
 
     public void Init(int internalID, string name, int currentLife, float maxLife) 
     {
-        player1Name.text = name;
-        player1Amount.text = currentLife.ToString();
+        nameText.text = name;
+        lifeText.text = currentLife.ToString();
         
     }
 
     public void UpdatePlayerUI(int internalID,int currentLife)
     {
-        player1Amount.text = currentLife.ToString();
-        player1Panel.fillAmount = (float)(currentLife / 100f);
+        lifeText.text = currentLife.ToString();
+        this.uiBar.fillAmount = (float)(currentLife / 100f);
         Debug.Log("My life is crazy: " + (float)currentLife / 100f);
 
     }
