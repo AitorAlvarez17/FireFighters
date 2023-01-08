@@ -10558,6 +10558,7 @@ GameObject:
   - component: {fileID: 4497655841904016353}
   - component: {fileID: 495356771}
   - component: {fileID: -225253698566385404}
+  - component: {fileID: 2781205036437690823}
   m_Layer: 0
   m_Name: FirePlace
   m_TagString: Untagged
@@ -10739,6 +10740,22 @@ AudioSource:
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 4
+--- !u!208 &2781205036437690823
+NavMeshObstacle:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6985857934185731609}
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Shape: 0
+  m_Extents: {x: 0.42, y: 1, z: 0.42}
+  m_MoveThreshold: 0.1
+  m_Carve: 0
+  m_CarveOnlyStationary: 1
+  m_Center: {x: 0.81, y: 0, z: 1.62}
+  m_TimeToStationary: 0.5
 --- !u!1 &7278487134692881328
 GameObject:
   m_ObjectHideFlags: 0
