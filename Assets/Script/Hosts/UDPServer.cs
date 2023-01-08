@@ -12,6 +12,7 @@ using Unity.VisualScripting;
 //Do a parent class that is MonoBehaviour and make this heritage from the parent in order to make it virtual for PlayerMovement
 public class UDPServer : MonoBehaviour
 {
+    public bool gameStarted = false;
     public float timeStamp;
     // Clients'IP and Port
     private string serverIP;
@@ -320,6 +321,7 @@ public class UDPServer : MonoBehaviour
         byte[] dataTMP = new byte[1024];
         try
         {
+            gameStarted = true;
             Debug.Log("[GAME STARTED!]");
             sendMessage.SetMessage("");
             sendMessage.SetGameState(state);
