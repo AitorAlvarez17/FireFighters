@@ -2,12 +2,14 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using TMPro;
 
 public class PlayerSawmill
 {
     public Lumberjack lumberjack;
     public Fireplace firePlace;
     public GameObject movementPredicter;
+
 
     public PlayerSawmill(Lumberjack  _lumberjack, Fireplace _firePlace, GameObject _predictioner)
     {
@@ -19,6 +21,7 @@ public class PlayerSawmill
 
 public class WorldController : MonoBehaviour
 {
+    public GameObject winCondition;
     public GameObject playerGO;
     public GameObject fireGO;
     public GameObject predictGO;
@@ -145,6 +148,8 @@ public class WorldController : MonoBehaviour
                             if(sawmill.firePlace.GetLife() > 0)
                             {
                                 Debug.Log("The winner is" + sawmill.lumberjack.internalId);
+                                winCondition.SetActive(true);
+                                winCondition.transform.GetChild(0).GetComponent<TextMeshPro>().text = "Player " + sawmill.lumberjack.internalId + " WINS!";
                             }
                         }
                     }
