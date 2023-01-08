@@ -93,6 +93,10 @@ public class Lumberjack : MonoBehaviour
     //visuals
     public GameObject avatar;
 
+    //animation
+    Animator animator;
+    bool isWalking;
+    
     public Lumberjack()
     {
 
@@ -181,6 +185,9 @@ public class Lumberjack : MonoBehaviour
     void Start()
     {
         trans = this.gameObject.GetComponent<Transform>();
+
+        animator = GetComponent<Animator>();
+        isWalking = false;
     }
 
     // Update is called once per frame
@@ -194,10 +201,17 @@ public class Lumberjack : MonoBehaviour
         {
             //Debug.Log("Is reckoning");
         }
+
+        if(isWalking && IsGettingInputFromPlayer()==false)
+            animator.SetBool("isWalking", false);
+        
     }
 
     public void Move(float[] _positions, Vector3 _directions, float _IP)
     {
+        animator.SetBool("isWalking", true);
+        isWalking=true;
+
         //Debug.Log("Time difference of:" + (time - lastTime) + " s");
         //Debug.Log("The RTT added to IP is: " + ((time - lastTime) - (_IP / 1000)));
         //possible upgrade: use RTT in order to lerp having in accountance lag.
@@ -227,7 +241,7 @@ public class Lumberjack : MonoBehaviour
 
             StartCoroutine(Lerp());
         }
-        
+
     }
 
     IEnumerator Lerp()
@@ -291,5 +305,13 @@ public class Lumberjack : MonoBehaviour
         }
 
         PrintDebug();
+    }
+
+    public bool IsGettingInputFromPlayer()
+    {
+        bool ret = false;
+        if (Input.GetKey("w") || Input.GetKey("a") || Input.GetKey("s") || Input.GetKey("d"))
+            ret = true;
+        return ret;
     }
 }
