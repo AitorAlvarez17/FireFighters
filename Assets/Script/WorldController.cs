@@ -132,6 +132,8 @@ public class WorldController : MonoBehaviour
                     if(worldDolls[item.Item1].firePlace.GetLife() <= 0)
                     {
                         worldDolls[item.Item1].lumberjack.textInfo.text = "DED";
+                        worldDolls[item.Item1].lumberjack.gameObject.SetActive(false);
+                        worldDolls[item.Item1].firePlace.gameObject.SetActive(false);
                     }
                 else
                     Debug.Log("Doll was not in the dictionary");
