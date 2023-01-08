@@ -19,6 +19,7 @@ public class UDPClient : MonoBehaviour
     private int serverPort;
 
     private TextMeshProUGUI matrixDebug;
+    private TextMeshProUGUI player1Name;
 
     //Data matrix and number of bytes
     private int recv;
@@ -102,7 +103,7 @@ public class UDPClient : MonoBehaviour
                 this.gameObject.GetComponent<WorldController>().worldDolls[thisPlayer.id].lumberjack.PrintDebug();
             }
         }
-        
+
     }
 
     public void CreateMessage(PlayerPackage _Message)
@@ -236,7 +237,7 @@ public class UDPClient : MonoBehaviour
 
             isMoving = false;
 
-            
+
 
             receiveThread = new Thread(Receive);
             receiveThread.Start();
@@ -247,7 +248,6 @@ public class UDPClient : MonoBehaviour
         }
     }
 
-    
     //Main communication funtion. It sends strings when called
     public void SendString(string _message)
     {
@@ -274,7 +274,7 @@ public class UDPClient : MonoBehaviour
             while (true)
             {
                 NewMessage();
-                
+
                 //PingMessage();
                 //PingMovement();
                 //PingFireAction();
@@ -312,8 +312,8 @@ public class UDPClient : MonoBehaviour
                     Debug.Log("Receiving in " + thisPlayer.id);
                     playersOnline = receiveMessage.playersOnline;
                 }
-                
-                
+
+
                 //time in ms
                 //RTT calculates the time that a packed lasts to go from client to server and comeback
                 //we use RTT / 2 to calculate the avg time of traveling of client - server
@@ -358,14 +358,13 @@ public class UDPClient : MonoBehaviour
                 //Debug.Log("[CLIENT] Received Id!" + receiveMessage.id);
             }
         }
-        catch(Exception e)
+        catch (Exception e)
         {
             Debug.Log("Recieve(): Error receiving: " + e);
         }
     }
 
-
-    public void PingMovement(float[] packageMovement, float[]movementDirection)
+    public void PingMovement(float[] packageMovement, float[] movementDirection)
     {
         try
         {
@@ -430,7 +429,6 @@ public class UDPClient : MonoBehaviour
         Debug.Log("Client was welcomed to world, ID:" + thisPlayer.id);
         this.gameObject.GetComponent<WorldController>().WelcomeClient(gameMatrix, thisPlayer.id);
     }
-
 
     public void MoveWorld(int _key, float[] _positions = null, float[] _directions = null, Tuple<int, int>[] newMatrix = null, int _life = -1)
     {

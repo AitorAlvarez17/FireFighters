@@ -12,7 +12,7 @@ public class Fireplace : MonoBehaviour
     public TextMeshPro lifeText;
 
     private int life = 300;
-    public float maxLife = 100;
+    public int maxLife = 100;
 
     public Fireplace()
     {
@@ -26,18 +26,19 @@ public class Fireplace : MonoBehaviour
         fireName = _name;
         life = 100;
         lifeText.text = "LIFE: " + life;
+        GC.GetComponent<UIHandler>().createPlayerUI(internalID, fireName, life, maxLife);
     }
 
     // Start is called before the first frame update
     void Start()
     {
-        
+
     }
 
     // Update is called once per frame
     void Update()
     {
-        
+
     }
 
     public void HealBar(int _type, int _amount)
@@ -50,26 +51,27 @@ public class Fireplace : MonoBehaviour
             case 1:
                 life += _amount;
                 lifeText.text = "LIFE: " + life;
-                FirePlaceActions(life / maxLife);
+                //Update UI
                 break;
             case 2:
                 life -= _amount;
                 lifeText.text = "LIFE: " + life;
-                FirePlaceActions(life / maxLife);
+                //Update UI
                 break;
             default:
                 break;
         }
-        
+
         //Ping Life();
     }
 
     public void SetLife(int _life)
     {
-        Debug.Log("Life set in Fireplace [ID: "+ internalID + "] with" + "[LIFE: ]" + _life);
+        Debug.Log("Life set in Fireplace [ID: " + internalID + "] with" + "[LIFE: ]" + _life);
         life = _life;
         lifeText.text = "LIFE: " + life;
-        FirePlaceActions(life / maxLife);
+        // GC.GetComponent<UIHandler>().UpdateFireUI();
+        //Update UI;
     }
 
     public void OnTriggerEnter(Collider other)
@@ -106,8 +108,4 @@ public class Fireplace : MonoBehaviour
         }
     }
 
-    public void FirePlaceActions(float lifeFraction)
-    {
-
-    }
 }

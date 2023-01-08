@@ -18,6 +18,7 @@ public class ServerController : MonoBehaviour
     public GameObject chatBillboard;
 
     public TextMeshProUGUI numberOfPlayers;
+    public TextMeshProUGUI player1Name;
 
     public TextMeshProUGUI clientName;
     public TextMeshProUGUI IpText;
