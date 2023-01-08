@@ -149,7 +149,7 @@ public class WorldController : MonoBehaviour
                             {
                                 Debug.Log("The winner is" + sawmill.lumberjack.internalId);
                                 winCondition.SetActive(true);
-                                winCondition.transform.GetChild(0).GetComponent<TextMeshPro>().text = "Player " + sawmill.lumberjack.internalId + " WINS!";
+                                winCondition.transform.GetChild(0).GetComponent<TextMeshProUGUI>().text = "Player " + sawmill.lumberjack.internalId + " WINS!";
                             }
                         }
                     }
