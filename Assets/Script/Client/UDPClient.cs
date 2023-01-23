@@ -258,6 +258,8 @@ public class UDPClient : MonoBehaviour
     {
         try
         {
+            Debug.Log("Server Ep:" + serverEP);
+            
             sendMessage.SetUsername("Player" + thisPlayer.id);
             sendMessage.SetMessage(_message);
             Debug.Log("[CLIENT] Sending to server: " + serverIPEP.ToString() + " Message: " + _message + "From:" + sendMessage.username);
@@ -278,6 +280,7 @@ public class UDPClient : MonoBehaviour
         {
             while (true)
             {
+                Debug.Log("Sending");
                 byte[] dataTMP = new byte[1024];
 
                 sendMessage.SetTimeStamp(timeStamp);

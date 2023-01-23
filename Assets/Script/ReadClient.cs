@@ -20,24 +20,28 @@ public class ReadClient : MonoBehaviour
     {
         //Sets client's input
         clientInput = input;
-        Debug.Log("ReadStringInput: " + input);
+        Debug.Log("ReadStringInput: " + input + "Sent ip is set to:" + ipSent);
 
         //In charge od sending the message after connecting with the server.
-        if (!ipSent)
-            return;
+        //if (ipSent == true)
+        //{
+        //    Debug.Log("ip sent was already sended");
+        //    return;
+        //}
 
-        switch (ServerController.MyServerInstance.GetSocketType)
-        {
-            case ServerController.SocketTypeProtocol.TCP:
-                this.gameObject.GetComponent<TCPClient>().SendString(clientInput);
-                break;
-            case ServerController.SocketTypeProtocol.UDP:
-                this.gameObject.GetComponent<UDPClient>().SendString(clientInput);
-                break;
-            default:
-                Debug.Log("Invalid protocol");
-                break;
-        }
+        //Debug.Log("Sending IP to server");
+        //switch (ServerController.MyServerInstance.GetSocketType)
+        //{
+        //    case ServerController.SocketTypeProtocol.TCP:
+        //        this.gameObject.GetComponent<TCPClient>().SendString(clientInput);
+        //        break;
+        //    case ServerController.SocketTypeProtocol.UDP:
+        //        this.gameObject.GetComponent<UDPClient>().SendString(clientInput);
+        //        break;
+        //    default:
+        //        Debug.Log("Invalid protocol");
+        //        break;
+        //}
     }
 
     public void ReadUsernameC(string input)
@@ -45,14 +49,14 @@ public class ReadClient : MonoBehaviour
         //Sets client's input
         clientUsername = input;
         Debug.Log("Username: " + input);
-
-
     }
 
     public void Connect()
     {
+        Debug.Log("Connecting from connect function");
         if (clientUsername != "" && clientInput.Contains(".") && !ipSent)
         {
+            Debug.Log("Connecting to server" + "with ip:" + ipSent);
             switch (ServerController.MyServerInstance.GetSocketType)
             {
                 case ServerController.SocketTypeProtocol.TCP:
