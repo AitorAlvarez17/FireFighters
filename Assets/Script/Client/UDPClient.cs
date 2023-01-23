@@ -13,7 +13,7 @@ public class UDPClient : MonoBehaviour
     //CSP Vars
     public float timeStamp;
     public float RTT;
-    public int PP = 50;
+    public int PP = 30;
 
     public bool newRtt = false;
     // Servers'IP and port
