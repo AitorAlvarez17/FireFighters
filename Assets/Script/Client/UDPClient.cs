@@ -13,7 +13,7 @@ public class UDPClient : MonoBehaviour
     //CSP Vars
     public float timeStamp;
     public float RTT;
-
+    public int PP = 50;
 
     public bool newRtt = false;
     // Servers'IP and port
@@ -291,7 +291,7 @@ public class UDPClient : MonoBehaviour
 
                 //carefull with data as it keeps setted, this can be so confusing if you cross it with a local dataTMP value, just to know.
                 //PP is the time between sent packets and is used right here.
-                
+                Thread.Sleep(PP);
             }
         }
         catch (Exception ex)
