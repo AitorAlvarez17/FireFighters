@@ -280,10 +280,11 @@ public class UDPClient : MonoBehaviour
         {
             while (true)
             {
-                Debug.Log("Sending");
+                Debug.Log("Sending FROM" + thisPlayer.id);
                 byte[] dataTMP = new byte[1024];
 
                 sendMessage.SetTimeStamp(timeStamp);
+                sendMessage.SetId(thisPlayer.id);
 
                 dataTMP = serializer.SerializePackage(sendMessage);
                 udpSocket.SendTo(dataTMP, dataTMP.Length, SocketFlags.None, serverEP);
