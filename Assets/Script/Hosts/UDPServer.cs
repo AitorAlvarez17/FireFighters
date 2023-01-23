@@ -245,29 +245,32 @@ public class UDPServer : MonoBehaviour
                 recv = udpSocket.ReceiveFrom(dataTMP, ref clientEP);
                 receivedMessage = serializer.DeserializePackage(dataTMP);
 
-                if (!UDPClientList.Contains(clientEP) && clientEP.ToString() != "")
+                if (receivedMessage.id != 0)
                 {
-                    Debug.Log("Adding a new remote conection point! :" + clientEP.ToString());
-                    UDPClientList.Add(clientEP);
-                    UpdateGameMatrix(1, UDPClientList.Count);
-                    sendMessage.SetPlayersOnline(playersOnline);
-                    ModifyReceivedMessage();
-                    serverDirty = true;
+                    if (!UDPClientList.Contains(clientEP) && clientEP.ToString() != "")
+                    {
+                        Debug.Log("Adding a new remote conection point! :" + clientEP.ToString());
+                        UDPClientList.Add(clientEP);
+                        UpdateGameMatrix(1, UDPClientList.Count);
+                        sendMessage.SetPlayersOnline(playersOnline);
+                        ModifyReceivedMessage();
+                        serverDirty = true;
+                    }
+
+                    if (receivedMessage.amount > 0)
+                    {
+                        Debug.Log("Server processing Fire");
+                        Debug.Log("Amount of fire charging: " + receivedMessage.amount + "From player" + receivedMessage.id);
+                        //here we change the matrix with the new life
+                        UpdateFireMatrix(receivedMessage.fireID, receivedMessage.fireAction, receivedMessage.amount, receivedMessage.fireLife);
+                        //and here we change the receivedMessage for pingPong comeback
+                        ModifyReceivedMessage();
+                    }
+                    //Debug.Log("[SERVER] Received message ID:" + receivedMessage.id);
+
+
+                    EchoData(receivedMessage);
                 }
-
-                if (receivedMessage.amount > 0)
-                {
-                    Debug.Log("Server processing Fire");
-                    Debug.Log("Amount of fire charging: " + receivedMessage.amount + "From player" + receivedMessage.id);
-                    //here we change the matrix with the new life
-                    UpdateFireMatrix(receivedMessage.fireID, receivedMessage.fireAction, receivedMessage.amount, receivedMessage.fireLife);
-                    //and here we change the receivedMessage for pingPong comeback
-                    ModifyReceivedMessage();
-                }
-                Debug.Log("[SERVER] Received message ID:" + receivedMessage.id);
-
-
-                EchoData(receivedMessage);
             }
         }
         catch (Exception e)
